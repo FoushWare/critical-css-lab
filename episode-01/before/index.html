@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Critical CSS Lab</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a href="/" class="logo">
+        Critical CSS Lab
+      </a>
+
+      <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="/">Articles</a>
+        <a href="/">About</a>
+      </nav>
+
+      <button class="menu-button" type="button">
+        Menu
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="hero-text">
+          <span class="eyebrow">
+            Web Performance
+          </span>
+
+          <h1>
+            Understanding Critical CSS
+          </h1>
+
+          <p>
+            Discover how CSS delivery affects the way
+            browsers render your page.
+          </p>
+
+          <a href="#articles" class="button">
+            Explore the experiment
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="articles" class="articles">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">
+            Performance Lab
+          </span>
+
+          <h2>
+            Latest Experiments
+          </h2>
+        </div>
+
+        <div class="article-grid">
+          <article class="article-card">
+            <div class="article-image">
+              <img src="assets/article-1.svg" alt="Browser rendering" />
+            </div>
+
+            <div class="article-content">
+              <span class="article-category">
+                Browser
+              </span>
+
+              <h3>
+                How browsers render CSS
+              </h3>
+
+              <p>
+                Learn what happens between HTML,
+                CSS and pixels.
+              </p>
+            </div>
+          </article>
+
+          <article class="article-card">
+            <div class="article-image">
+              <img src="assets/article-2.svg" alt="CSS rendering" />
+            </div>
+
+            <div class="article-content">
+              <span class="article-category">
+                CSS
+              </span>
+
+              <h3>
+                What makes CSS render-blocking?
+              </h3>
+
+              <p>
+                Explore how stylesheets affect
+                initial rendering.
+              </p>
+            </div>
+          </article>
+
+          <article class="article-card">
+            <div class="article-image">
+              <img src="assets/article-3.svg" alt="Performance measurement" />
+            </div>
+
+            <div class="article-content">
+              <span class="article-category">
+                Performance
+              </span>
+
+              <h3>
+                Measuring page performance
+              </h3>
+
+              <p>
+                Learn how to measure real browser
+                performance.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="experiment">
+      <div class="container experiment-content">
+        <span class="eyebrow">
+          Coming next
+        </span>
+
+        <h2>
+          Critical CSS in React
+        </h2>
+
+        <p>
+          What changes when JavaScript enters the rendering process?
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Critical CSS Lab
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
