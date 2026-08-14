@@ -26,41 +26,35 @@ This is intentionally the baseline approach. The stylesheet contains styles for 
 
 **No Critical CSS optimization has been applied.**
 
-## 🔧 DevTools Guide Panel
+## Measuring Performance
 
-The page includes a DevTools guide panel (top-right corner) that provides step-by-step instructions for using Chrome DevTools to measure actual performance.
+### Network Tab Setup
 
-### Guide Features
+1. Open Chrome DevTools (F12 or Cmd+Option+I)
+2. Go to **Network** tab
+3. Enable **☑ Disable cache**
+4. Set throttling to **Fast 4G** or **Slow 3G**
+5. Reload the page
 
-1. **� Network Waterfall** - Step-by-step instructions for viewing the actual network waterfall in Chrome DevTools
-2. **⚡ Performance Panel** - Instructions for measuring real performance metrics using the Performance panel
-3. **🎯 What is Critical CSS?** - Educational modal explaining the concept, benefits, and trade-offs
+### Performance Panel Setup
 
-### Using the DevTools Guide
+1. Go to **Performance** tab
+2. Click **Record** (or press Ctrl+E / Cmd+E)
+3. Reload the page
+4. Stop recording when page loads
 
-#### 1. View Network Waterfall
-Click "� Network Waterfall" to get instructions for:
-- Opening Chrome DevTools
-- Navigating to the Network tab
-- Setting network throttling to Slow 3G
-- Observing the CSS blocking behavior
-- Understanding the waterfall timeline
+### What to Observe
 
-#### 2. Measure Performance
-Click "⚡ Performance Panel" to learn how to:
-- Open the Performance panel
-- Record page load performance
-- Analyze FCP, LCP, and other metrics
-- Identify CSS blocking time
-- Measure real performance impact
+In the Network tab, notice:
+- `styles.css` loading as a render-blocking resource
+- The waterfall timeline showing CSS blocking paint
+- Transfer size and download time of the stylesheet
 
-#### 3. Learn Critical CSS Concepts
-Click "🎯 What is Critical CSS?" to understand:
-- The problem with render-blocking CSS
-- How Critical CSS solves it
-- Code examples of before/after implementation
-- Benefits and trade-offs
-- When to use Critical CSS
+In the Performance panel, look for:
+- **First Contentful Paint (FCP)** - When content first appears
+- **Largest Contentful Paint (LCP)** - When main content is visible
+- **CSS Parse Time** - Time spent parsing stylesheet
+- **Render Block Time** - How long CSS blocks rendering
 
 ## Page Structure
 
@@ -98,8 +92,8 @@ In the next stage we will investigate:
 - **CSS Loading** - Different strategies for loading CSS
 - **Above-the-fold CSS** - Identifying styles needed for initial viewport
 - **Critical CSS** - Extracting and inlining critical styles
-- **FCP (First Contentful Paint)** - Time to first content render
-- **LCP (Largest Contentful Paint)** - Time to largest content render
+- **FCP** (First Contentful Paint) - Time to first content render
+- **LCP** (Largest Contentful Paint) - Time to largest content render
 
 ## How to Run
 
@@ -131,36 +125,13 @@ npx http-server -p 8080
 
 Then open: `http://localhost:8080`
 
-## Measuring Performance
+## Key Concepts
 
-### Network Tab Setup
+This baseline demonstrates:
 
-1. Open Chrome DevTools (F12 or Cmd+Option+I)
-2. Go to **Network** tab
-3. Enable **☑ Disable cache**
-4. Set throttling to **Fast 4G** (or Slow 3G for more dramatic results)
-5. Reload the page
-
-### What to Observe
-
-In the Network tab, notice:
-- `styles.css` loading as a render-blocking resource
-- The waterfall timeline showing CSS blocking paint
-- Transfer size and download time of the stylesheet
-
-### Performance Panel Setup
-
-1. Go to **Performance** tab
-2. Click **Record** (or press Ctrl+E / Cmd+E)
-3. Reload the page
-4. Stop recording when page loads
-
-### Key Metrics to Note
-
-- **First Contentful Paint (FCP)** - When content first appears
-- **Largest Contentful Paint (LCP)** - When main content is visible
-- **CSS Parse Time** - Time spent parsing stylesheet
-- **Render Block Time** - How long CSS blocks rendering
+- **Render-blocking CSS**: External stylesheets prevent the browser from painting content
+- **Critical vs Non-critical CSS**: Some styles are needed immediately (header, hero), others can wait (footer, animations)
+- **Performance impact**: Large stylesheets delay First Contentful Paint (FCP) and Largest Contentful Paint (LCP)
 
 ## Important Notes
 
@@ -168,32 +139,20 @@ In the Network tab, notice:
 
 This implementation intentionally represents the starting point:
 
-- ✅ Uses normal external stylesheet for page content
+- ✅ Uses normal external stylesheet
 - ✅ Contains styles for entire page (including below-the-fold)
-- ✅ No Critical CSS optimization in main implementation
-- ✅ No CSS loading tricks (preload, async, defer) for main page
-- ✅ No artificial performance delays in page loading
+- ✅ No Critical CSS optimization
+- ✅ No CSS loading tricks (preload, async, defer)
+- ✅ No artificial performance delays
 - ✅ Well-structured, maintainable code
-- ✅ Demo controls are separate file (demo-controls.css) for educational purposes only
 
 ### What NOT to Do Yet
 
-- ❌ Do NOT inline critical CSS in the main implementation
-- ❌ Do NOT use `<link rel="preload">` for main page CSS
-- ❌ Do NOT use media tricks for CSS loading in main implementation
-- ❌ Do NOT split CSS into critical/non-critical files for main page
-- ❌ Do NOT use any CSS optimization techniques in the main page
-
-The demo-controls.css file contains styles only for the interactive demonstration panel and educational modals. This is separate from the baseline page implementation and does not affect the performance experiment.
-
-### Realistic Performance
-
-The page is intentionally well-built but has a complete stylesheet. This creates a realistic scenario where:
-
-- The page looks professional and modern
-- CSS is substantial but not artificially bloated
-- Performance bottleneck is CSS delivery (not bad code)
-- Below-the-fold content exists and is styled
+- ❌ Do NOT inline critical CSS
+- ❌ Do NOT use `<link rel="preload">`
+- ❌ Do NOT use media tricks for CSS loading
+- ❌ Do NOT split CSS into critical/non-critical files
+- ❌ Do NOT use any CSS optimization techniques
 
 ## Accessibility
 
@@ -225,56 +184,12 @@ episode-01/
 └── before/
     ├── index.html
     ├── styles.css
-    ├── demo-controls.css      # Demo panel and modal styles
     └── assets/
         ├── README.md
         ├── article-1.svg
         ├── article-2.svg
         └── article-3.svg
 ```
-
-## DevTools Guide Panel
-
-The floating guide panel (top-right) provides step-by-step instructions for using real Chrome DevTools:
-
-### Current Status Display
-Shows the current baseline state:
-- **CSS Loading**: Normal (Render-blocking)
-- **CSS Size**: ~20 KB
-- **Status**: Baseline (No optimization)
-
-### Instruction Modals
-Three educational modals provide guidance:
-1. **Network Waterfall Instructions** - How to use DevTools Network tab
-2. **Performance Panel Instructions** - How to measure real performance
-3. **Critical CSS Explanation** - Conceptual overview with code examples
-
-## Important Notes for Video Production
-
-### Why DevTools Guide?
-The guide panel provides real, actionable instructions for using Chrome DevTools:
-- **Real measurements** - Actual browser performance data
-- **Professional approach** - Shows developers how to use real tools
-- **Authentic results** - No simulation, real browser behavior
-- **Educational value** - Teaches DevTools skills alongside Critical CSS concepts
-
-### Real Performance Measurement
-The guide panel teaches you to use actual Chrome DevTools:
-- **Network tab** - See real waterfall and CSS blocking
-- **Performance panel** - Measure actual FCP, LCP, and other metrics
-- **Throttling** - Simulate real network conditions
-- **Lighthouse** - Comprehensive performance audits
-
-### The "Before" State
-This implementation intentionally represents the problem:
-- ✅ Normal external stylesheet (render-blocking)
-- ✅ No inline CSS in main page
-- ✅ No preload, async, or defer tricks
-- ✅ Styles for entire page (including below-the-fold)
-- ✅ ~20KB CSS file
-- ✅ Realistic content and layout
-
-The DevTools guide panel helps users understand how to measure and visualize the problem using real browser tools.
 
 ## Next Steps
 
@@ -291,10 +206,10 @@ After measuring the baseline performance, the next episode will:
 ### Visual Placeholders
 
 The page uses SVG placeholders for article images to:
-- Keep the project self-contained
-- Avoid external dependencies
-- Ensure reproducible results
+- Keep the project self-contained without external dependencies
+- Ensure reproducible performance measurements
 - Maintain fast loading (no large image files)
+- Maintain visual consistency
 
 ### Color Scheme
 
@@ -318,8 +233,8 @@ The font stack prioritizes system fonts for performance:
 ### Current Baseline
 
 - **CSS Size**: ~20KB
-- **CSS Loading**: Render-blocking
-- **Critical CSS**: None
+- **CSS Loading**: Render-blocking (normal behavior)
+- **Critical CSS**: None (baseline state)
 - **Below-the-fold CSS**: Included in main stylesheet
 - **Additional Network Requests**: 3 SVG images (~2KB total)
 

@@ -47,7 +47,7 @@ python3 -m http.server 8080
 # Open http://localhost:8080
 ```
 
-Episode 1 includes interactive demo controls to help understand the impact of Critical CSS without requiring DevTools expertise.
+Episode 1 provides a clean baseline with normal CSS loading. Use Chrome DevTools to measure the current performance before applying Critical CSS optimization.
 
 ## 📁 Project Structure
 
