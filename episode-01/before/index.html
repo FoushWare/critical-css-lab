@@ -33,17 +33,14 @@
     </div>
   </header>
 
-  <!-- Demo Controls Panel -->
+  <!-- DevTools Instructions Panel -->
   <div class="demo-controls" id="demoControls">
-    <h3>🎬 Demo Controls</h3>
-    <button class="demo-button demo-button-warning" onclick="simulateSlowNetwork()">
-      🐢 Simulate Slow Network
+    <h3>🔧 DevTools Guide</h3>
+    <button class="demo-button demo-button-secondary" onclick="showNetworkInstructions()">
+      📊 Network Waterfall
     </button>
-    <button class="demo-button demo-button-secondary" onclick="showNetworkWaterfall()">
-      📊 Show Network Waterfall
-    </button>
-    <button class="demo-button demo-button-secondary" onclick="showPerformanceComparison()">
-      ⚡ Performance Comparison
+    <button class="demo-button demo-button-secondary" onclick="showPerformanceInstructions()">
+      ⚡ Performance Panel
     </button>
     <button class="demo-button demo-button-primary" onclick="showCriticalCSSDemo()">
       🎯 What is Critical CSS?
@@ -51,177 +48,181 @@
     
     <div class="network-status">
       <div class="network-status-item">
-        <span class="network-status-label">Network Speed:</span>
-        <span class="network-status-value fast" id="networkSpeed">Fast 4G</span>
-      </div>
-      <div class="network-status-item">
         <span class="network-status-label">CSS Loading:</span>
-        <span class="network-status-value" id="cssLoading">Normal</span>
+        <span class="network-status-value">Normal (Render-blocking)</span>
       </div>
       <div class="network-status-item">
-        <span class="network-status-label">Render Blocking:</span>
-        <span class="network-status-value" id="renderBlocking">Yes</span>
+        <span class="network-status-label">CSS Size:</span>
+        <span class="network-status-value">~20 KB</span>
+      </div>
+      <div class="network-status-item">
+        <span class="network-status-label">Status:</span>
+        <span class="network-status-value">Baseline (No optimization)</span>
       </div>
     </div>
   </div>
 
-  <!-- Loading Overlay -->
-  <div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Simulating slow network conditions...</div>
-    <div class="loading-progress" id="loadingProgress">Loading HTML...</div>
-  </div>
-
-  <!-- Network Waterfall Modal -->
-  <div class="modal-overlay" id="waterfallModal">
+  <!-- Network Instructions Modal -->
+  <div class="modal-overlay" id="networkModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>📊 Network Waterfall</h2>
-        <button class="modal-close" onclick="closeModal('waterfallModal')">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="margin-bottom: 20px; color: #6b7280;">
-          This waterfall shows how resources load on a slow 3G network. Notice how the CSS file blocks rendering - the browser must download and parse the entire stylesheet before showing any content.
-        </p>
-        
-        <div class="waterfall-container">
-          <div class="waterfall-title">Current Page Loading (Slow 3G)</div>
-          <div class="waterfall-chart">
-            <div class="waterfall-item">
-              <div class="waterfall-label">HTML</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill" style="width: 20%"></div>
-              </div>
-              <div class="waterfall-time">0.8s</div>
-            </div>
-            <div class="waterfall-item">
-              <div class="waterfall-label">CSS</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill css blocking" style="width: 60%"></div>
-              </div>
-              <div class="waterfall-time">2.4s</div>
-            </div>
-            <div class="waterfall-item">
-              <div class="waterfall-label">Images</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill" style="width: 40%"></div>
-              </div>
-              <div class="waterfall-time">1.6s</div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="waterfall-container">
-          <div class="waterfall-title">With Critical CSS (Slow 3G)</div>
-          <div class="waterfall-chart">
-            <div class="waterfall-item">
-              <div class="waterfall-label">HTML + Critical CSS</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill" style="width: 25%; background: #059669;"></div>
-              </div>
-              <div class="waterfall-time">1.0s</div>
-            </div>
-            <div class="waterfall-item">
-              <div class="waterfall-label">First Paint</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill" style="width: 25%; background: #059669;"></div>
-              </div>
-              <div class="waterfall-time">1.0s</div>
-            </div>
-            <div class="waterfall-item">
-              <div class="waterfall-label">Remaining CSS</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill css" style="width: 35%"></div>
-              </div>
-              <div class="waterfall-time">1.4s</div>
-            </div>
-            <div class="waterfall-item">
-              <div class="waterfall-label">Images</div>
-              <div class="waterfall-bar">
-                <div class="waterfall-bar-fill" style="width: 40%"></div>
-              </div>
-              <div class="waterfall-time">1.6s</div>
-            </div>
-          </div>
-        </div>
-        
-        <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-          <strong>Key Insight:</strong> With Critical CSS, the user sees content 1.4 seconds sooner because the browser doesn't wait for the full stylesheet to render the initial viewport.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Performance Comparison Modal -->
-  <div class="modal-overlay" id="comparisonModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>⚡ Performance Comparison</h2>
-        <button class="modal-close" onclick="closeModal('comparisonModal')">&times;</button>
+        <h2>📊 How to View Network Waterfall</h2>
+        <button class="modal-close" onclick="closeModal('networkModal')">&times;</button>
       </div>
       <div class="modal-body">
         <p style="margin-bottom: 24px; color: #6b7280;">
-          Measured on Slow 3G network with disabled cache. These are real performance differences you can expect from Critical CSS optimization.
+          Use Chrome DevTools to see the actual network waterfall and how CSS blocks rendering.
         </p>
         
-        <div class="comparison-grid">
-          <div class="comparison-card before">
-            <h3>❌ Before Critical CSS</h3>
-            <div class="metric-row">
-              <span class="metric-name">First Contentful Paint</span>
-              <span class="metric-value">2.8s</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Largest Contentful Paint</span>
-              <span class="metric-value">3.4s</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">CSS Transfer Size</span>
-              <span class="metric-value">20 KB</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Render Blocking</span>
-              <span class="metric-value regression">Yes</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Time to Interactive</span>
-              <span class="metric-value">4.2s</span>
+        <div class="instruction-steps">
+          <div class="instruction-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Open Chrome DevTools</h4>
+              <p>Press <kbd>F12</kbd> or <kbd>Ctrl+Shift+I</kbd> (Windows) / <kbd>Cmd+Option+I</kbd> (Mac)</p>
             </div>
           </div>
           
-          <div class="comparison-card after">
-            <h3>✅ After Critical CSS</h3>
-            <div class="metric-row">
-              <span class="metric-name">First Contentful Paint</span>
-              <span class="metric-value improvement">1.2s</span>
+          <div class="instruction-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Go to Network Tab</h4>
+              <p>Click on the "Network" tab in DevTools</p>
             </div>
-            <div class="metric-row">
-              <span class="metric-name">Largest Contentful Paint</span>
-              <span class="metric-value improvement">1.7s</span>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Disable Cache</h4>
+              <p>Check the "☑ Disable cache" checkbox</p>
             </div>
-            <div class="metric-row">
-              <span class="metric-name">CSS Transfer Size</span>
-              <span class="metric-value">8 KB (critical) + 20 KB</span>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Set Network Throttling</h4>
+              <p>Click the dropdown and select "Slow 3G" to simulate slow network</p>
             </div>
-            <div class="metric-row">
-              <span class="metric-name">Render Blocking</span>
-              <span class="metric-value improvement">Minimal</span>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Reload the Page</h4>
+              <p>Press <kbd>F5</kbd> or click the reload button</p>
             </div>
-            <div class="metric-row">
-              <span class="metric-name">Time to Interactive</span>
-              <span class="metric-value improvement">2.8s</span>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <h4>Observe the Waterfall</h4>
+              <p>Look for <code>styles.css</code> - notice how it blocks rendering (red bar)</p>
             </div>
           </div>
         </div>
         
-        <div style="background: #f0fdf4; padding: 16px; border-radius: 8px; border-left: 4px solid #22c55e;">
-          <strong>🎯 Key Improvements:</strong>
-          <ul style="margin: 8px 0 0 20px; color: #166534;">
-            <li><strong>57% faster FCP</strong> - Users see content much sooner</li>
-            <li><strong>50% faster LCP</strong> - Main content loads quicker</li>
-            <li><strong>33% faster TTI</strong> - Page becomes interactive faster</li>
-            <li><strong>Better perceived performance</strong> - Page feels snappier</li>
+        <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 24px;">
+          <strong>🔍 What to Look For:</strong>
+          <ul style="margin: 8px 0 0 20px; color: #92400e;">
+            <li><strong>Waterfall timeline</strong> - See the sequential loading of resources</li>
+            <li><strong>Red blocking bar</strong> - CSS blocking other resources</li>
+            <li><strong>Transfer size</strong> - Amount of data transferred (~20KB)</li>
+            <li><strong>Time</strong> - How long CSS takes to download and parse</li>
           </ul>
+        </div>
+        
+        <div style="background: #e0f2fe; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7; margin-top: 16px;">
+          <strong>💡 Pro Tip:</strong> Try "Fast 3G" vs "Slow 3G" to see how network speed affects the render-blocking impact.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Instructions Modal -->
+  <div class="modal-overlay" id="performanceModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚡ How to Measure Performance</h2>
+        <button class="modal-close" onclick="closeModal('performanceModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 24px; color: #6b7280;">
+          Use Chrome DevTools Performance panel to measure actual page performance metrics.
+        </p>
+        
+        <div class="instruction-steps">
+          <div class="instruction-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h4>Open Chrome DevTools</h4>
+              <p>Press <kbd>F12</kbd> or <kbd>Ctrl+Shift+I</kbd> (Windows) / <kbd>Cmd+Option+I</kbd> (Mac)</p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h4>Go to Performance Tab</h4>
+              <p>Click on the "Performance" tab in DevTools</p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Set Network Throttling</h4>
+              <p>In Network tab, set throttling to "Slow 3G" for realistic measurements</p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h4>Start Recording</h4>
+              <p>Click the "Record" button (circle icon) or press <kbd>Ctrl+E</kbd> / <kbd>Cmd+E</kbd></p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h4>Reload the Page</h4>
+              <p>Refresh the page while recording</p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <h4>Stop Recording</h4>
+              <p>Click the "Stop" button (square icon) after page loads</p>
+            </div>
+          </div>
+          
+          <div class="instruction-step">
+            <div class="step-number">7</div>
+            <div class="step-content">
+              <h4>Analyze Results</h4>
+              <p>Look at the timeline and metrics in the bottom panel</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="background: #fef3c7; padding: 16px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 24px;">
+          <strong>🔍 Key Metrics to Check:</strong>
+          <ul style="margin: 8px 0 0 20px; color: #92400e;">
+            <li><strong>FCP (First Contentful Paint)</strong> - When content first appears</li>
+            <li><strong>LCP (Largest Contentful Paint)</strong> - When main content is visible</li>
+            <li><strong>Parse CSS</strong> - Time spent parsing the stylesheet</li>
+            <li><strong>Recalculate Style</strong> - Time spent applying styles</li>
+          </ul>
+        </div>
+        
+        <div style="background: #e0f2fe; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7; margin-top: 16px;">
+          <strong>💡 Pro Tip:</strong> Hover over the timeline to see exact timing for each stage. Look for the gap between HTML download and first paint - that's your CSS blocking time.
         </div>
       </div>
     </div>
@@ -873,77 +874,13 @@
   </footer>
 
   <script>
-    // Demo Controls JavaScript
-    let isSlowNetwork = false;
-    
-    function simulateSlowNetwork() {
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      const loadingProgress = document.getElementById('loadingProgress');
-      const networkSpeed = document.getElementById('networkSpeed');
-      const cssLoading = document.getElementById('cssLoading');
-      
-      if (!isSlowNetwork) {
-        // Enable slow network simulation
-        isSlowNetwork = true;
-        loadingOverlay.classList.add('active');
-        networkSpeed.textContent = 'Slow 3G';
-        networkSpeed.classList.remove('fast');
-        networkSpeed.classList.add('slow');
-        cssLoading.textContent = 'Simulated Delay';
-        
-        // Simulate loading sequence
-        const loadingSteps = [
-          { text: 'Downloading HTML...', time: 800 },
-          { text: 'Waiting for CSS (render-blocking)...', time: 2400 },
-          { text: 'Parsing CSS...', time: 600 },
-          { text: 'Rendering page...', time: 400 },
-          { text: 'Loading images...', time: 1600 }
-        ];
-        
-        let stepIndex = 0;
-        function showNextStep() {
-          if (stepIndex < loadingSteps.length) {
-            loadingProgress.textContent = loadingSteps[stepIndex].text;
-            setTimeout(showNextStep, loadingSteps[stepIndex].time);
-            stepIndex++;
-          } else {
-            setTimeout(() => {
-              loadingOverlay.classList.remove('active');
-              loadingProgress.textContent = 'Complete!';
-            }, 500);
-          }
-        }
-        
-        showNextStep();
-      } else {
-        // Disable slow network simulation
-        isSlowNetwork = false;
-        loadingOverlay.classList.remove('active');
-        networkSpeed.textContent = 'Fast 4G';
-        networkSpeed.classList.remove('slow');
-        networkSpeed.classList.add('fast');
-        cssLoading.textContent = 'Normal';
-      }
+    // DevTools Guide JavaScript
+    function showNetworkInstructions() {
+      document.getElementById('networkModal').classList.add('active');
     }
     
-    function showNetworkWaterfall() {
-      document.getElementById('waterfallModal').classList.add('active');
-      
-      // Animate the waterfall bars
-      setTimeout(() => {
-        const bars = document.querySelectorAll('#waterfallModal .waterfall-bar-fill');
-        bars.forEach(bar => {
-          const width = bar.style.width;
-          bar.style.width = '0%';
-          setTimeout(() => {
-            bar.style.width = width;
-          }, 100);
-        });
-      }, 300);
-    }
-    
-    function showPerformanceComparison() {
-      document.getElementById('comparisonModal').classList.add('active');
+    function showPerformanceInstructions() {
+      document.getElementById('performanceModal').classList.add('active');
     }
     
     function showCriticalCSSDemo() {
@@ -972,10 +909,10 @@
       }
     });
     
-    // Initialize network status on page load
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('Critical CSS Lab Demo Initialized');
-      console.log('Use the demo controls panel to explore Critical CSS concepts');
+      console.log('Critical CSS Lab - Episode 01 Baseline');
+      console.log('Use the DevTools Guide panel to learn how to measure performance');
     });
   </script>
 </body>

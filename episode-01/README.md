@@ -26,41 +26,36 @@ This is intentionally the baseline approach. The stylesheet contains styles for 
 
 **No Critical CSS optimization has been applied.**
 
-## 🎬 Interactive Demo Controls
+## 🔧 DevTools Guide Panel
 
-The page includes an interactive demo control panel (top-right corner) designed for video demonstrations and educational purposes. These controls help illustrate the impact of Critical CSS without requiring actual network manipulation.
+The page includes a DevTools guide panel (top-right corner) that provides step-by-step instructions for using Chrome DevTools to measure actual performance.
 
-### Demo Features
+### Guide Features
 
-1. **🐢 Simulate Slow Network** - Demonstrates how render-blocking CSS affects page loading on slow connections
-2. **📊 Show Network Waterfall** - Visual comparison of resource loading with and without Critical CSS
-3. **⚡ Performance Comparison** - Before/after metrics showing FCP, LCP, and other performance improvements
-4. **🎯 What is Critical CSS?** - Educational modal explaining the concept, benefits, and trade-offs
+1. **� Network Waterfall** - Step-by-step instructions for viewing the actual network waterfall in Chrome DevTools
+2. **⚡ Performance Panel** - Instructions for measuring real performance metrics using the Performance panel
+3. **🎯 What is Critical CSS?** - Educational modal explaining the concept, benefits, and trade-offs
 
-### Using the Demo Controls for Video
+### Using the DevTools Guide
 
-#### 1. Show the Problem (Slow Network)
-Click "🐢 Simulate Slow Network" to demonstrate:
-- How external CSS blocks rendering
-- The blank screen users experience while CSS loads
-- Sequential loading: HTML → CSS → Render → Images
+#### 1. View Network Waterfall
+Click "� Network Waterfall" to get instructions for:
+- Opening Chrome DevTools
+- Navigating to the Network tab
+- Setting network throttling to Slow 3G
+- Observing the CSS blocking behavior
+- Understanding the waterfall timeline
 
-#### 2. Visual Network Waterfall
-Click "📊 Show Network Waterfall" to show:
-- Side-by-side comparison of loading patterns
-- Red highlighted CSS blocking time
-- Green highlighted Critical CSS improvements
-- Time savings from Critical CSS
+#### 2. Measure Performance
+Click "⚡ Performance Panel" to learn how to:
+- Open the Performance panel
+- Record page load performance
+- Analyze FCP, LCP, and other metrics
+- Identify CSS blocking time
+- Measure real performance impact
 
-#### 3. Performance Metrics
-Click "⚡ Performance Comparison" to display:
-- Quantitative before/after measurements
-- FCP improvement: 2.8s → 1.2s (57% faster)
-- LCP improvement: 3.4s → 1.7s (50% faster)
-- TTI improvement: 4.2s → 2.8s (33% faster)
-
-#### 4. Educational Content
-Click "🎯 What is Critical CSS?" to explain:
+#### 3. Learn Critical CSS Concepts
+Click "🎯 What is Critical CSS?" to understand:
 - The problem with render-blocking CSS
 - How Critical CSS solves it
 - Code examples of before/after implementation
@@ -238,37 +233,37 @@ episode-01/
         └── article-3.svg
 ```
 
-## Demo Control Panel
+## DevTools Guide Panel
 
-The floating control panel (top-right) provides interactive demonstrations:
+The floating guide panel (top-right) provides step-by-step instructions for using real Chrome DevTools:
 
-### Network Status Display
-Shows current simulation state:
-- **Network Speed**: Fast 4G / Slow 3G
-- **CSS Loading**: Normal / Simulated Delay
-- **Render Blocking**: Yes / Minimal
+### Current Status Display
+Shows the current baseline state:
+- **CSS Loading**: Normal (Render-blocking)
+- **CSS Size**: ~20 KB
+- **Status**: Baseline (No optimization)
 
-### Modal Overlays
-Three educational modals explain different aspects:
-1. **Network Waterfall** - Visual resource loading comparison
-2. **Performance Comparison** - Quantitative metrics comparison
+### Instruction Modals
+Three educational modals provide guidance:
+1. **Network Waterfall Instructions** - How to use DevTools Network tab
+2. **Performance Panel Instructions** - How to measure real performance
 3. **Critical CSS Explanation** - Conceptual overview with code examples
 
 ## Important Notes for Video Production
 
-### Why Demo Controls?
-Real network throttling in DevTools can be inconsistent and hard to capture on video. The demo controls provide:
-- **Consistent behavior** - Same timing every time
-- **Visual feedback** - Clear loading states and progress
-- **Educational value** - Built-in explanations and comparisons
-- **Easy to record** - No complex DevTools setup needed
+### Why DevTools Guide?
+The guide panel provides real, actionable instructions for using Chrome DevTools:
+- **Real measurements** - Actual browser performance data
+- **Professional approach** - Shows developers how to use real tools
+- **Authentic results** - No simulation, real browser behavior
+- **Educational value** - Teaches DevTools skills alongside Critical CSS concepts
 
-### Demo vs Real Performance
-The demo controls simulate network behavior for educational purposes. For actual performance measurement:
-- Use Chrome DevTools Network tab with throttling
-- Use Chrome DevTools Performance panel for detailed metrics
-- Test on real devices and network conditions
-- Use Lighthouse for comprehensive audits
+### Real Performance Measurement
+The guide panel teaches you to use actual Chrome DevTools:
+- **Network tab** - See real waterfall and CSS blocking
+- **Performance panel** - Measure actual FCP, LCP, and other metrics
+- **Throttling** - Simulate real network conditions
+- **Lighthouse** - Comprehensive performance audits
 
 ### The "Before" State
 This implementation intentionally represents the problem:
@@ -279,7 +274,7 @@ This implementation intentionally represents the problem:
 - ✅ ~20KB CSS file
 - ✅ Realistic content and layout
 
-The demo controls help visualize the problem without requiring the viewer to understand DevTools or network throttling.
+The DevTools guide panel helps users understand how to measure and visualize the problem using real browser tools.
 
 ## Next Steps
 
