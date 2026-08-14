@@ -1,13 +1,22 @@
-# Episode 01 - Critical CSS Baseline
+# EPS01 - CSS is Rendering Blocker
 
 ## Goal
 
 This project represents the **BEFORE** state of the Critical CSS experiment. It creates a realistic, modern landing page using only vanilla HTML and CSS to establish a reproducible baseline for measuring the impact of Critical CSS optimization.
 
+## Screenshots
+
+### Performance Metrics
+![Performance metrics showing LCP at 3.31s and CLS metrics](screenshots/performance-metrics.png)
+
+### Network Waterfall
+![Network tab showing CSS blocking with styles.css taking significant time](screenshots/network-waterfall.png)
+
 ## Technology
 
 - **HTML5** - Semantic markup
 - **CSS3** - Modern CSS with custom properties, flexbox, and grid
+- **Node.js** - Custom server for CSS delay simulation
 - **No frameworks** - Pure HTML/CSS implementation
 - **No build tools** - Direct browser rendering
 
@@ -16,7 +25,7 @@ This project represents the **BEFORE** state of the Critical CSS experiment. It 
 The page uses a **normal external stylesheet**:
 
 ```html
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="./styles.css">
 ```
 
 This is intentionally the baseline approach. The stylesheet contains styles for the entire page, including:
@@ -26,6 +35,65 @@ This is intentionally the baseline approach. The stylesheet contains styles for 
 
 **No Critical CSS optimization has been applied.**
 
+## 🧪 CSS Rendering Block Experiment
+
+This episode uses a **custom Node.js server** to simulate realistic CSS rendering blocking:
+
+- **HTML loads instantly** (~7ms response time)
+- **CSS is deliberately delayed by 3000ms** on the server
+- **Browser waits for CSS** before painting any content (render-blocking behavior)
+- **Users experience blank screen** while waiting for CSS
+
+This authentic approach demonstrates the real impact of render-blocking CSS:
+- The browser genuinely blocks rendering while waiting for CSS
+- No JavaScript tricks or artificial delays
+- Reproducible 3-second CSS delay for consistent measurements
+- Educational value: shows actual browser behavior
+
+## How to Run
+
+### Using the Custom Node.js Server (Recommended)
+
+1. Navigate to the before directory:
+   ```bash
+   cd episode-01/before
+   ```
+
+2. Install dependencies (if needed):
+   ```bash
+   npm install
+   ```
+
+3. Start the custom server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open in browser:
+   ```
+   http://localhost:8080
+   ```
+
+**What you'll see:**
+- The page will load with HTML first
+- Then there will be a **3-second delay** while CSS loads
+- Content will only appear after CSS is received
+- The browser will show a blank screen during this delay
+
+This demonstrates the render-blocking CSS problem in a realistic, observable way.
+
+### Server Configuration
+
+The custom server (`server.js`) includes:
+
+- **CSS Delay**: 3000ms delay for `styles.css` requests
+- **Cache Control**: `no-store` to prevent caching during experiments
+- **Security**: Directory traversal protection
+- **Logging**: Detailed request/response timing information
+- **Port**: 8080 (configurable)
+
+You can modify the CSS delay by changing the `CSS_DELAY` constant in `server.js`.
+
 ## Measuring Performance
 
 ### Network Tab Setup
@@ -33,35 +101,33 @@ This is intentionally the baseline approach. The stylesheet contains styles for 
 1. Open Chrome DevTools (F12 or Cmd+Option+I)
 2. Go to **Network** tab
 3. Enable **☑ Disable cache**
-4. Set throttling to **Fast 4G** or **Slow 3G**
-5. Reload the page
-
-### Performance Panel Setup
-
-1. Go to **Performance** tab
-2. Click **Record** (or press Ctrl+E / Cmd+E)
-3. Reload the page
-4. Stop recording when page loads
+4. Reload the page
 
 ### What to Observe
 
 In the Network tab, notice:
-- `styles.css` loading as a render-blocking resource
-- The waterfall timeline showing CSS blocking paint
-- Transfer size and download time of the stylesheet
+- **HTML loads quickly** (~7ms)
+- **styles.css shows ~3000ms** (intentional server delay)
+- **Waterfall timeline** shows CSS blocking other resources
+- **Content only appears** after CSS is loaded
 
-In the Performance panel, look for:
-- **First Contentful Paint (FCP)** - When content first appears
-- **Largest Contentful Paint (LCP)** - When main content is visible
-- **CSS Parse Time** - Time spent parsing stylesheet
-- **Render Block Time** - How long CSS blocks rendering
+### Expected Timeline
+
+```
+HTML Request    → 7ms   → HTML received
+CSS Request     → 3000ms → CSS received (delayed by server)
+First Paint      → ~3007ms → Content appears
+Images/Assets   → After CSS → Load normally
+```
+
+This clearly demonstrates why external CSS blocks rendering and how it affects user experience.
 
 ## Page Structure
 
 The landing page includes the following sections:
 
 1. **Header** - Logo, navigation, mobile menu button
-2. **Hero Section** - Headline, description, CTA button, visual illustration
+2. **Hero Section** - Headline, description, CTA buttons, browser visualization
 3. **Performance Metrics** - Cards showing FCP, LCP, CSS Size, and Render Blocking status
 4. **How It Works** - Visual explanation of the browser rendering pipeline
 5. **Experiments** - Grid of research areas (Browser Rendering, CSS, Critical CSS, etc.)
@@ -95,36 +161,6 @@ In the next stage we will investigate:
 - **FCP** (First Contentful Paint) - Time to first content render
 - **LCP** (Largest Contentful Paint) - Time to largest content render
 
-## How to Run
-
-### Using Python
-
-1. Navigate to the before directory:
-   ```bash
-   cd episode-01/before
-   ```
-
-2. Start a local HTTP server:
-   ```bash
-   python3 -m http.server 8080
-   ```
-
-3. Open in browser:
-   ```
-   http://localhost:8080
-   ```
-
-### Using Node.js
-
-If you have Node.js installed:
-
-```bash
-cd episode-01/before
-npx http-server -p 8080
-```
-
-Then open: `http://localhost:8080`
-
 ## Key Concepts
 
 This baseline demonstrates:
@@ -132,6 +168,7 @@ This baseline demonstrates:
 - **Render-blocking CSS**: External stylesheets prevent the browser from painting content
 - **Critical vs Non-critical CSS**: Some styles are needed immediately (header, hero), others can wait (footer, animations)
 - **Performance impact**: Large stylesheets delay First Contentful Paint (FCP) and Largest Contentful Paint (LCP)
+- **Real network behavior**: The server-side delay simulates slow network conditions authentically
 
 ## Important Notes
 
@@ -143,8 +180,16 @@ This implementation intentionally represents the starting point:
 - ✅ Contains styles for entire page (including below-the-fold)
 - ✅ No Critical CSS optimization
 - ✅ No CSS loading tricks (preload, async, defer)
-- ✅ No artificial performance delays
+- ✅ Server-side CSS delay for demonstration (not artificial JavaScript delays)
 - ✅ Well-structured, maintainable code
+
+### Server-Side CSS Delay
+
+The 3000ms CSS delay is implemented at the server level:
+- **Authentic network behavior** - Browser genuinely waits for CSS
+- **Not JavaScript simulation** - Real HTTP response delay
+- **Reproducible experiments** - Consistent timing for measurements
+- **Educational value** - Shows actual render-blocking behavior
 
 ### What NOT to Do Yet
 
@@ -179,11 +224,16 @@ The page uses modern CSS features supported in all major browsers:
 ## File Structure
 
 ```
-episode-01/
+eps01-css-is-rendering-blocker/
 ├── README.md
+├── screenshots/
+│   ├── performance-metrics.png
+│   └── network-waterfall.png
 └── before/
     ├── index.html
     ├── styles.css
+    ├── server.js          # Custom Node.js server with CSS delay
+    ├── package.json       # Node.js dependencies
     └── assets/
         ├── README.md
         ├── article-1.svg
@@ -214,16 +264,16 @@ The page uses SVG placeholders for article images to:
 ### Color Scheme
 
 The design uses a professional color palette:
-- Primary: Dark gray (#111827)
-- Secondary: Blue (#2563eb)
-- Accent: Green (#10b981)
-- Background: White and light gray
+- Primary: Blue (#2563eb)
+- Background: Light gray (#f8fafc) and white (#ffffff)
+- Text: Dark (#0f172a) and muted (#64748b)
+- Accents: Subtle variations for visual hierarchy
 
 ### Typography
 
-The font stack prioritizes system fonts for performance:
+The font stack prioritizes modern system fonts:
 - Inter (if available)
-- System UI fonts
+- UI system fonts
 - Apple system fonts
 - Segoe UI (Windows)
 - Sans-serif fallback
@@ -232,6 +282,8 @@ The font stack prioritizes system fonts for performance:
 
 ### Current Baseline
 
+- **HTML Response Time**: ~7ms
+- **CSS Response Time**: ~3000ms (intentional server delay)
 - **CSS Size**: ~20KB
 - **CSS Loading**: Render-blocking (normal behavior)
 - **Critical CSS**: None (baseline state)
@@ -240,11 +292,13 @@ The font stack prioritizes system fonts for performance:
 
 ### Expected Behavior
 
-With Fast 4G throttling:
-- HTML downloads quickly
-- CSS download blocks rendering
-- First paint occurs after CSS is parsed
-- Full page render includes all styled content
+When using the custom server:
+- **HTML loads instantly** - Users see quick initial response
+- **3-second blank screen** - While CSS is being delayed by server
+- **Content appears after CSS** - Browser finally paints styled content
+- **Full page render** - All styled content displays correctly
+
+This clearly demonstrates the render-blocking problem: users wait 3 seconds for CSS that includes styles for content they can't even see yet (footer, below-fold articles, etc.).
 
 ## Project Context
 
@@ -263,24 +317,33 @@ Each episode builds on the same page design to ensure meaningful comparisons.
 
 ## Troubleshooting
 
+### Server Not Starting
+
+- Ensure Node.js is installed: `node --version`
+- Check you're in the `episode-01/before` directory
+- Verify `package.json` exists
+- Try `npm install` if dependencies are missing
+
 ### Page Not Loading
 
-- Ensure you're running a local server (not just opening the HTML file)
-- Check that `styles.css` is in the same directory as `index.html`
-- Verify the server is running on the correct port
+- Ensure the server is running: `npm run dev`
+- Check that server shows "Server running at http://localhost:8080"
+- Verify the port 8080 is not already in use
+- Check browser console for errors
 
-### Styles Not Applying
+### CSS Not Delaying
 
-- Check browser console for CSS loading errors
-- Verify the file path in the `<link>` tag
-- Ensure the server is serving CSS with correct MIME type
+- Verify you're using the custom server (`npm run dev`), not Python's http.server
+- Check server logs for "[CSS] Request received. Delaying response by 3000ms..."
+- Ensure `styles.css` is being requested (check Network tab in DevTools)
+- Verify the CSS_DELAY constant in `server.js` is set to 3000
 
 ### Performance Measurements Inconsistent
 
-- Always use "Disable cache" in DevTools
-- Use consistent network throttling settings
-- Close other tabs that might affect network performance
-- Run multiple measurements and take averages
+- The server deliberately adds 3000ms delay to CSS
+- This is intentional to demonstrate render-blocking behavior
+- measurements should consistently show ~3000ms CSS load time
+- HTML should always load quickly (~7ms)
 
 ## License
 

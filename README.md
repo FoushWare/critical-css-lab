@@ -14,9 +14,9 @@ This series explores how Critical CSS works and whether its benefits change when
 
 | # | Episode | Technology | Status | Description |
 |---|---------|------------|--------|-------------|
-| 1 | What Is Critical CSS? | HTML/CSS | ✅ Completed | Establish baseline with normal CSS loading |
-| 2 | Implementing Critical CSS | HTML/CSS | 📋 Planned | Extract and inline critical styles |
-| 3 | Automated Extraction | HTML/CSS | 📋 Planned | Tools for automated Critical CSS generation |
+| 1 | CSS is Rendering Blocker | HTML/CSS | ✅ Completed | Establish baseline with CSS rendering block experiment |
+| 2 | Critical CSS Implementation | HTML/CSS | 📋 Planned | Extract and inline critical styles |
+| 3 | Automated Critical CSS Extraction | HTML/CSS | 📋 Planned | Tools for automated Critical CSS generation |
 | 4 | Critical CSS in React | React | 📋 Planned | Does Critical CSS work with client-side rendering? |
 | 5 | Critical CSS with Tailwind | Tailwind | 📋 Planned | Does Tailwind make Critical CSS unnecessary? |
 | 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
@@ -25,51 +25,52 @@ This series explores how Critical CSS works and whether its benefits change when
 
 ## 🚀 Quick Start
 
-### View the Series Hub
+### Episode 1: CSS Rendering Block Experiment
 
-Open the main landing page to see all episodes:
-
-```bash
-# Start a local server in the root directory
-python3 -m http.server 8080
-
-# Open http://localhost:8080
-```
-
-### Episode 1: Baseline
-
-The first episode is ready to explore:
+The first episode is ready to explore with a custom server that demonstrates CSS rendering blocking:
 
 ```bash
-cd episode-01/before
-python3 -m http.server 8080
-
-# Open http://localhost:8080
+cd eps01-css-is-rendering-blocker/before
+npm install
+npm run dev
 ```
 
-Episode 1 provides a clean baseline with normal CSS loading. Use Chrome DevTools to measure the current performance before applying Critical CSS optimization.
+Then open: `http://localhost:8080`
+
+**What you'll see:**
+- HTML loads instantly (~7ms)
+- CSS is delayed by 3000ms (server-side delay)
+- Browser shows blank screen while waiting for CSS
+- Content only appears after CSS is received
+
+This authentic experiment demonstrates why Critical CSS matters.
+
+### Episode Documentation
+
+Each episode has its own README with detailed instructions:
+
+- **Episode 1**: [eps01-css-is-rendering-blocker/README.md](eps01-css-is-rendering-blocker/README.md) - CSS rendering block experiment
+- **Episode 2-8**: Coming soon
 
 ## 📁 Project Structure
 
 ```
 critical-css-lab/
-├── README.md              # This file
-├── index.html             # Main series hub page
-├── main.css               # Styling for hub page
-├── episode-01/            # ✅ Completed
-│   ├── README.md
+├── README.md
+├── eps01-css-is-rendering-blocker/            # ✅ Completed
 │   └── before/
 │       ├── index.html
 │       ├── styles.css
-│       ├── demo-controls.css
+│       ├── server.js      # Custom server with CSS delay
+│       ├── package.json
 │       └── assets/
-├── episode-02/            # 📋 Planned
-├── episode-03/            # 📋 Planned
-├── episode-04/            # 📋 Planned
-├── episode-05/            # 📋 Planned
-├── episode-06/            # 📋 Planned
-├── episode-07/            # 📋 Planned
-└── episode-08/            # 📋 Planned
+├── eps02-critical-css-implementation/            # 📋 Planned
+├── eps03-automated-critical-css/            # 📋 Planned
+├── eps04-critical-css-react/            # 📋 Planned
+├── eps05-critical-css-tailwind/            # 📋 Planned
+├── eps06-critical-css-nextjs/            # 📋 Planned
+├── eps07-css-loading-strategies/            # 📋 Planned
+└── eps08-final-comparison/            # 📋 Planned
 ```
 
 ## 🎯 Series Approach
@@ -98,10 +99,10 @@ This ensures meaningful performance comparisons across different technologies.
 
 - **HTML5** - Semantic markup
 - **CSS3** - Modern CSS with custom properties, flexbox, grid
-- **React** - Client-side rendering framework
-- **Tailwind CSS** - Utility-first CSS framework
-- **Next.js** - React framework with SSR/SSG
-- **Node.js** - Build tools and development servers
+- **Node.js** - Custom server for CSS delay simulation
+- **React** - Client-side rendering framework (future episodes)
+- **Tailwind CSS** - Utility-first CSS framework (future episodes)
+- **Next.js** - React framework with SSR/SSG (future episodes)
 
 ## 📊 Performance Metrics
 
@@ -125,128 +126,21 @@ By the end of this series, you'll understand:
 
 ## 🔧 Development
 
-### Running Episodes
-
-Each episode can be run independently:
+### Running Episode 1
 
 ```bash
-# Navigate to specific episode
-cd episode-XX/before  # or /after for optimized versions
-
-# Start local server
-python3 -m http.server 8080
-
-# Open http://localhost:8080
+cd episode-01/before
+npm install
+npm run dev
 ```
 
 ### Measuring Performance
 
 Use Chrome DevTools for accurate measurements:
 
-1. **Network Tab**: Set throttling to "Fast 4G" or "Slow 3G"
-2. **Performance Tab**: Record page load to see rendering timeline
+1. **Network Tab**: Set throttling to observe CSS blocking behavior
+2. **Performance Panel**: Record page load to see rendering timeline
 3. **Lighthouse**: Run comprehensive performance audits
-
-## 📖 Episode Details
-
-### Episode 1: What Is Critical CSS? ✅
-
-**Goal**: Establish the baseline problem
-
-**Technology**: HTML/CSS
-
-**What you'll learn**:
-- Why CSS is render-blocking
-- How external stylesheets delay initial rendering
-- The impact on First Contentful Paint
-- Interactive demo controls for education
-
-**Status**: ✅ Completed - Ready to explore
-
-### Episode 2: Implementing Critical CSS 📋
-
-**Goal**: Actually implement Critical CSS optimization
-
-**Technology**: HTML/CSS
-
-**What you'll learn**:
-- Manual Critical CSS extraction
-- Inlining critical styles
-- Async loading of remaining CSS
-- Real performance impact measurement
-
-### Episode 3: Automated Critical CSS Extraction 📋
-
-**Goal**: Automate the Critical CSS process
-
-**Technology**: HTML/CSS + Tools
-
-**What you'll learn**:
-- Tools for automated extraction
-- Coverage analysis techniques
-- Build-time vs runtime extraction
-- Viewport-specific Critical CSS
-
-### Episode 4: Critical CSS in React 📋
-
-**Goal**: Test Critical CSS with client-side rendering
-
-**Technology**: React
-
-**What you'll learn**:
-- Does Critical CSS work with React?
-- JavaScript vs CSS performance bottlenecks
-- Critical CSS in SPA architecture
-- Framework-specific considerations
-
-### Episode 5: Critical CSS with Tailwind CSS 📋
-
-**Goal**: Investigate Critical CSS with utility-first CSS
-
-**Technology**: Tailwind CSS
-
-**What you'll learn**:
-- Tailwind's built-in unused CSS elimination
-- Does Tailwind make Critical CSS unnecessary?
-- Critical utilities vs full framework
-- Build-time optimizations
-
-### Episode 6: Critical CSS in Next.js 📋
-
-**Goal**: Test Critical CSS with server-side rendering
-
-**Technology**: Next.js
-
-**What you'll learn**:
-- SSR vs CSR rendering implications
-- Does SSR eliminate the need for Critical CSS?
-- Framework-managed CSS
-- Streaming and hydration considerations
-
-### Episode 7: CSS Loading Strategies 📋
-
-**Goal**: Compare different CSS loading approaches
-
-**Technology**: HTML/CSS
-
-**What you'll learn**:
-- Normal stylesheet loading
-- Preload strategies
-- Inline critical CSS
-- Async CSS loading
-- Optimal approach selection
-
-### Episode 8: Final Performance Comparison 📋
-
-**Goal**: Comprehensive comparison across all approaches
-
-**Technology**: All frameworks
-
-**What you'll learn**:
-- Side-by-side performance comparison
-- Which approach performs best
-- Trade-offs and considerations
-- When to use each approach
 
 ## 🤝 Contributing
 
@@ -260,12 +154,6 @@ This is an educational project. Feel free to:
 
 This project is part of an educational video series on Critical CSS optimization.
 
-## 🙏 Acknowledgments
-
-- Inspired by real-world performance challenges
-- Built to help developers make informed decisions about CSS optimization
-- Dedicated to understanding web performance fundamentals
-
 ---
 
-**Start exploring**: Open [index.html](index.html) to begin the series journey!
+**Start exploring**: See [episode-01/README.md](episode-01/README.md) for the CSS rendering block experiment!
