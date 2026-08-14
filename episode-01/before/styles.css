@@ -890,6 +890,40 @@ p {
   color: var(--color-white);
 }
 
+/* Demo Controls Specific Styles */
+@media (max-width: 768px) {
+  .demo-controls {
+    position: static;
+    width: 100%;
+    margin: 20px auto;
+    max-width: calc(100% - 40px);
+  }
+}
+
+/* Modal Responsive Styles */
+@media (max-width: 768px) {
+  .modal-content {
+    max-height: 95vh;
+    margin: 10px;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .waterfall-chart {
+    font-size: 11px;
+  }
+  
+  .waterfall-label {
+    width: 80px;
+  }
+  
+  .waterfall-time {
+    width: 60px;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hero-content {
