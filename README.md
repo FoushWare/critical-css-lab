@@ -50,15 +50,7 @@ This authentic experiment demonstrates why Critical CSS matters.
 Each episode has its own README with detailed instructions:
 
 - **Episode 1**: [eps01-css-is-rendering-blocker/README.md](eps01-css-is-rendering-blocker/README.md) - CSS rendering block experiment
-- **Episode 2**: [eps02-critical-css-optimization/            # 🚧 In Progress
-│   ├── README.md
-│   ├── code/
-│   │   ├── index.html
-│   │   ├── styles.css
-│   │   ├── server.js
-│   │   ├── package.json
-│   │   └── assets/
-   └── screenshots/
+- **Episode 2**: [eps02-critical-css-optimization/README.md](eps02-critical-css-optimization/README.md) - Critical CSS optimization
 - **Episode 3-8**: Coming soon
 
 ## 📁 Project Structure

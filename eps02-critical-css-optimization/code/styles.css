@@ -767,6 +767,10 @@ button {
   color: var(--color-warning);
 }
 
+.metric-status.success {
+  color: var(--color-accent);
+}
+
 .metric-status.good {
   color: var(--color-accent);
 }
