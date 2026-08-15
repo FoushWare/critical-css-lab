@@ -191,7 +191,7 @@
               ~3.0s
             </div>
 
-            <div class="metric-status warning" data-ar="أول ظهور للمحتوى الملون" data-en="First Contentful Paint">
+            <div class="metric-status warning" data-ar="أول ظهور للمحتوى الملون (FCP)" data-en="First Contentful Paint">
               First Contentful Paint
             </div>
 
@@ -207,7 +207,7 @@
               ~3.1s
             </div>
 
-            <div class="metric-status warning" data-ar="أكبر ظهور للمحتوى الملون" data-en="Largest Contentful Paint">
+            <div class="metric-status warning" data-ar="أكبر ظهور للمحتوى الملون (LCP)" data-en="Largest Contentful Paint">
               Largest Contentful Paint
             </div>
 
@@ -223,7 +223,7 @@
               ~20 KB
             </div>
 
-            <div class="metric-status" data-ar="حجم ورقة الأنماط" data-en="Stylesheet size">
+            <div class="metric-status" data-ar="حجم ورقة الأنماط (CSS)" data-en="Stylesheet size">
               Stylesheet size
             </div>
 
@@ -239,7 +239,7 @@
               Yes
             </div>
 
-            <div class="metric-status warning" data-ar="CSS يعيق العرض" data-en="Render Blocking">
+            <div class="metric-status warning" data-ar="CSS يعيق العرض (RB)" data-en="Render Blocking">
               Render Blocking
             </div>
 
@@ -331,7 +331,7 @@
               DOM + CSSOM
             </div>
 
-            <h3 data-ar="شجرة العرض" data-en="Render Tree">
+            <h3 data-ar="شجرة العرض (Render Tree)" data-en="Render Tree">
               Render Tree
             </h3>
 
@@ -352,7 +352,7 @@
               Layout
             </div>
 
-            <h3 data-ar="التخطيط" data-en="Layout">
+            <h3 data-ar="التخطيط (Layout)" data-en="Layout">
               Layout
             </h3>
 
@@ -372,7 +372,7 @@
               Paint
             </div>
 
-            <h3 data-ar="الرسم" data-en="Paint">
+            <h3 data-ar="الرسم (Paint)" data-en="Paint">
               Paint
             </h3>
 
@@ -392,7 +392,7 @@
               Composite
             </div>
 
-            <h3 data-ar="التركيب" data-en="Composite">
+            <h3 data-ar="التركيب (Composite)" data-en="Composite">
               Composite
             </h3>
 
@@ -434,10 +434,10 @@
         }
       });
 
-      // Update language button label
+      // Update language button label (show opposite language)
       const langLabel = document.getElementById('lang-label');
       if (langLabel) {
-        langLabel.textContent = currentLang.toUpperCase();
+        langLabel.textContent = currentLang === 'en' ? 'AR' : 'EN';
       }
 
       // Update RTL/LTR direction
@@ -452,6 +452,12 @@
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Critical CSS Lab - EPS01 CSS Rendering Blocker');
       console.log('Language:', currentLang);
+      
+      // Set initial button label to show opposite language
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = 'AR';
+      }
     });
   </script>
 
