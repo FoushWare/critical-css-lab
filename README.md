@@ -15,13 +15,13 @@ This series explores how Critical CSS works and whether its benefits change when
 | # | Episode | Technology | Status | Description |
 |---|---------|------------|--------|-------------|
 | 1 | CSS is Rendering Blocker | HTML/CSS | ✅ Completed | Establish baseline with CSS rendering block experiment |
-| 2 | Critical CSS Implementation | HTML/CSS | 📋 Planned | Extract and inline critical styles |
-| 3 | Automated Critical CSS Extraction | HTML/CSS | 📋 Planned | Tools for automated Critical CSS generation |
-| 4 | Critical CSS in React | React | 📋 Planned | Does Critical CSS work with client-side rendering? |
-| 5 | Critical CSS with Tailwind | Tailwind | 📋 Planned | Does Tailwind make Critical CSS unnecessary? |
-| 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
-| 7 | CSS Loading Strategies | HTML/CSS | 📋 Planned | Compare different CSS loading approaches |
-| 8 | Final Comparison | All | 📋 Planned | Comprehensive performance comparison |
+| 2 | Critical CSS Implementation | HTML/CSS | 🚧 In Progress | Extract and inline critical styles |
+| 3 | Automated Critical CSS Extraction | HTML/CSS | 🚧 In Progress | Tools for automated Critical CSS generation |
+| 4 | Critical CSS in React | React | 🚧 In Progress | Does Critical CSS work with client-side rendering? |
+| 5 | Critical CSS with Tailwind | Tailwind | 🚧 In Progress | Does Tailwind make Critical CSS unnecessary? |
+| 6 | Critical CSS in Next.js | Next.js | 🚧 In Progress | Does SSR change the Critical CSS equation? |
+| 7 | CSS Loading Strategies | HTML/CSS | 🚧 In Progress | Compare different CSS loading approaches |
+| 8 | Final Comparison | All | 🚧 In Progress | Comprehensive performance comparison |
 
 ## 🚀 Quick Start
 
@@ -50,7 +50,16 @@ This authentic experiment demonstrates why Critical CSS matters.
 Each episode has its own README with detailed instructions:
 
 - **Episode 1**: [eps01-css-is-rendering-blocker/README.md](eps01-css-is-rendering-blocker/README.md) - CSS rendering block experiment
-- **Episode 2-8**: Coming soon
+- **Episode 2**: [eps02-critical-css-optimization/            # 🚧 In Progress
+│   ├── README.md
+│   ├── code/
+│   │   ├── index.html
+│   │   ├── styles.css
+│   │   ├── server.js
+│   │   ├── package.json
+│   │   └── assets/
+   └── screenshots/
+- **Episode 3-8**: Coming soon
 
 ## 📁 Project Structure
 
@@ -66,13 +75,21 @@ critical-css-lab/
 │   │   ├── package.json
 │   │   └── assets/
 │   └── screenshots/
-├── eps02-critical-css-implementation/            # 📋 Planned
-├── eps03-automated-critical-css/            # 📋 Planned
-├── eps04-critical-css-react/            # 📋 Planned
-├── eps05-critical-css-tailwind/            # 📋 Planned
-├── eps06-critical-css-nextjs/            # 📋 Planned
-├── eps07-css-loading-strategies/            # 📋 Planned
-└── eps08-final-comparison/            # 📋 Planned
+├── eps02-critical-css-optimization/            # 🚧 In Progress
+│   ├── README.md
+│   ├── code/
+│   │   ├── index.html
+│   │   ├── styles.css
+│   │   ├── server.js
+│   │   ├── package.json
+│   │   └── assets/
+   └── screenshots/
+├── eps03-automated-critical-css/            # 🚧 In Progress
+├── eps04-critical-css-react/            # 🚧 In Progress
+├── eps05-critical-css-tailwind/            # 🚧 In Progress
+├── eps06-critical-css-nextjs/            # 🚧 In Progress
+├── eps07-css-loading-strategies/            # 🚧 In Progress
+└── eps08-final-comparison/            # 🚧 In Progress
 ```
 
 ## 🎯 Series Approach
