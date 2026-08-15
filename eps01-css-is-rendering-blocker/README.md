@@ -6,11 +6,9 @@ This project represents the **BEFORE** state of the Critical CSS experiment. It 
 
 ## Screenshots
 
-**To add screenshots:** Place your performance and network screenshots in the `screenshots/` directory with the following filenames:
-- `performance-metrics.png` - Chrome DevTools Performance panel showing LCP and other metrics
-- `network-waterfall.png` - Chrome DevTools Network tab showing CSS blocking behavior
+![Performance Metrics](screenshots/performance-metrics.png)
 
-Once added, they will automatically appear here.
+![Network Waterfall](screenshots/network-waterfall.png)
 
 ## Technology
 
@@ -25,15 +23,24 @@ Once added, they will automatically appear here.
 The page uses a **normal external stylesheet**:
 
 ```html
-<link rel="stylesheet" href="./styles.css">
+<link rel="stylesheet" href="styles.css">
 ```
 
 This is intentionally the baseline approach. The stylesheet contains styles for the entire page, including:
-
 - Critical (above-the-fold): Header, hero section, navigation
-- Non-critical (below-the-fold): Article cards, metrics, footer, additional sections
+- Non-critical (below-the-fold): Metrics, pipeline sections
 
 **No Critical CSS optimization has been applied.**
+
+### Content Approach
+
+The page uses a **question-based format** to engage users and make them think about CSS blocking:
+- Main heading: "Does CSS Block Rendering?"
+- Metrics section: "What's the Impact of CSS Delay?"
+- Pipeline section: "How Does CSS Prevent Page Display?"
+- Each pipeline step asks a question (e.g., "Does HTML stop rendering? No, HTML is fast")
+
+This approach makes the educational content more interactive and thought-provoking.
 
 ## 🧪 CSS Rendering Block Experiment
 
@@ -126,15 +133,19 @@ This clearly demonstrates why external CSS blocks rendering and how it affects u
 
 The landing page includes the following sections:
 
-1. **Header** - Logo, navigation, mobile menu button
-2. **Hero Section** - Headline, description, CTA buttons, browser visualization
-3. **Performance Metrics** - Cards showing FCP, LCP, CSS Size, and Render Blocking status
-4. **How It Works** - Visual explanation of the browser rendering pipeline
-5. **Experiments** - Grid of research areas (Browser Rendering, CSS, Critical CSS, etc.)
-6. **Articles** - 6 article cards with categories, titles, descriptions, and metadata
-7. **Newsletter** - Email subscription form
-8. **About** - Project description and statistics
-9. **Footer** - Logo, navigation, resources, social links, copyright
+1. **Header** - Logo, navigation with language switcher (EN/AR)
+2. **Hero Section** - Question-based headline, description, refresh button, browser visualization
+3. **Performance Metrics** - Cards showing CSS Delay (3.0s), First Paint (~3.0s), Largest Paint (~3.1s), and Blocking status (Yes)
+4. **How It Works** - Question-based visual explanation of the browser rendering pipeline (6 steps)
+
+### Bilingual Support
+
+The page supports both English and Arabic:
+- Language switcher in navigation bar
+- All content translated in both languages
+- RTL (right-to-left) layout for Arabic
+- Bilingual technical labels (e.g., "FCP أول ظهور")
+- "rendering" term kept in English for Arabic users to learn technical terminology
 
 ## CSS Architecture
 
