@@ -76,7 +76,6 @@ critical-css-lab/
 │   │   ├── package.json
 │   │   └── assets/
    └── screenshots/
-├── eps03-automated-critical-css/            # 🚧 In Progress
 ├── eps04-critical-css-react/            # 🚧 In Progress
 ├── eps05-critical-css-tailwind/            # 🚧 In Progress
 ├── eps06-critical-css-nextjs/            # 🚧 In Progress
