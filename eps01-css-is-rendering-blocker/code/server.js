@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, '..');
 
 const PORT = 8080;
 const CSS_DELAY = 3000;
@@ -54,19 +55,19 @@ const server = http.createServer(async (req, res) => {
         : pathname.replace(/^\/+/, "");
 
     const filePath = path.join(
-      __dirname,
+      rootDir,
       relativePath
     );
 
     /*
      * Prevent requests from escaping the
-     * episode-01/before directory.
+     * eps01-css-is-rendering-blocker directory.
      */
     const resolvedPath = path.resolve(filePath);
 
     if (
       !resolvedPath.startsWith(
-        path.resolve(__dirname)
+        path.resolve(rootDir)
       )
     ) {
       res.writeHead(403, {
@@ -186,6 +187,6 @@ server.listen(PORT, () => {
   );
 
   console.log(
-    `   ${__dirname}`
+    `   ${rootDir}`
   );
 });

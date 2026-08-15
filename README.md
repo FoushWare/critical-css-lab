@@ -30,7 +30,7 @@ This series explores how Critical CSS works and whether its benefits change when
 The first episode is ready to explore with a custom server that demonstrates CSS rendering blocking:
 
 ```bash
-cd eps01-css-is-rendering-blocker
+cd eps01-css-is-rendering-blocker/code
 npm install
 npm run dev
 ```
@@ -58,11 +58,13 @@ Each episode has its own README with detailed instructions:
 critical-css-lab/
 ├── README.md
 ├── eps01-css-is-rendering-blocker/            # ✅ Completed
-│   ├── index.html
-│   ├── styles.css
-│   ├── server.js              # Custom server with CSS delay
-│   ├── package.json
-│   ├── assets/
+│   ├── README.md
+│   ├── code/
+│   │   ├── index.html
+│   │   ├── styles.css
+│   │   ├── server.js              # Custom server with CSS delay
+│   │   ├── package.json
+│   │   └── assets/
 │   └── screenshots/
 ├── eps02-critical-css-implementation/            # 📋 Planned
 ├── eps03-automated-critical-css/            # 📋 Planned

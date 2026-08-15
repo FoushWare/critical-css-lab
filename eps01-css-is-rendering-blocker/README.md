@@ -56,7 +56,7 @@ This authentic approach demonstrates the real impact of render-blocking CSS:
 
 1. Navigate to the episode directory:
    ```bash
-   cd eps01-css-is-rendering-blocker
+   cd eps01-css-is-rendering-blocker/code
    ```
 
 2. Install dependencies (if needed):
@@ -226,15 +226,16 @@ The page uses modern CSS features supported in all major browsers:
 ```
 eps01-css-is-rendering-blocker/
 ├── README.md
-├── index.html
-├── styles.css
-├── server.js              # Custom Node.js server with CSS delay
-├── package.json           # Node.js dependencies
-├── assets/
-│   ├── README.md
-│   ├── article-1.svg
-│   ├── article-2.svg
-│   └── article-3.svg
+├── code/
+│   ├── index.html
+│   ├── styles.css
+│   ├── server.js              # Custom Node.js server with CSS delay
+│   ├── package.json           # Node.js dependencies
+│   └── assets/
+│       ├── README.md
+│       ├── article-1.svg
+│       ├── article-2.svg
+│       └── article-3.svg
 └── screenshots/
     ├── README.md
     ├── performance-metrics.png
