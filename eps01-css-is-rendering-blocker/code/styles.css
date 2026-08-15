@@ -156,6 +156,36 @@ body {
   line-height: 1.5;
 }
 
+/* Arabic font and line-height adjustments */
+[dir="rtl"] body {
+  font-family:
+    "Segoe UI",
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+  
+  line-height: 1.8;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+  line-height: 1.4;
+}
+
+[dir="rtl"] .hero h1 {
+  line-height: 1.3;
+}
+
+[dir="rtl"] p {
+  line-height: 1.9;
+}
+
+[dir="rtl"] .metric-status {
+  line-height: 1.6;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -371,6 +401,10 @@ button {
 
   font-size: 1.125rem;
   line-height: 1.8;
+}
+
+[dir="rtl"] .hero-description {
+  line-height: 2.1;
 }
 
 .hero-actions {
@@ -837,6 +871,10 @@ button {
   line-height: 1.6;
 }
 
+[dir="rtl"] .pipeline-step p {
+  line-height: 1.85;
+}
+
 .pipeline-arrow {
   font-size: 2rem;
   color: var(--color-primary);
@@ -876,6 +914,10 @@ button {
   line-height: 1.8;
   max-width: 620px;
   margin: 0 auto;
+}
+
+[dir="rtl"] .section-intro p {
+  line-height: 2;
 }
 
 /* Responsive Design */
