@@ -768,7 +768,7 @@ button {
 }
 
 .metric-status.success {
-  color: var(--color-accent);
+  color: #22c55e;
 }
 
 .metric-status.good {
