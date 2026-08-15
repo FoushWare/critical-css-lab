@@ -29,8 +29,11 @@
       </div>
 
       <nav class="main-navigation" aria-label="Main navigation">
-        <span>EPS01</span>
-        <span>CSS Rendering Blocker</span>
+        <span id="nav-episode">EPS01</span>
+        <span id="nav-title">CSS Rendering Blocker</span>
+        <button class="lang-switcher" onclick="toggleLanguage()" aria-label="Switch language">
+          <span id="lang-label">EN</span>
+        </button>
       </nav>
 
     </div>
@@ -46,16 +49,17 @@
 
         <div class="hero-content">
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-ar="مختبر أداء الويب" data-en="WEB PERFORMANCE LAB">
             WEB PERFORMANCE LAB
           </p>
 
-          <h1>
-            Understanding
-            <span>Critical CSS</span>
+          <h1 data-ar="فهم" data-en="Understanding">
+            <span data-ar="CSS الحرج" data-en="Critical CSS">
+              Critical CSS
+            </span>
           </h1>
 
-          <p class="hero-description">
+          <p class="hero-description" data-ar="تجربة عملية حول كيفية تحميل المتصفحات وتحليل وتصيير CSS، وكيف يمكن لـ Critical CSS تغيير المسار من HTML إلى بكسل." data-en="A practical experiment into how browsers load, parse and render CSS, and how Critical CSS can change the path from HTML to pixels.">
             A practical experiment into how browsers load,
             parse and render CSS, and how Critical CSS can
             change the path from HTML to pixels.
@@ -63,11 +67,11 @@
 
           <div class="hero-actions">
 
-            <button class="button button-primary clickable" onclick="location.reload()">
+            <button class="button button-primary clickable" onclick="location.reload()" data-ar="تحديث الصفحة" data-en="Refresh Page">
               Refresh Page
             </button>
 
-            <div class="button button-secondary">
+            <div class="button button-secondary" data-ar="لاحظ تأخير CSS لمدة 3 ثواني" data-en="Observe 3s CSS Delay">
               Observe 3s CSS Delay
             </div>
 
@@ -76,22 +80,22 @@
           <div class="hero-meta">
 
             <div class="meta-item">
-              <strong>EPS01</strong>
-              <span>CSS is Rendering Blocker</span>
+              <strong data-ar="حلقة 01" data-en="EPS01">EPS01</strong>
+              <span data-ar="CSS يعيق العرض" data-en="CSS is Rendering Blocker">CSS is Rendering Blocker</span>
             </div>
 
             <div class="meta-divider"></div>
 
             <div class="meta-item">
               <strong>HTML</strong>
-              <span>Native CSS</span>
+              <span data-ar="CSS أصلي" data-en="Native CSS">Native CSS</span>
             </div>
 
             <div class="meta-divider"></div>
 
             <div class="meta-item">
-              <strong>Before</strong>
-              <span>Baseline</span>
+              <strong data-ar="قبل" data-en="Before">Before</strong>
+              <span data-ar="الخط الأساسي" data-en="Baseline">Baseline</span>
             </div>
 
           </div>
@@ -160,15 +164,15 @@
 
         <div class="section-intro section-intro-centered">
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-ar="ما نقيسه؟" data-en="What are we measuring?">
             What are we measuring?
           </p>
 
-          <h2>
+          <h2 data-ar="تأثير الأداء" data-en="Performance Impact">
             Performance Impact
           </h2>
 
-          <p>
+          <p data-ar="الحالة الحالية تظهر تأثير CSS المعيق للعرض على مقاييس أداء الصفحة." data-en="The current state shows the impact of render-blocking CSS on page performance metrics.">
             The current state shows the impact of render-blocking CSS
             on page performance metrics.
           </p>
@@ -179,15 +183,15 @@
 
           <article class="metric-card">
 
-            <div class="metric-label">
+            <div class="metric-label" data-ar="أول ظهور للمحتوى" data-en="FCP">
               FCP
             </div>
 
-            <div class="metric-value highlight">
+            <div class="metric-value highlight" data-ar="~3.0s" data-en="~3.0s">
               ~3.0s
             </div>
 
-            <div class="metric-status warning">
+            <div class="metric-status warning" data-ar="أول ظهور للمحتوى الملون" data-en="First Contentful Paint">
               First Contentful Paint
             </div>
 
@@ -195,15 +199,15 @@
 
           <article class="metric-card">
 
-            <div class="metric-label">
+            <div class="metric-label" data-ar="أكبر ظهور للمحتوى" data-en="LCP">
               LCP
             </div>
 
-            <div class="metric-value highlight">
+            <div class="metric-value highlight" data-ar="~3.1s" data-en="~3.1s">
               ~3.1s
             </div>
 
-            <div class="metric-status warning">
+            <div class="metric-status warning" data-ar="أكبر ظهور للمحتوى الملون" data-en="Largest Contentful Paint">
               Largest Contentful Paint
             </div>
 
@@ -211,15 +215,15 @@
 
           <article class="metric-card">
 
-            <div class="metric-label">
+            <div class="metric-label" data-ar="حجم CSS" data-en="CSS Size">
               CSS Size
             </div>
 
-            <div class="metric-value">
+            <div class="metric-value" data-ar="~20 KB" data-en="~20 KB">
               ~20 KB
             </div>
 
-            <div class="metric-status">
+            <div class="metric-status" data-ar="حجم ورقة الأنماط" data-en="Stylesheet size">
               Stylesheet size
             </div>
 
@@ -227,15 +231,15 @@
 
           <article class="metric-card">
 
-            <div class="metric-label">
+            <div class="metric-label" data-ar="RB" data-en="RB">
               RB
             </div>
 
-            <div class="metric-value highlight">
+            <div class="metric-value highlight" data-ar="نعم" data-en="Yes">
               Yes
             </div>
 
-            <div class="metric-status warning">
+            <div class="metric-status warning" data-ar="CSS يعيق العرض" data-en="Render Blocking">
               Render Blocking
             </div>
 
@@ -259,15 +263,15 @@
 
         <div class="section-intro section-intro-centered">
 
-          <p class="eyebrow">
+          <p class="eyebrow" data-ar="عرض المتصفح" data-en="Browser rendering">
             Browser rendering
           </p>
 
-          <h2>
+          <h2 data-ar="من HTML إلى بكسل" data-en="From HTML to pixels">
             From HTML to pixels
           </h2>
 
-          <p>
+          <p data-ar="قبل تحسين أي شيء، نحتاج إلى فهم ما يفعله المتصفح بالفعل." data-en="Before we optimize anything, we need to understand what the browser actually has to do.">
             Before we optimize anything, we need to understand
             what the browser actually has to do.
           </p>
@@ -285,11 +289,11 @@
               HTML
             </div>
 
-            <h3>
+            <h3 data-ar="HTML → DOM" data-en="HTML → DOM">
               HTML → DOM
             </h3>
 
-            <p>
+            <p data-ar="يستقبل المتصفح ويحلل مستند HTML إلى DOM (نموذج كائن المستند)." data-en="The browser receives and parses the HTML document into the DOM (Document Object Model).">
               The browser receives and parses the HTML
               document into the DOM (Document Object Model).
             </p>
@@ -306,11 +310,11 @@
               CSS
             </div>
 
-            <h3>
+            <h3 data-ar="CSS → CSSOM" data-en="CSS → CSSOM">
               CSS → CSSOM
             </h3>
 
-            <p>
+            <p data-ar="يتم تحميل ورقة الأنماط وتحليلها إلى CSSOM (نموذج كائن CSS)." data-en="Stylesheets are downloaded and parsed into the CSSOM (CSS Object Model).">
               Stylesheets are downloaded and parsed
               into the CSSOM (CSS Object Model).
             </p>
@@ -327,11 +331,11 @@
               DOM + CSSOM
             </div>
 
-            <h3>
+            <h3 data-ar="شجرة العرض" data-en="Render Tree">
               Render Tree
             </h3>
 
-            <p>
+            <p data-ar="يجمع المتصفح DOM و CSSOM لإنشاء شجرة العرض تحتوي فقط على العناصر المرئية." data-en="The browser combines DOM and CSSOM to create the render tree with only visible elements.">
               The browser combines DOM and CSSOM to create
               the render tree with only visible elements.
             </p>
@@ -348,11 +352,11 @@
               Layout
             </div>
 
-            <h3>
+            <h3 data-ar="التخطيط" data-en="Layout">
               Layout
             </h3>
 
-            <p>
+            <p data-ar="حساب الموقع والحجم لكل عنصر." data-en="Calculate the position and size of each element.">
               Calculate the position and size of each element.
             </p>
 
@@ -368,11 +372,11 @@
               Paint
             </div>
 
-            <h3>
+            <h3 data-ar="الرسم" data-en="Paint">
               Paint
             </h3>
 
-            <p>
+            <p data-ar="ملء البكسل بالألوان والنصوص والصور." data-en="Fill pixels with colors, text, and images.">
               Fill pixels with colors, text, and images.
             </p>
 
@@ -388,11 +392,11 @@
               Composite
             </div>
 
-            <h3>
+            <h3 data-ar="التركيب" data-en="Composite">
               Composite
             </h3>
 
-            <p>
+            <p data-ar="دمج الطبقات المرسومة في الصفحة المرئية النهائية." data-en="Combine painted layers into the final visible page.">
               Combine painted layers into the final visible page.
             </p>
 
@@ -405,6 +409,51 @@
     </section>
 
   </main>
+
+  <script>
+    // Language Switcher
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      updateLanguage();
+    }
+
+    function updateLanguage() {
+      // Update all elements with data-en and data-ar attributes
+      const elements = document.querySelectorAll('[data-en][data-ar]');
+      
+      elements.forEach(element => {
+        const enText = element.getAttribute('data-en');
+        const arText = element.getAttribute('data-ar');
+        
+        if (currentLang === 'ar' && arText) {
+          element.textContent = arText;
+        } else if (currentLang === 'en' && enText) {
+          element.textContent = enText;
+        }
+      });
+
+      // Update language button label
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = currentLang.toUpperCase();
+      }
+
+      // Update RTL/LTR direction
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      
+      // Update document direction
+      document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Critical CSS Lab - EPS01 CSS Rendering Blocker');
+      console.log('Language:', currentLang);
+    });
+  </script>
 
 </body>
 </html>

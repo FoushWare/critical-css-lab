@@ -40,6 +40,41 @@ html {
   scroll-behavior: smooth;
 }
 
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .hero-grid {
+  grid-template-columns:
+    minmax(400px, 0.95fr)
+    minmax(0, 1.05fr);
+}
+
+[dir="rtl"] .logo {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .main-navigation {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .hero-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .hero-meta {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .pipeline {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .pipeline-arrow {
+  transform: scaleX(-1);
+}
+
 /* Smooth animations */
 @keyframes fadeInUp {
   from {
@@ -238,6 +273,35 @@ button {
 
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.lang-switcher {
+  min-width: 44px;
+  height: 32px;
+
+  padding: 0 12px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+
+  background: var(--color-surface);
+  color: var(--color-primary);
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.lang-switcher:hover {
+  border-color: var(--color-primary);
+  background: #eff6ff;
+}
+
+.lang-switcher #lang-label {
+  transition: opacity 0.3s ease;
 }
 
 .hero {
@@ -836,6 +900,10 @@ button {
   .pipeline-arrow {
     transform: rotate(90deg);
   }
+
+  [dir="rtl"] .pipeline-arrow {
+    transform: rotate(-90deg);
+  }
 }
 
 @media (max-width: 768px) {
@@ -850,6 +918,10 @@ button {
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  [dir="rtl"] .hero-actions {
+    flex-direction: column-reverse;
   }
 
   .button {
