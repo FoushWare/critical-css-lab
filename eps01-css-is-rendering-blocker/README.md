@@ -47,14 +47,14 @@ This approach makes the educational content more interactive and thought-provoki
 This episode uses a **custom Node.js server** to simulate realistic CSS rendering blocking:
 
 - **HTML loads instantly** (~7ms response time)
-- **CSS is deliberately delayed by 5000ms** on the server
+- **CSS is deliberately delayed by 10000ms** on the server
 - **Browser waits for CSS** before painting any content (render-blocking behavior)
 - **Users experience blank screen** while waiting for CSS
 
 This authentic approach demonstrates the real impact of render-blocking CSS:
 - The browser genuinely blocks rendering while waiting for CSS
 - No JavaScript tricks or artificial delays
-- Reproducible 5-second CSS delay for consistent measurements
+- Reproducible 10-second CSS delay for consistent measurements
 - Educational value: shows actual browser behavior
 
 ## How to Run
@@ -83,7 +83,7 @@ This authentic approach demonstrates the real impact of render-blocking CSS:
 
 **What you'll see:**
 - The page will load with HTML first
-- Then there will be a **5-second delay** while CSS loads
+- Then there will be a **10-second delay** while CSS loads
 - Content will only appear after CSS is received
 - The browser will show a blank screen during this delay
 
@@ -93,7 +93,7 @@ This demonstrates the render-blocking CSS problem in a realistic, observable way
 
 The custom server (`server.js`) includes:
 
-- **CSS Delay**: 5000ms delay for `styles.css` requests
+- **CSS Delay**: 10000ms delay for `styles.css` requests
 - **Cache Control**: `no-store` to prevent caching during experiments
 - **Security**: Directory traversal protection
 - **Logging**: Detailed request/response timing information
@@ -114,7 +114,7 @@ You can modify the CSS delay by changing the `CSS_DELAY` constant in `server.js`
 
 In the Network tab, notice:
 - **HTML loads quickly** (~7ms)
-- **styles.css shows ~5000ms** (intentional server delay)
+- **styles.css shows ~10000ms** (intentional server delay)
 - **Waterfall timeline** shows CSS blocking other resources
 - **Content only appears** after CSS is loaded
 
@@ -122,8 +122,8 @@ In the Network tab, notice:
 
 ```
 HTML Request    → 7ms   → HTML received
-CSS Request     → 5000ms → CSS received (delayed by server)
-First Paint      → ~5007ms → Content appears
+CSS Request     → 10000ms → CSS received (delayed by server)
+First Paint      → ~10007ms → Content appears
 Images/Assets   → After CSS → Load normally
 ```
 
@@ -135,7 +135,7 @@ The landing page includes the following sections:
 
 1. **Header** - Logo, navigation with language switcher (EN/AR)
 2. **Hero Section** - Question-based headline, description, refresh button, browser visualization
-3. **Performance Metrics** - Cards showing CSS Delay (5.0s), First Paint (~5.0s), Largest Paint (~5.1s), and Blocking status (Yes)
+3. **Performance Metrics** - Cards showing CSS Delay (10.0s), First Paint (~10.0s), Largest Paint (~10.1s), and Blocking status (Yes)
 4. **How It Works** - Question-based visual explanation of the browser rendering pipeline (6 steps)
 
 ### Bilingual Support
@@ -196,7 +196,7 @@ This implementation intentionally represents the starting point:
 
 ### Server-Side CSS Delay
 
-The 5000ms CSS delay is implemented at the server level:
+The 10000ms CSS delay is implemented at the server level:
 - **Authentic network behavior** - Browser genuinely waits for CSS
 - **Not JavaScript simulation** - Real HTTP response delay
 - **Reproducible experiments** - Consistent timing for measurements
@@ -295,7 +295,7 @@ The font stack prioritizes modern system fonts:
 ### Current Baseline
 
 - **HTML Response Time**: ~7ms
-- **CSS Response Time**: ~5000ms (intentional server delay)
+- **CSS Response Time**: ~10000ms (intentional server delay)
 - **CSS Size**: ~20KB
 - **CSS Loading**: Render-blocking (normal behavior)
 - **Critical CSS**: None (baseline state)
@@ -306,11 +306,11 @@ The font stack prioritizes modern system fonts:
 
 When using the custom server:
 - **HTML loads instantly** - Users see quick initial response
-- **5-second blank screen** - While CSS is being delayed by server
+- **10-second blank screen** - While CSS is being delayed by server
 - **Content appears after CSS** - Browser finally paints styled content
 - **Full page render** - All styled content displays correctly
 
-This clearly demonstrates the render-blocking problem: users wait 5 seconds for CSS that includes styles for content they can't even see yet (footer, below-fold articles, etc.).
+This clearly demonstrates the render-blocking problem: users wait 10 seconds for CSS that includes styles for content they can't even see yet (footer, below-fold articles, etc.).
 
 ## Project Context
 
@@ -346,15 +346,15 @@ Each episode builds on the same page design to ensure meaningful comparisons.
 ### CSS Not Delaying
 
 - Verify you're using the custom server (`npm run dev`), not Python's http.server
-- Check server logs for "[CSS] Request received. Delaying response by 5000ms..."
+- Check server logs for "[CSS] Request received. Delaying response by 10000ms..."
 - Ensure `styles.css` is being requested (check Network tab in DevTools)
-- Verify the CSS_DELAY constant in `server.js` is set to 5000
+- Verify the CSS_DELAY constant in `server.js` is set to 10000
 
 ### Performance Measurements Inconsistent
 
-- The server deliberately adds 5000ms delay to CSS
+- The server deliberately adds 10000ms delay to CSS
 - This is intentional to demonstrate render-blocking behavior
-- measurements should consistently show ~5000ms CSS load time
+- measurements should consistently show ~10000ms CSS load time
 - HTML should always load quickly (~7ms)
 
 ## License
