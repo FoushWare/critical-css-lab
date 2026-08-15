@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = __dirname;
 
 const PORT = 8080;
-const CSS_DELAY = 3000;
+const CSS_DELAY = 5000;
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
