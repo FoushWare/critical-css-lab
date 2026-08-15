@@ -54,7 +54,7 @@ This authentic approach demonstrates the real impact of render-blocking CSS:
 
 ### Using the Custom Node.js Server (Recommended)
 
-1. Navigate to the episode directory:
+1. Navigate to the code directory:
    ```bash
    cd eps01-css-is-rendering-blocker/code
    ```

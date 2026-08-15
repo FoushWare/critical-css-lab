@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.join(__dirname, '..');
+const rootDir = __dirname;
 
 const PORT = 8080;
 const CSS_DELAY = 3000;
@@ -61,7 +61,7 @@ const server = http.createServer(async (req, res) => {
 
     /*
      * Prevent requests from escaping the
-     * eps01-css-is-rendering-blocker directory.
+     * code directory.
      */
     const resolvedPath = path.resolve(filePath);
 
@@ -99,7 +99,7 @@ const server = http.createServer(async (req, res) => {
      * We are NOT delaying rendering with JavaScript.
      * We are delaying the actual CSS resource.
      */
-    if (pathname === "/styles.css") {
+    if (pathname === "/styles.css" || pathname === "/code/styles.css") {
       console.log(
         `[CSS] Request received. Delaying response by ${CSS_DELAY}ms...`
       );
