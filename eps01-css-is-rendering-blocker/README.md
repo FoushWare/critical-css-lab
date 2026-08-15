@@ -6,11 +6,11 @@ This project represents the **BEFORE** state of the Critical CSS experiment. It 
 
 ## Screenshots
 
-### Performance Metrics
-![Performance metrics showing LCP at 3.31s and CLS metrics](screenshots/performance-metrics.png)
+**To add screenshots:** Place your performance and network screenshots in the `screenshots/` directory with the following filenames:
+- `performance-metrics.png` - Chrome DevTools Performance panel showing LCP and other metrics
+- `network-waterfall.png` - Chrome DevTools Network tab showing CSS blocking behavior
 
-### Network Waterfall
-![Network tab showing CSS blocking with styles.css taking significant time](screenshots/network-waterfall.png)
+Once added, they will automatically appear here.
 
 ## Technology
 
