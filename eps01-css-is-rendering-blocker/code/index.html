@@ -10,7 +10,7 @@
 
   <meta
     name="description"
-    content="A practical demonstration of how CSS blocks rendering and delays page paint."
+    content="See how CSS delays page display. The browser waits for CSS to load before showing any content."
   />
 
   <title>CSS is Render-Blocking | Critical CSS Lab</title>
@@ -25,7 +25,7 @@
 
       <div class="logo">
         <span class="logo-mark">C</span>
-        <span data-ar="مختبر CSS الحرج" data-en="Critical CSS Lab">Critical CSS Lab</span>
+        <span data-ar="مختبر CSS" data-en="Critical CSS Lab">Critical CSS Lab</span>
       </div>
 
       <nav class="main-navigation" aria-label="Main navigation">
@@ -57,10 +57,9 @@
             CSS is Render-Blocking
           </h1>
 
-          <p class="hero-description" data-ar="تجربة عملية توضح كيف يعيق CSS عرض الصفحة ويؤخر ظهور المحتوى. المتصفح ينتظر تحميل CSS قبل أن يرسم أي محتوى." data-en="A practical demonstration of how CSS blocks rendering and delays page paint. The browser waits for CSS to load before painting any content.">
-            A practical demonstration of how CSS blocks rendering
-            and delays page paint. The browser waits for CSS to load
-            before painting any content.
+          <p class="hero-description" data-ar="شاهد كيف يؤخر CSS ظهور الصفحة. المتصفح ينتظر تحميل CSS قبل عرض أي محتوى." data-en="See how CSS delays page display. The browser waits for CSS to load before showing any content.">
+            See how CSS delays page display. The browser waits
+            for CSS to load before showing any content.
           </p>
 
           <div class="hero-actions">
@@ -69,8 +68,8 @@
               Refresh Page
             </button>
 
-            <div class="button button-secondary" data-ar="لاحظ تأخير CSS لمدة 3 ثواني" data-en="Observe 3s CSS Delay">
-              Observe 3s CSS Delay
+            <div class="button button-secondary" data-ar="تأخير CSS: 3 ثواني" data-en="CSS Delay: 3s">
+              CSS Delay: 3s
             </div>
 
           </div>
@@ -79,21 +78,21 @@
 
             <div class="meta-item">
               <strong data-ar="حلقة 01" data-en="EPS01">EPS01</strong>
-              <span data-ar="CSS يعيق العرض" data-en="CSS is Rendering Blocker">CSS is Rendering Blocker</span>
+              <span data-ar="CSS يعيق العرض" data-en="CSS Blocks Rendering">CSS Blocks Rendering</span>
             </div>
 
             <div class="meta-divider"></div>
 
             <div class="meta-item">
               <strong>HTML</strong>
-              <span data-ar="CSS أصلي" data-en="Native CSS">Native CSS</span>
+              <span data-ar="CSS عادي" data-en="Normal CSS">Normal CSS</span>
             </div>
 
             <div class="meta-divider"></div>
 
             <div class="meta-item">
               <strong data-ar="قبل" data-en="Before">Before</strong>
-              <span data-ar="الخط الأساسي" data-en="Baseline">Baseline</span>
+              <span data-ar="الحالة الأولية" data-en="Baseline">Baseline</span>
             </div>
 
           </div>
@@ -141,7 +140,7 @@
 
           <div class="floating-badge badge-render">
             <span class="badge-dot"></span>
-            <span data-ar="عرض" data-en="Rendering">Rendering</span>
+            <span data-ar="عرض" data-en="Display">Display</span>
           </div>
 
           <div class="floating-badge badge-css">
@@ -166,13 +165,13 @@
             CSS Performance Impact
           </p>
 
-          <h2 data-ar="كيف يعيق CSS العرض" data-en="How CSS Blocks Rendering">
-            How CSS Blocks Rendering
+          <h2 data-ar="كيف يؤثر CSS على سرعة الصفحة" data-en="How CSS Affects Page Speed">
+            How CSS Affects Page Speed
           </h2>
 
-          <p data-ar="توضح هذه المقاييس التأثير المباشر لتأخير CSS على سرعة ظهور الصفحة ووقت العرض الأول." data-en="These metrics show the direct impact of CSS delay on page speed and first paint time.">
-            These metrics show the direct impact of CSS delay
-            on page speed and first paint time.
+          <p data-ar="هذه المقاييس تظهر تأثير تأخير CSS على سرعة ظهور الصفحة." data-en="These metrics show the impact of CSS delay on page display speed.">
+            These metrics show the impact of CSS delay
+            on page display speed.
           </p>
 
         </div>
@@ -189,55 +188,55 @@
               3.0s
             </div>
 
-            <div class="metric-status warning" data-ar="CSS متأخر لمدة 3 ثواني" data-en="CSS delayed by 3 seconds">
-              CSS delayed by 3 seconds
+            <div class="metric-status warning" data-ar="CSS متأخر 3 ثواني" data-en="CSS delayed 3s">
+              CSS delayed 3s
             </div>
 
           </article>
 
           <article class="metric-card">
 
-            <div class="metric-label" data-ar="أول ظهور للمحتوى" data-en="FCP">
-              FCP
+            <div class="metric-label" data-ar="أول ظهور" data-en="First Paint">
+              First Paint
             </div>
 
             <div class="metric-value highlight" data-ar="~3.0s" data-en="~3.0s">
               ~3.0s
             </div>
 
-            <div class="metric-status warning" data-ar="أول ظهور للمحتوى الملون (FCP)" data-en="First Contentful Paint">
-              First Contentful Paint
+            <div class="metric-status warning" data-ar="أول ظهور للمحتوى" data-en="First content visible">
+              First content visible
             </div>
 
           </article>
 
           <article class="metric-card">
 
-            <div class="metric-label" data-ar="أكبر ظهور للمحتوى" data-en="LCP">
-              LCP
+            <div class="metric-label" data-ar="أكبر ظهور" data-en="Largest Paint">
+              Largest Paint
             </div>
 
             <div class="metric-value highlight" data-ar="~3.1s" data-en="~3.1s">
               ~3.1s
             </div>
 
-            <div class="metric-status warning" data-ar="أكبر ظهور للمحتوى الملون (LCP)" data-en="Largest Contentful Paint">
-              Largest Contentful Paint
+            <div class="metric-status warning" data-ar="أكبر محتوى ظاهر" data-en="Largest content visible">
+              Largest content visible
             </div>
 
           </article>
 
           <article class="metric-card">
 
-            <div class="metric-label" data-ar="معيق للعرض" data-en="Render Blocking">
-              Render Blocking
+            <div class="metric-label" data-ar="معيق للعرض" data-en="Blocking">
+              Blocking
             </div>
 
             <div class="metric-value highlight" data-ar="نعم" data-en="Yes">
               Yes
             </div>
 
-            <div class="metric-status warning" data-ar="CSS يعيق العرض (RB)" data-en="CSS blocks rendering">
+            <div class="metric-status warning" data-ar="CSS يعيق العرض" data-en="CSS blocks rendering">
               CSS blocks rendering
             </div>
 
@@ -265,14 +264,13 @@
             Why CSS Blocks Rendering
           </p>
 
-          <h2 data-ar="عملية العرض مع CSS" data-en="Rendering Process with CSS">
-            Rendering Process with CSS
+          <h2 data-ar="مراحل عرض الصفحة" data-en="Page Rendering Stages">
+            Page Rendering Stages
           </h2>
 
-          <p data-ar="المتصفح يحتاج إلى CSS لتحديد شكل وأسلوب العناصر قبل أن يرسمها. بدون CSS، المتصفح لا يمكنه تقديم كيف يجب أن تبدو الصفحة." data-en="The browser needs CSS to determine the appearance and style of elements before painting them. Without CSS, the browser cannot predict how the page should look.">
-            The browser needs CSS to determine the appearance and style
-            of elements before painting them. Without CSS, the browser
-            cannot predict how the page should look.
+          <p data-ar="المتصفح يحتاج CSS لتحديد شكل الصفحة. بدون CSS، لا يمكن عرض المحتوى بشكل صحيح." data-en="The browser needs CSS to determine page appearance. Without CSS, content cannot be displayed correctly.">
+            The browser needs CSS to determine page appearance.
+            Without CSS, content cannot be displayed correctly.
           </p>
 
         </div>
@@ -288,13 +286,13 @@
               HTML
             </div>
 
-            <h3 data-ar="HTML → DOM" data-en="HTML → DOM">
-              HTML → DOM
+            <h3 data-ar="HTML" data-en="HTML">
+              HTML
             </h3>
 
-            <p data-ar="المتصفح يحلل HTML ويبني DOM. هذا سريع ولا يعيق العرض." data-en="The browser parses HTML and builds the DOM. This is fast and doesn't block rendering.">
-              The browser parses HTML and builds the DOM.
-              This is fast and doesn't block rendering.
+            <p data-ar="المتصفح يقرأ HTML ويبني هيكل الصفحة. هذا سريع." data-en="Browser reads HTML and builds page structure. This is fast.">
+              Browser reads HTML and builds page structure.
+              This is fast.
             </p>
 
           </article>
@@ -309,13 +307,13 @@
               CSS
             </div>
 
-            <h3 data-ar="CSS → CSSOM" data-en="CSS → CSSOM">
-              CSS → CSSOM
+            <h3 data-ar="CSS" data-en="CSS">
+              CSS
             </h3>
 
-            <p data-ar="المتصفح ينتظر تحميل CSS. إذا تأخر CSS، يتوقف العرض حتى يكتمل التحميل. هذا هو المشكلة." data-en="The browser waits for CSS to load. If CSS is delayed, rendering stops until loading completes. This is the problem.">
-              The browser waits for CSS to load. If CSS is delayed,
-              rendering stops until loading completes. This is the problem.
+            <p data-ar="المتصفح ينتظر تحميل CSS. إذا تأخر CSS، يتوقف العرض حتى يكتمل." data-en="Browser waits for CSS to load. If CSS is delayed, rendering stops until complete.">
+              Browser waits for CSS to load. If CSS is delayed,
+              rendering stops until complete.
             </p>
 
           </article>
@@ -330,13 +328,12 @@
               DOM + CSSOM
             </div>
 
-            <h3 data-ar="شجرة العرض (Render Tree)" data-en="Render Tree">
-              Render Tree
+            <h3 data-ar="دمج" data-en="Combine">
+              Combine
             </h3>
 
-            <p data-ar="بعد تحميل CSS، يجمع المتصفح DOM و CSSOM لإنشاء شجرة العرض." data-en="After CSS loads, the browser combines DOM and CSSOM to create the render tree.">
-              After CSS loads, the browser combines DOM and CSSOM
-              to create the render tree.
+            <p data-ar="بعد تحميل CSS، يجمع المتصفح HTML و CSS معاً." data-en="After CSS loads, browser combines HTML and CSS together.">
+              After CSS loads, browser combines HTML and CSS together.
             </p>
 
           </article>
@@ -351,7 +348,7 @@
               Layout
             </div>
 
-            <h3 data-ar="التخطيط (Layout)" data-en="Layout">
+            <h3 data-ar="المواقع" data-en="Layout">
               Layout
             </h3>
 
@@ -371,12 +368,12 @@
               Paint
             </div>
 
-            <h3 data-ar="الرسم (Paint)" data-en="Paint">
+            <h3 data-ar="الرسم" data-en="Paint">
               Paint
             </h3>
 
-            <p data-ar="رسم العناصر على الشاشة بأسلوبها المحدد في CSS." data-en="Paint elements on screen with their CSS-defined styles.">
-              Paint elements on screen with their CSS-defined styles.
+            <p data-ar="رسم العناصر على الشاشة بألوانها وأشكالها." data-en="Draw elements on screen with their colors and shapes.">
+              Draw elements on screen with their colors and shapes.
             </p>
 
           </article>
@@ -391,12 +388,12 @@
               Composite
             </div>
 
-            <h3 data-ar="التركيب (Composite)" data-en="Composite">
-              Composite
+            <h3 data-ar="العرض" data-en="Display">
+              Display
             </h3>
 
-            <p data-ar="دمج الطبقات المرسومة لإظهار الصفحة النهائية." data-en="Combine painted layers to show the final page.">
-              Combine painted layers to show the final page.
+            <p data-ar="إظهار الصفحة النهائية للمستخدم." data-en="Show final page to the user.">
+              Show final page to the user.
             </p>
 
           </article>
