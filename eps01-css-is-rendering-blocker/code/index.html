@@ -23,16 +23,16 @@
   <header class="site-header">
     <div class="container header-inner">
 
-      <a href="/" class="logo">
+      <div class="logo">
         <span class="logo-mark">C</span>
         <span>Critical CSS Lab</span>
-      </a>
+      </div>
 
       <nav class="main-navigation" aria-label="Main navigation">
-        <a href="#home">Home</a>
-        <a href="#experiments">Experiments</a>
-        <a href="#articles">Articles</a>
-        <a href="#about">About</a>
+        <span>Home</span>
+        <span>Experiments</span>
+        <span>Articles</span>
+        <span>About</span>
       </nav>
 
       <button
@@ -75,19 +75,13 @@
 
           <div class="hero-actions">
 
-            <a
-              href="#experiments"
-              class="button button-primary"
-            >
-              Explore the experiment
-            </a>
+            <button class="button button-primary clickable" onclick="location.reload()">
+              Refresh Page
+            </button>
 
-            <a
-              href="#how-it-works"
-              class="button button-secondary"
-            >
-              How it works
-            </a>
+            <div class="button button-secondary">
+              Observe 3s CSS Delay
+            </div>
 
           </div>
 
@@ -628,9 +622,9 @@
                 to the pixels on your screen.
               </p>
 
-              <a href="#" class="article-link">
+              <span class="article-link">
                 Read experiment →
-              </a>
+              </span>
 
             </div>
 
@@ -658,9 +652,9 @@
                 stylesheet information before painting.
               </p>
 
-              <a href="#" class="article-link">
+              <span class="article-link">
                 Read experiment →
-              </a>
+              </span>
 
             </div>
 
@@ -688,9 +682,9 @@
                 what happens during page loading.
               </p>
 
-              <a href="#" class="article-link">
+              <span class="article-link">
                 Read experiment →
-              </a>
+              </span>
 
             </div>
 

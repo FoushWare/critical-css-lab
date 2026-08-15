@@ -205,6 +205,8 @@ button {
 
   font-size: 0.95rem;
   font-weight: 800;
+
+  cursor: default;
 }
 
 .logo-mark {
@@ -228,18 +230,11 @@ button {
   gap: 32px;
 }
 
-.main-navigation a {
+.main-navigation span {
   color: var(--color-text-muted);
 
   font-size: 0.9rem;
   font-weight: 600;
-
-  transition:
-    color 150ms ease;
-}
-
-.main-navigation a:hover {
-  color: var(--color-text);
 }
 
 .menu-button {
@@ -383,6 +378,11 @@ button {
   background: white;
 
   color: var(--color-text);
+}
+
+.button-secondary.clickable:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .hero-meta {
@@ -611,7 +611,7 @@ button {
   grid-template-columns:
     repeat(4, 1fr);
 
-  gap: 24px;
+  gap: 32px;
 
   margin-top: 48px;
 }
@@ -624,10 +624,6 @@ button {
 
   background: var(--color-surface);
 
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-
   animation: fadeInUp 0.6s ease-out both;
 }
 
@@ -635,11 +631,6 @@ button {
 .metric-card:nth-child(2) { animation-delay: 0.2s; }
 .metric-card:nth-child(3) { animation-delay: 0.3s; }
 .metric-card:nth-child(4) { animation-delay: 0.4s; }
-
-.metric-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-md);
-}
 
 .metric-label {
   font-size: 0.75rem;
@@ -692,7 +683,7 @@ button {
 
   align-items: flex-start;
 
-  gap: 32px;
+  gap: 24px;
 
   margin-top: 64px;
 
@@ -701,18 +692,14 @@ button {
 
 .pipeline-step {
   flex: 1;
-  min-width: 200px;
+  min-width: 180px;
 
-  padding: 32px;
+  padding: 28px;
 
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
   background: var(--color-surface);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
 
   animation: fadeInUp 0.6s ease-out both;
 }
@@ -723,11 +710,6 @@ button {
 .pipeline-step:nth-child(4) { animation-delay: 0.4s; }
 .pipeline-step:nth-child(5) { animation-delay: 0.5s; }
 .pipeline-step:nth-child(6) { animation-delay: 0.6s; }
-
-.pipeline-step:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-md);
-}
 
 .step-number {
   display: inline-block;
@@ -876,6 +858,19 @@ button {
     box-shadow 150ms ease;
 }
 
+.button.clickable {
+  cursor: pointer;
+}
+
+.button.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.button.clickable:hover::before {
+  left: 100%;
+}
+
 .button::before {
   content: '';
   position: absolute;
@@ -892,22 +887,13 @@ button {
   transition: left 0.5s ease;
 }
 
-.button:hover::before {
-  left: 100%;
-}
-
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
 .button-primary {
   background: var(--color-primary);
   color: white;
   animation: glow 3s ease-in-out infinite;
 }
 
-.button-primary:hover {
+.button-primary.clickable:hover {
   background: var(--color-primary-dark);
 }
 
@@ -917,11 +903,6 @@ button {
   background: white;
 
   color: var(--color-text);
-}
-
-.button-secondary:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
 }
 
 /* Experiments Section */
@@ -935,22 +916,18 @@ button {
   grid-template-columns:
     repeat(2, 1fr);
 
-  gap: 24px;
+  gap: 32px;
 
   margin-top: 48px;
 }
 
 .experiment-card {
-  padding: 40px;
+  padding: 32px;
 
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 
   background: var(--color-surface);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
 
   animation: fadeInUp 0.6s ease-out both;
 }
@@ -959,11 +936,6 @@ button {
 .experiment-card:nth-child(2) { animation-delay: 0.2s; }
 .experiment-card:nth-child(3) { animation-delay: 0.3s; }
 .experiment-card:nth-child(4) { animation-delay: 0.4s; }
-
-.experiment-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-md);
-}
 
 .experiment-card h3 {
   margin: 0 0 12px 0;
@@ -1017,7 +989,7 @@ button {
   grid-template-columns:
     repeat(3, 1fr);
 
-  gap: 32px;
+  gap: 24px;
 
   margin-top: 48px;
 }
@@ -1030,21 +1002,12 @@ button {
 
   overflow: hidden;
 
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-
   animation: fadeInUp 0.6s ease-out both;
 }
 
 .article-card:nth-child(1) { animation-delay: 0.1s; }
 .article-card:nth-child(2) { animation-delay: 0.2s; }
 .article-card:nth-child(3) { animation-delay: 0.3s; }
-
-.article-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-md);
-}
 
 .article-image {
   height: 200px;
@@ -1118,10 +1081,6 @@ button {
   color: var(--color-primary);
   font-weight: 700;
   font-size: 0.9rem;
-}
-
-.article-link:hover {
-  text-decoration: underline;
 }
 
 /* Newsletter Section */
