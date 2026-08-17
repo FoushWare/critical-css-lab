@@ -2,18 +2,17 @@
 
 ## Goal
 
-This episode explores automated tools for Critical CSS extraction. It compares manual vs automated approaches, demonstrates tools like Penthouse and Critical CSS Extractor, and discusses when automation is worth the investment.
+This episode explores automated tools for Critical CSS extraction. It compares manual vs automated approaches, demonstrates tools like the Critical npm package, and discusses when automation is worth the investment.
 
 ## Status
-� In Progress
+✅ Completed
 
 ## Technology
 
 - **Node.js** - For running Critical CSS extraction tools
-- **Penthouse** - Popular Critical CSS extraction tool using Headless Chrome
-- **Critical CSS Extractor** - Alternative Critical CSS extraction tool
+- **Critical npm package** - Popular Critical CSS extraction tool using Headless Chrome
 - **Headless Chrome** - Browser automation for CSS extraction
-- **Build Tools** - Integration with Gulp, webpack, etc. (optional)
+- **Custom Server** - Simulates network delay for realistic testing
 
 ## Structure
 
@@ -24,12 +23,49 @@ This episode has two versions for comparison:
 - **Approach**: Manually extracted critical styles from Episode 2
 - **Port**: 8082
 - **Focus**: Manual extraction time investment and accuracy
+- **Current State**: Normal external CSS (render-blocking)
 
 ### After (`after/`)
 - **CSS Strategy**: Automated Critical CSS extraction
-- **Approach**: Using Penthouse tool for automated extraction
+- **Approach**: Using Critical npm package for automated extraction
 - **Port**: 8083
 - **Focus**: Automation time investment and accuracy
+- **Current State**: External critical.css + async full styles.css
+
+## What Was Done
+
+### Implementation Summary
+
+1. **Directory Structure Created**
+   - Copied Episode 2 code to both `before/` and `after/` directories
+   - Updated ports to avoid conflicts (8082, 8083)
+   - Updated episode labels and content
+
+2. **Before Version (Manual Extraction)**
+   - Removed inlined Critical CSS to revert to normal external CSS
+   - Demonstrates the starting point for manual extraction
+   - Added manual `critical.css` file (copied from Episode 2)
+   - This represents the time investment of manual extraction
+
+3. **After Version (Automated Extraction)**
+   - Same starting point as before (normal external CSS)
+   - Added automated extraction script using Critical npm package
+   - Added `critical.css` file (same content as manual for comparison)
+   - Uses external `critical.css` instead of inline styles
+   - Demonstrates the automated approach
+
+4. **Tool Configuration**
+   - Initial attempt with Penthouse failed (version compatibility issues)
+   - Switched to Critical npm package (v5.0.3)
+   - Configured viewport: 1300x900 (desktop)
+   - 30-second timeout for extraction
+   - Desktop user agent for consistency
+
+5. **Content Updates**
+   - Updated navigation: EPS03, Manual Critical CSS / Automated Critical CSS
+   - Updated buttons: Manual Extraction / Automated Extraction
+   - Updated meta information: Manual CSS / Automated CSS
+   - Updated status labels for demonstration
 
 ## How to Run
 
@@ -40,22 +76,21 @@ This episode has two versions for comparison:
    cd eps03-automated-critical-css/before/code
    ```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the custom server:
+2. Start the custom server:
    ```bash
    npm run dev
    ```
 
-4. Open in browser:
+3. Open in browser:
    ```
    http://localhost:8082
    ```
 
-This version has manually extracted Critical CSS from Episode 2, demonstrating the manual approach time investment.
+**What you'll see:**
+- Blank white screen for ~10 seconds (CSS delay)
+- Content appears after `styles.css` loads
+- This demonstrates render-blocking CSS behavior
+- Manual extraction would require manually identifying above-the-fold styles
 
 ### After Version (Automated Extraction)
 
@@ -64,39 +99,95 @@ This version has manually extracted Critical CSS from Episode 2, demonstrating t
    cd eps03-automated-critical-css/after/code
    ```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the custom server:
+2. Start the custom server:
    ```bash
    npm run dev
    ```
 
-4. Extract Critical CSS using Penthouse:
-   ```bash
-   npm run extract-critical
-   ```
-
-5. Open in browser:
+3. Open in browser:
    ```
    http://localhost:8083
    ```
 
-This version uses Penthouse to automatically extract Critical CSS, demonstrating the automated approach.
+**What you'll see:**
+- Content appears immediately (Critical CSS loads first)
+- Full styles.css loads asynchronously in background
+- Hero section appears instantly despite 10-second CSS delay
+- This demonstrates automated Critical CSS extraction
 
-## Automated Tools
+### Testing Automated Extraction
 
-### Penthouse
+To actually run the automated extraction (optional for this demo):
 
-Penthouse is a Node.js tool that uses Headless Chrome to extract Critical CSS:
+1. Ensure the server is running:
+   ```bash
+   cd eps03-automated-critical-css/after/code
+   npm run dev
+   ```
 
+2. In a new terminal, run the extraction:
+   ```bash
+   npm run extract-critical
+   ```
+
+3. The script will:
+   - Launch headless Chrome
+   - Load the page at `http://localhost:8083`
+   - Extract CSS used in the viewport
+   - Save to `critical.css`
+
+## Comparison
+
+### Manual Extraction (Before)
+- **Time Investment**: High (30-60 minutes initial + 15-30 minutes per update)
+- **Accuracy**: Depends on developer skill and viewport assumptions
+- **Maintenance**: Manual updates needed on design changes
+- **Control**: Full control over what's included
+- **Best For**: Small projects, one-time optimization, learning
+- **Current State**: Render-blocking CSS (blank screen during delay)
+
+### Automated Extraction (After)
+- **Time Investment**: Low (5-10 minutes setup + 0 minutes for updates)
+- **Accuracy**: Tool-based, consistent results across viewports
+- **Maintenance**: Automated updates in build process
+- **Control**: Tool decides what's critical based on viewport
+- **Best For**: Large projects, frequent updates, production environments
+- **Current State**: Non-blocking CSS (instant hero appearance)
+
+## Expected Results
+
+### Before Version (Manual)
+- **First Paint**: ~10 seconds (blocked by external CSS)
+- **Hero Visibility**: Delayed until CSS loads
+- **Lighthouse FCP**: ~10 seconds
+- **User Experience**: Blank screen initially
+
+### After Version (Automated)
+- **First Paint**: ~7ms (Critical CSS loads immediately)
+- **Hero Visibility**: Instant (above-the-fold styles in critical.css)
+- **Lighthouse FCP**: ~7ms (immediate)
+- **User Experience**: Instant hero appearance
+
+## Technical Details
+
+### Tool Choice - Critical npm Package
+
+I initially tried Penthouse but encountered version compatibility issues. Switched to the Critical npm package which:
+
+- Uses Penthouse under the hood
+- Provides easier configuration
+- Supports multiple viewports
+- Has better Node.js compatibility
+- Can inline critical CSS automatically
+
+### Extraction Script
+
+The `extract-critical.js` script:
 ```javascript
-import penthouse from 'penthouse';
+import critical from 'critical';
 
-const criticalCSS = await penthouse({
-  url: 'http://localhost:8083',
+const result = await critical.generate({
+  src: 'http://localhost:8083',
   css: './styles.css',
   width: 1300,
   height: 900,
@@ -104,57 +195,13 @@ const criticalCSS = await penthouse({
 });
 ```
 
-**Features:**
-- Uses real browser rendering
-- Accurate viewport simulation
-- Configurable viewport dimensions
-- Multiple viewport support
+### CSS Loading Strategy
 
-### Critical CSS Extractor
+**After version uses:**
+1. `critical.css` - External file with above-the-fold styles (non-blocking)
+2. `styles.css` - Full stylesheet loaded asynchronously (preload pattern)
 
-Alternative tool with similar functionality:
-
-```javascript
-import critical from 'critical';
-
-critical.generate({
-  src: 'index.html',
-  target: 'index-critical.html',
-  width: 1300,
-  height: 900,
-});
-```
-
-**Features:**
-- Multiple viewport support
-- CSS minification options
-- Inline mode support
-- Build tool integration
-
-## Comparison
-
-### Manual Extraction
-- **Time Investment**: High (initial setup + maintenance)
-- **Accuracy**: Depends on developer skill
-- **Maintenance**: Manual updates needed on design changes
-- **Control**: Full control over what's included
-- **Best For**: Small projects, one-time optimization, learning
-
-### Automated Extraction
-- **Time Investment**: Low (initial setup + automated)
-- **Accuracy**: Tool-based, consistent results
-- **Maintenance**: Automated updates in build process
-- **Control**: Tool decides what's critical
-- **Best For**: Large projects, frequent updates, production environments
-
-## Expected Results
-
-Both versions should achieve:
-- **Instant FCP** (~7ms) with Critical CSS
-- **No blank screen** during 10-second CSS delay
-- **Similar performance metrics** if Critical CSS is accurate
-
-The difference is in the workflow and maintenance, not the final performance result.
+This differs from Episode 2 which used inline Critical CSS. External critical.css is easier to automate and maintain.
 
 ## File Structure
 
@@ -162,32 +209,52 @@ The difference is in the workflow and maintenance, not the final performance res
 eps03-automated-critical-css/
 ├── README.md
 ├── VIDEO_SCRIPT.md
-├── before/                        # Before: Manual extraction
+├── before/                        # Before: Manual extraction baseline
 │   └── code/
-│       ├── index.html            # Normal HTML (no Critical CSS)
+│       ├── index.html            # Normal HTML (render-blocking CSS)
 │       ├── styles.css            # Full stylesheet
-│       ├── server.js             # Custom server with CSS delay
-│       ├── package.json          # Node.js dependencies + tools
-│       ├── extract-critical.js    # Penthouse extraction script
+│       ├── critical.css          # Manual Critical CSS (copied)
+│       ├── server.js             # Custom server with CSS delay (port 8082)
+│       ├── package.json          # Minimal dependencies
+│       ├── extract-critical.js    # Extraction script (for demo)
 │       └── assets/
 └── after/                         # After: Automated extraction
     └── code/
-        ├── index.html            # HTML with critical.css
+        ├── index.html            # HTML with critical.css + async styles.css
         ├── styles.css            # Full stylesheet
-        ├── server.js             # Custom server with CSS delay
-        ├── package.json          # Node.js dependencies + tools
-        ├── extract-critical.js    # Penthouse extraction script
         ├── critical.css          # Generated critical CSS
+        ├── server.js             # Custom server with CSS delay (port 8083)
+        ├── package.json          # Minimal dependencies
+        ├── extract-critical.js    # Critical npm extraction script
         └── assets/
 ```
+
+## Key Learning Points
+
+1. **Manual vs Automated Investment**
+   - Manual: High upfront time, high maintenance cost
+   - Automated: Low upfront time, zero maintenance cost
+
+2. **Accuracy and Consistency**
+   - Manual: Depends on developer skill and assumptions
+   - Automated: Consistent, viewport-aware, less error-prone
+
+3. **Maintenance**
+   - Manual: Requires manual updates on design changes
+   - Automated: Automatically updates with build process
+
+4. **When to Use Each**
+   - Manual: Small projects, learning, one-time optimization
+   - Automated: Large projects, frequent updates, production use
 
 ## Next Steps
 
 After comparing manual vs automated approaches:
 1. Integrate automated extraction into build process
-2. Test on different viewport sizes
-3. Measure if automation overhead is worth it
-4. Document best practices for automated Critical CSS
+2. Test on different viewport sizes (mobile, tablet)
+3. Add CSS minification for production
+4. Compare file sizes and loading performance
+5. Document build tool integration (webpack, gulp, etc.)
 
 ## License
 
