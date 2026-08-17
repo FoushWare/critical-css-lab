@@ -84,6 +84,7 @@ critical-css-lab/
 │           ├── package.json
 │           └── assets/
 ├── eps03-automated-critical-css/            # 📋 Planned
+├── eps04-critical-css-react/            # 📋 Planned
 ├── eps05-critical-css-tailwind/            # 📋 Planned
 ├── eps06-critical-css-nextjs/            # 📋 Planned
 ├── eps07-css-loading-strategies/            # 📋 Planned
