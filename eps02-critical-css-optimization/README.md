@@ -5,7 +5,7 @@
 This episode demonstrates how Critical CSS optimization fixes the render-blocking CSS problem. It shows a direct comparison between the "before" state (render-blocking CSS) and the "after" state (Critical CSS optimization).
 
 ## Status
-🚧 In Progress
+✅ Completed
 
 ## Technology
 
