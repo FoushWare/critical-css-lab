@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "extract-critical": "node extract-critical.js"
+  },
+  "dependencies": {
+    "penthouse": "^4.1.0",
+    "critical": "^5.0.3"
+  }
+}

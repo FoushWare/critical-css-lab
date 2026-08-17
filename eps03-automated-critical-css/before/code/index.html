@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Does CSS block rendering? See for yourself how CSS delays page display."
+  />
+
+  <title>Does CSS Block Rendering? | Critical CSS Lab</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <div class="logo">
+        <span class="logo-mark">C</span>
+        <span data-ar="مختبر CSS" data-en="Critical CSS Lab">Critical CSS Lab</span>
+      </div>
+
+      <nav class="main-navigation" aria-label="Main navigation">
+        <span id="nav-episode">EPS03</span>
+        <span id="nav-title">Manual Critical CSS</span>
+        <button class="lang-switcher" onclick="toggleLanguage()" aria-label="Switch language">
+          <span id="lang-label">EN</span>
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- HERO -->
+
+    <section id="home" class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-content">
+
+          <p class="eyebrow" data-ar="مختبر أداء الويب" data-en="WEB PERFORMANCE LAB">
+            WEB PERFORMANCE LAB
+          </p>
+
+          <h1 data-ar="هل CSS يعيق rendering؟" data-en="Does CSS Block Rendering?">
+            Does CSS Block Rendering?
+          </h1>
+
+          <p class="hero-description" data-ar="هل CSS يوقف عرض الصفحة؟ شاهد بنفسك كيف يؤخر CSS ظهور المحتوى." data-en="Does CSS stop page display? See for yourself how CSS delays content appearance.">
+            Does CSS stop page display? See for yourself
+            how CSS delays content appearance.
+          </p>
+
+          <div class="hero-actions">
+
+            <button class="button button-primary clickable" onclick="location.reload()" data-ar="تحديث الصفحة" data-en="Refresh Page">
+              Refresh Page
+            </button>
+
+            <div class="button button-secondary" data-ar="تأخير CSS: 10 ثواني" data-en="CSS Delay: 10s">
+              CSS Delay: 10s (Non-blocking)
+            </div>
+
+          </div>
+
+          <div class="hero-meta">
+
+            <div class="meta-item">
+              <strong data-ar="حلقة 03" data-en="EPS03">EPS03</strong>
+              <span data-ar="CSS يدوي" data-en="Manual CSS">Manual CSS</span>
+            </div>
+
+            <div class="meta-divider"></div>
+
+            <div class="meta-item">
+              <strong>HTML</strong>
+              <span data-ar="CSS عادي" data-en="Normal CSS">Normal CSS</span>
+            </div>
+
+            <div class="meta-divider"></div>
+
+            <div class="meta-item">
+              <strong data-ar="قبل" data-en="Before">Before</strong>
+              <span data-ar="استخراج يدوي" data-en="Manual Extraction">Manual Extraction</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-visual" aria-hidden="true">
+
+          <div class="browser-window">
+
+            <div class="browser-toolbar">
+
+              <div class="browser-controls">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <div class="browser-address">
+                css-render-blocking.dev
+              </div>
+
+            </div>
+
+            <div class="browser-content">
+
+              <div class="browser-line browser-line-large"></div>
+
+              <div class="browser-line browser-line-medium"></div>
+
+              <div class="browser-line browser-line-small"></div>
+
+              <div class="browser-card-grid">
+
+                <div class="browser-card"></div>
+                <div class="browser-card"></div>
+                <div class="browser-card"></div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="floating-badge badge-render">
+            <span class="badge-dot"></span>
+            <span data-ar="rendering" data-en="Display">Display</span>
+          </div>
+
+          <div class="floating-badge badge-css">
+            <span data-ar="CSS" data-en="CSS">CSS</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- METRICS -->
+
+    <section class="metrics-section">
+
+      <div class="container">
+
+        <div class="section-intro section-intro-centered">
+
+          <p class="eyebrow" data-ar="تأثير CSS على الأداء" data-en="CSS Performance Impact">
+            CSS Performance Impact
+          </p>
+
+          <h2 data-ar="ما تأثير تأخير CSS؟" data-en="What's the Impact of CSS Delay?">
+            What's the Impact of CSS Delay?
+          </h2>
+
+          <p data-ar="هل CSS يؤثر فعلاً على سرعة الصفحة؟ شاهد الأرقام." data-en="Does CSS really affect page speed? See the numbers.">
+            Does CSS really affect page speed? See the numbers.
+          </p>
+
+        </div>
+
+        <div class="metrics-grid">
+
+          <article class="metric-card">
+
+            <div class="metric-label" data-ar="تأخير CSS" data-en="CSS Delay">
+              CSS Delay
+            </div>
+
+            <div class="metric-value highlight" data-ar="10.0s" data-en="10.0s">
+              10.0s
+            </div>
+
+            <div class="metric-status success" data-ar="غير معيق" data-en="Non-blocking">
+              Non-blocking
+            </div>
+
+          </article>
+
+          <article class="metric-card">
+
+            <div class="metric-label" data-ar="FCP أول ظهور" data-en="First Paint">
+              First Paint
+            </div>
+
+            <div class="metric-value highlight" data-ar="~7ms" data-en="~7ms">
+              ~7ms
+            </div>
+
+            <div class="metric-status success" data-ar="ظهور فوري" data-en="Instant">
+              Instant
+            </div>
+
+          </article>
+
+          <article class="metric-card">
+
+            <div class="metric-label" data-ar="LCP أكبر ظهور" data-en="Largest Paint">
+              Largest Paint
+            </div>
+
+            <div class="metric-value highlight" data-ar="~7ms" data-en="~7ms">
+              ~7ms
+            </div>
+
+            <div class="metric-status success" data-ar="ظهور فوري" data-en="Instant">
+              Instant
+            </div>
+
+          </article>
+
+          <article class="metric-card">
+
+            <div class="metric-label" data-ar="RB معيق للعرض" data-en="Blocking">
+              Blocking
+            </div>
+
+            <div class="metric-value highlight" data-ar="لا" data-en="No">
+              No
+            </div>
+
+            <div class="metric-status success" data-ar="تم حل المشكلة" data-en="Fixed">
+              Fixed
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RENDERING PIPELINE -->
+
+    <section
+      id="how-it-works"
+      class="pipeline-section"
+    >
+
+      <div class="container">
+
+        <div class="section-intro section-intro-centered">
+
+          <p class="eyebrow" data-ar="لماذا CSS يعيق rendering" data-en="Why CSS Blocks Rendering">
+            Why CSS Blocks Rendering
+          </p>
+
+          <h2 data-ar="كيف يمنع CSS عرض الصفحة؟" data-en="How Does CSS Prevent Page Display?">
+            How Does CSS Prevent Page Display?
+          </h2>
+
+          <p data-ar="هل المتصفح يحتاج CSS؟ ماذا يحدث إذا تأخر CSS؟" data-en="Does the browser need CSS? What happens if CSS is delayed?">
+            Does the browser need CSS? What happens if CSS is delayed?
+          </p>
+
+        </div>
+
+
+        <div class="pipeline">
+
+          <article class="pipeline-step">
+
+            <span class="step-number">01</span>
+
+            <div class="step-icon">
+              HTML
+            </div>
+
+            <h3 data-ar="HTML تحليل" data-en="HTML">
+              HTML
+            </h3>
+
+            <p data-ar="هل HTML يوقف rendering؟ لا، HTML سريع." data-en="Does HTML stop rendering? No, HTML is fast.">
+              Does HTML stop rendering? No, HTML is fast.
+            </p>
+
+          </article>
+
+          <span class="pipeline-arrow">→</span>
+
+          <article class="pipeline-step">
+
+            <span class="step-number">02</span>
+
+            <div class="step-icon">
+              CSS
+            </div>
+
+            <h3 data-ar="CSS تحميل" data-en="CSS">
+              CSS
+            </h3>
+
+            <p data-ar="هل CSS يوقف rendering؟ نعم، المتصفح ينتظر CSS." data-en="Does CSS stop rendering? Yes, browser waits for CSS.">
+              Does CSS stop rendering? Yes, browser waits for CSS.
+            </p>
+
+          </article>
+
+          <span class="pipeline-arrow">→</span>
+
+          <article class="pipeline-step">
+
+            <span class="step-number">03</span>
+
+            <div class="step-icon">
+              DOM + CSSOM
+            </div>
+
+            <h3 data-ar="Render Tree دمج" data-en="Combine">
+              Combine
+            </h3>
+
+            <p data-ar="هل يمكن عرض بدون CSS؟ لا، يجب دمج HTML و CSS." data-en="Can we display without CSS? No, must combine HTML and CSS.">
+              Can we display without CSS? No, must combine HTML and CSS.
+            </p>
+
+          </article>
+
+          <span class="pipeline-arrow">→</span>
+
+          <article class="pipeline-step">
+
+            <span class="step-number">04</span>
+
+            <div class="step-icon">
+              Layout
+            </div>
+
+            <h3 data-ar="Layout المواقع" data-en="Layout">
+              Layout
+            </h3>
+
+            <p data-ar="هل يمكن تحديد المواقع بدون CSS؟ لا، CSS يحدد الأماكن." data-en="Can we determine positions without CSS? No, CSS defines locations.">
+              Can we determine positions without CSS? No, CSS defines locations.
+            </p>
+
+          </article>
+
+          <span class="pipeline-arrow">→</span>
+
+          <article class="pipeline-step">
+
+            <span class="step-number">05</span>
+
+            <div class="step-icon">
+              Paint
+            </div>
+
+            <h3 data-ar="Paint الرسم" data-en="Paint">
+              Paint
+            </h3>
+
+            <p data-ar="هل يمكن الرسم بدون CSS؟ لا، CSS يحدد الألوان والأشكال." data-en="Can we paint without CSS? No, CSS defines colors and shapes.">
+              Can we paint without CSS? No, CSS defines colors and shapes.
+            </p>
+
+          </article>
+
+          <span class="pipeline-arrow">→</span>
+
+          <article class="pipeline-step">
+
+            <span class="step-number">06</span>
+
+            <div class="step-icon">
+              Composite
+            </div>
+
+            <h3 data-ar="Composite rendering" data-en="Display">
+              Display
+            </h3>
+
+            <p data-ar="متى يظهر المحتوى؟ بعد تحميل CSS بالكامل." data-en="When does content appear? After CSS loads completely.">
+              When does content appear? After CSS loads completely.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Language Switcher
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      updateLanguage();
+    }
+
+    function updateLanguage() {
+      // Update all elements with data-en and data-ar attributes
+      const elements = document.querySelectorAll('[data-en][data-ar]');
+      
+      elements.forEach(element => {
+        const enText = element.getAttribute('data-en');
+        const arText = element.getAttribute('data-ar');
+        
+        if (currentLang === 'ar' && arText) {
+          element.textContent = arText;
+        } else if (currentLang === 'en' && enText) {
+          element.textContent = enText;
+        }
+      });
+
+      // Update language button label (show opposite language)
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = currentLang === 'en' ? 'AR' : 'EN';
+      }
+
+      // Update RTL/LTR direction
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      
+      // Update document direction
+      document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Critical CSS Lab - EPS01 CSS Rendering Blocker');
+      console.log('Language:', currentLang);
+      
+      // Set initial button label to show opposite language
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = 'AR';
+      }
+    });
+  </script>
+
+</body>
+</html>
