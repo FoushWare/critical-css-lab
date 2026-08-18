@@ -92,16 +92,13 @@ Open both URLs in different browser tabs:
 
 ### Step 4: Optional - Run Automated Extraction
 
-To actually see the automated extraction process:
+The automated extraction script is provided for demonstration, but requires Chrome browser setup. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction).
 
-```bash
-# Ensure server is running on port 8083
-cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/after/code
-npm run dev
+**To see the automated extraction process work:**
 
-# In a new terminal, run extraction
-npm run extract-critical
-```
+1. Ensure server is running on port 8083
+2. Install Chrome browser: `npx puppeteer browsers install chrome`
+3. Run: `npm run extract-critical`
 
 **What This Does:**
 - Launches headless Chrome
@@ -109,7 +106,7 @@ npm run extract-critical
 - Extracts CSS used in the defined viewport
 - Saves results to `critical.css`
 
-**Note:** For this demo, both versions already have the same `critical.css` content to demonstrate the comparison.
+**For This Demo:** The `critical.css` file is already provided to demonstrate the result without requiring complex Chrome setup.
 
 ## Key Technical Decisions
 
