@@ -59,8 +59,10 @@ This episode has two versions for comparison:
    - Uses bounding-box detection with `getBoundingClientRect()` for true above-the-fold extraction
    - Multi-viewport support: mobile (390x844), tablet (768x1024), desktop (1300x900)
    - DOM walking approach to determine viewport visibility
+   - Media query support: Handles `@media` rules with viewport matching
+   - Order preservation: Uses position-based deduplication to maintain CSS cascade
    - Merges and deduplicates CSS from all viewports
-   - Generates 6,452 characters of optimized critical CSS (52 unique rules)
+   - Generates 13,173 characters of optimized critical CSS (110 unique rules)
    - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
@@ -121,11 +123,14 @@ This episode has two versions for comparison:
 
 **Current Status:**
 - ✅ Working automated extraction using Playwright with system Chrome
-- ✅ `critical.css` is generated dynamically (14,362 characters)
+- ✅ `critical.css` is generated dynamically (13,173 characters for after, 6,720 for before)
 - ✅ Web servers are working and ready for testing
-- ✅ Extraction script performs actual CSS extraction via coverage API
+- ✅ Extraction script performs actual CSS extraction via bounding-box detection
 - ✅ Uses system Chrome browser
-- ✅ Dynamic extraction based on actual CSS usage
+- ✅ Dynamic extraction based on actual CSS usage with media query support
+- ✅ Order-preserving deduplication maintains CSS cascade
+- ✅ Multi-viewport coverage (mobile, tablet, desktop)
+- ✅ Responsive CSS properly handled with media query matching
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
@@ -182,11 +187,12 @@ I chose Playwright with system Chrome for dynamic extraction because:
 - Uses your installed Chrome browser (no downloads needed)
 - Provides true above-the-fold extraction via bounding-box detection
 - Extracts CSS based on actual viewport visibility using `getBoundingClientRect()`
+- Handles `@media` rules properly for responsive design
+- Maintains CSS cascade order with position-based deduplication
 - Modern, well-maintained project with good system Chrome integration
 - Accurate multi-viewport extraction (mobile, tablet, desktop)
-- Automatic deduplication of CSS rules across viewports
-- Better alternative to older tools with dependency issues
 - Implements the same approach as critical/penthouse but with Playwright
+- Proper responsive CSS support across different viewports
 
 **Why not other tools:**
 - Critical npm package: Required Chrome download via Puppeteer (complex setup)
@@ -196,7 +202,7 @@ I chose Playwright with system Chrome for dynamic extraction because:
 
 ### Extraction Script
 
-The `extract-critical.js` script uses Playwright with system Chrome for multi-viewport extraction with bounding-box detection:
+The `extract-critical.js` script uses Playwright with system Chrome for multi-viewport extraction with bounding-box detection and media query support:
 ```javascript
 import { chromium } from 'playwright';
 
@@ -212,44 +218,57 @@ const browser = await chromium.launch({
   headless: true,
 });
 
-const allCSS = new Set();
+// Use Map for order-preserving deduplication
+const cssRulesMap = new Map();
 
 for (const viewport of viewports) {
   const page = await browser.newPage();
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   await page.goto('http://localhost:8083', { waitUntil: 'networkidle' });
   
-  // Extract critical CSS using bounding-box approach
-  const criticalRules = await page.evaluate((vpHeight) => {
-    const used = [];
-    const sheets = Array.from(document.styleSheets);
-    
-    for (const sheet of sheets) {
-      try {
-        const rules = sheet.cssRules || sheet.rules;
-        for (const rule of rules) {
-          if (!rule.selectorText) continue;
-          
-          const elements = document.querySelectorAll(rule.selectorText);
-          for (const el of elements) {
-            const rect = el.getBoundingClientRect();
-            // Check if element is within viewport (above the fold)
-            if (rect.top < vpHeight && rect.bottom > 0) {
-              used.push(rule.cssText);
-              break;
-            }
+  // Extract critical CSS with media query support
+  const criticalRules = await page.evaluate(({ vpWidth, vpHeight }) => {
+    function collectRules(rules, sheetIndex, ruleIndex, vpWidth, vpHeight, used) {
+      for (const rule of rules) {
+        const currentRuleIndex = ruleIndex++;
+        
+        // Handle @media rules
+        if (rule.type === CSSRule.MEDIA_RULE) {
+          if (window.matchMedia(rule.conditionText).matches) {
+            collectRules(rule.cssRules, sheetIndex, currentRuleIndex, vpWidth, vpHeight, used);
+          }
+          continue;
+        }
+        
+        if (!rule.selectorText) continue;
+        
+        const elements = document.querySelectorAll(rule.selectorText);
+        for (const el of elements) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < vpHeight && rect.bottom > 0) {
+            used.push({
+              cssText: rule.cssText,
+              position: `${sheetIndex}_${currentRuleIndex}`
+            });
+            break;
           }
         }
-      } catch (e) {
-        continue;
       }
     }
+    
+    const used = [];
+    const sheets = Array.from(document.styleSheets);
+    for (let sheetIndex = 0; sheetIndex < sheets.length; sheetIndex++) {
+      const rules = sheets[sheetIndex].cssRules || sheets[sheetIndex].rules;
+      if (!rules) continue;
+      collectRules(rules, sheetIndex, 0, vpWidth, vpHeight, used);
+    }
     return used;
-  }, viewport.height);
+  }, { vpWidth: viewport.width, vpHeight: viewport.height });
   
   criticalRules.forEach(rule => {
-    if (rule && rule.trim()) {
-      allCSS.add(rule.trim());
+    if (rule && rule.cssText && rule.position) {
+      cssRulesMap.set(rule.position, rule.cssText);
     }
   });
   
@@ -258,8 +277,12 @@ for (const viewport of viewports) {
 
 await browser.close();
 
-// Merge all CSS rules
-const criticalCSS = Array.from(allCSS).join('\n');
+// Sort by position to preserve original source order
+const sortedRules = Array.from(cssRulesMap.entries())
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(entry => entry[1]);
+
+const criticalCSS = sortedRules.join('\n');
 ```
 
 **Alternative using Critical npm package (v8.0.0):**

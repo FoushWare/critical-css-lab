@@ -27,7 +27,9 @@ async function extractCriticalCSS() {
       headless: true,
     });
 
-    const allCSS = new Set();
+    // Use Map for order-preserving deduplication
+    // Key: sheetIndex_ruleIndex, Value: cssText
+    const cssRulesMap = new Map();
 
     for (const viewport of viewports) {
       console.log(`  🔄 Processing ${viewport.name} (${viewport.width}x${viewport.height})...`);
@@ -40,34 +42,53 @@ async function extractCriticalCSS() {
       // Navigate to the page
       await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle' });
       
-      // Extract critical CSS using bounding-box approach
-      const criticalRules = await page.evaluate((vpHeight) => {
+      // Extract critical CSS using bounding-box approach with media query support
+      const criticalRules = await page.evaluate(({ vpWidth, vpHeight }) => {
         const used = [];
         const sheets = Array.from(document.styleSheets);
         
-        for (const sheet of sheets) {
-          try {
-            const rules = sheet.cssRules || sheet.rules;
-            if (!rules) continue;
+        function collectRules(rules, sheetIndex, ruleIndex, vpWidth, vpHeight, used) {
+          for (const rule of rules) {
+            const currentRuleIndex = ruleIndex++;
             
-            for (const rule of rules) {
-              if (!rule.selectorText) continue;
-              
-              try {
-                const elements = document.querySelectorAll(rule.selectorText);
-                for (const el of elements) {
-                  const rect = el.getBoundingClientRect();
-                  // Check if element is within viewport (above the fold)
-                  if (rect.top < vpHeight && rect.bottom > 0) {
-                    used.push(rule.cssText);
-                    break; // Only need one element to be visible
-                  }
-                }
-              } catch (e) {
-                // Invalid selector or other DOM issues
-                continue;
+            // Handle @media rules
+            if (rule.type === CSSRule.MEDIA_RULE) {
+              // Check if this media query applies to the current viewport
+              if (window.matchMedia(rule.conditionText).matches) {
+                collectRules(rule.cssRules, sheetIndex, currentRuleIndex, vpWidth, vpHeight, used);
               }
+              continue;
             }
+            
+            // Skip rules without selectorText (@font-face, @keyframes, @supports, etc.)
+            if (!rule.selectorText) continue;
+            
+            try {
+              const elements = document.querySelectorAll(rule.selectorText);
+              for (const el of elements) {
+                const rect = el.getBoundingClientRect();
+                // Check if element is within viewport (above the fold)
+                if (rect.top < vpHeight && rect.bottom > 0) {
+                  // Store with position key for order preservation
+                  used.push({
+                    cssText: rule.cssText,
+                    position: `${sheetIndex}_${currentRuleIndex}`
+                  });
+                  break; // Only need one element to be visible
+                }
+              }
+            } catch (e) {
+              // Invalid selector or other DOM issues
+              continue;
+            }
+          }
+        }
+        
+        for (let sheetIndex = 0; sheetIndex < sheets.length; sheetIndex++) {
+          try {
+            const rules = sheets[sheetIndex].cssRules || sheets[sheetIndex].rules;
+            if (!rules) continue;
+            collectRules(rules, sheetIndex, 0, vpWidth, vpHeight, used);
           } catch (e) {
             // Cross-origin stylesheet or other access issues
             continue;
@@ -75,12 +96,12 @@ async function extractCriticalCSS() {
         }
         
         return used;
-      }, viewport.height);
+      }, { vpWidth: viewport.width, vpHeight: viewport.height });
       
-      // Add CSS rules to set for deduplication
+      // Add CSS rules to Map for order-preserving deduplication
       criticalRules.forEach(rule => {
-        if (rule && rule.trim()) {
-          allCSS.add(rule.trim());
+        if (rule && rule.cssText && rule.position) {
+          cssRulesMap.set(rule.position, rule.cssText);
         }
       });
       
@@ -90,15 +111,19 @@ async function extractCriticalCSS() {
 
     await browser.close();
     
-    // Merge all CSS rules and write to file
-    const criticalCSS = Array.from(allCSS).join('\n');
+    // Sort by position to preserve original source order, then join
+    const sortedRules = Array.from(cssRulesMap.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(entry => entry[1]);
+    
+    const criticalCSS = sortedRules.join('\n');
     
     await fs.writeFile(outputPath, criticalCSS);
     console.log('✅ Critical CSS extracted to critical.css');
     console.log(`📊 CSS size: ${criticalCSS.length} characters`);
     console.log(`🎯 Successfully extracted using Playwright with system Chrome`);
     console.log(`📱 Viewports covered: ${viewports.map(v => v.name).join(', ')}`);
-    console.log(`🔢 Total unique CSS rules: ${allCSS.size}`);
+    console.log(`🔢 Total unique CSS rules: ${cssRulesMap.size}`);
     
   } catch (error) {
     console.error('❌ Error extracting Critical CSS:', error);
