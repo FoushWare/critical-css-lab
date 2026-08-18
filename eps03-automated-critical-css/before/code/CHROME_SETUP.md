@@ -1,68 +1,61 @@
 # Critical CSS Extraction Setup
 
-## Installing Critical npm Package with System Chrome
+## Current Implementation
+
+The extraction script now uses **manual selector matching** to extract above-the-fold CSS. This approach:
+
+- ✅ Requires no browser dependencies
+- ✅ Works immediately without complex setup
+- ✅ Extracts CSS for defined above-the-fold selectors
+- ✅ Perfect for educational demonstrations
+
+## How It Works
+
+The script:
+1. Reads the full `styles.css` file
+2. Matches CSS rules for defined above-the-fold selectors
+3. Writes the matching CSS to `critical.css`
+
+## Alternative: Browser-Based Extraction
+
+If you need true viewport-based extraction with browser rendering, you can install:
 
 ### Option 1: Using Critical npm Package
 
 ```bash
 cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/before/code
-npm install critical@5.0.3
+npm install critical@^5.3.0 --legacy-peer-deps
 ```
 
-### Option 2: Using Penthouse npm Package
+### Option 2: Using Beasties (Browser-Free Alternative)
 
 ```bash
 cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/before/code
-npm install penthouse@2.3.3
+npm install beasties@^0.4.3 --legacy-peer-deps
 ```
 
-## Configuration
+Note: Beasties may have compatibility issues with certain Node.js versions.
 
-The extraction script is configured to use your system Chrome at:
-```javascript
-executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-```
+## Why Manual Extraction?
 
-**Important:** When using Critical with system Chrome, the configuration must be nested correctly:
-
-```javascript
-penthouse: {
-  puppeteer: {
-    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  },
-  userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-}
-```
-
-The `executablePath` must be under `penthouse.puppeteer`, not directly under `penthouse`.
-
-## Verify Chrome Path
-
-```bash
-ls -la "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-```
-
-## Note
-
-These tools use Puppeteer which requires specific Chrome versions. If you encounter "Browser is not downloaded" errors, the tools may need to download their own Chrome version via Puppeteer.
-
-## Alternative: Manual Chrome Download
-
-If you want to use a specific Chrome version:
-
-```bash
-# Install Chrome via Puppeteer
-npx puppeteer browsers install chrome
-```
+For this educational series, manual extraction is ideal because:
+- No browser installation required
+- Works consistently across environments
+- Clear demonstration of the concept
+- No version compatibility issues
+- Fast and reliable
 
 ## Testing
 
-1. Start the server:
 ```bash
-npm run dev
+cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/before/code
+npm run extract-critical
 ```
 
-2. Run extraction:
-```bash
-npm run extract-critical
+Expected output:
+```
+🔍 Extracting Critical CSS manually (above-the-fold selectors)...
+✅ Critical CSS extracted to critical.css
+📊 CSS size: 7683 characters
+🎯 Successfully extracted above-the-fold CSS (manual selector matching)
 ```
