@@ -92,9 +92,9 @@ Open both URLs in different browser tabs:
 
 ### Step 4: Test Automated Extraction Script
 
-The automated extraction script validates the provided critical.css file. Chrome is installed on your system, but automation tools have specific browser requirements.
+The automated extraction script now performs **actual Critical CSS extraction** using manual selector matching. This approach requires no browser dependencies and works immediately.
 
-**Run the extraction validation:**
+**Run the extraction:**
 ```bash
 cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/after/code
 npm run extract-critical
@@ -102,20 +102,19 @@ npm run extract-critical
 
 **Expected Output:**
 ```
-🔍 Validating Critical CSS extraction...
-📝 Note: Chrome is installed on your system
-💡 In production, you would use Critical npm package with Chrome
-✅ Critical CSS file exists (critical.css)
-🎯 This demonstrates the result of automated extraction
+🔍 Extracting Critical CSS manually (above-the-fold selectors)...
+✅ Critical CSS extracted to critical.css
+📊 CSS size: 7683 characters
+🎯 Successfully extracted above-the-fold CSS (manual selector matching)
 ```
 
 **What This Does:**
-- Validates that critical.css exists
-- Reports CSS file size (6580 characters)
-- Acknowledges Chrome availability
-- In production, would use Critical npm package with Chrome
-- Demonstrates the automation concept
-- In production, would use Critical npm package with Chrome
+- Reads the full styles.css file
+- Matches CSS rules for above-the-fold selectors (hero, header, navigation, etc.)
+- Writes the matching CSS to critical.css
+- Generates real critical CSS (7,683 characters)
+- No browser dependencies required
+- Works consistently across environments
 
 **This Works:** The extraction script runs successfully without Chrome setup!
 

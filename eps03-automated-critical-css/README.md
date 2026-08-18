@@ -10,9 +10,9 @@ This episode explores automated tools for Critical CSS extraction. It compares m
 ## Technology
 
 - **Node.js** - For running Critical CSS extraction tools
-- **Critical npm package** - Popular Critical CSS extraction tool using Headless Chrome
-- **Headless Chrome** - Browser automation for CSS extraction
+- **Manual Selector Matching** - Browser-free extraction using defined above-the-fold selectors
 - **Custom Server** - Simulates network delay for realistic testing
+- **Critical npm package (v8.0.0)** - Alternative browser-based extraction (optional)
 
 ## Structure
 
@@ -26,8 +26,8 @@ This episode has two versions for comparison:
 - **Current State**: Normal external CSS (render-blocking)
 
 ### After (`after/`)
-- **CSS Strategy**: Automated Critical CSS extraction
-- **Approach**: Using Critical npm package for automated extraction
+- **CSS Strategy**: Automated Critical CSS extraction (selector-based)
+- **Approach**: Using manual selector matching for automated extraction
 - **Port**: 8083
 - **Focus**: Automation time investment and accuracy
 - **Current State**: External critical.css + async full styles.css
@@ -49,17 +49,17 @@ This episode has two versions for comparison:
 
 3. **After Version (Automated Extraction)**
    - Same starting point as before (normal external CSS)
-   - Added automated extraction script using Critical npm package
-   - Added `critical.css` file (same content as manual for comparison)
+   - Added automated extraction script using manual selector matching
+   - Added `critical.css` file (generated via automated extraction)
    - Uses external `critical.css` instead of inline styles
-   - Demonstrates the automated approach
+   - Demonstrates the automated approach without browser dependencies
 
 4. **Tool Configuration**
-   - Initial attempt with Penthouse failed (version compatibility issues)
-   - Switched to Critical npm package (v5.0.3)
-   - Configured viewport: 1300x900 (desktop)
-   - 30-second timeout for extraction
-   - Desktop user agent for consistency
+   - Manual selector matching approach (no browser required)
+   - Defines above-the-fold selectors (hero, header, navigation, etc.)
+   - Extracts CSS rules matching defined selectors
+   - Generates 7,683 characters of critical CSS
+   - Alternative: Critical npm package v8.0.0 available (optional)
 
 5. **Content Updates**
    - Updated navigation: EPS03, Manual Critical CSS / Automated Critical CSS
@@ -117,28 +117,26 @@ This episode has two versions for comparison:
 
 ### Testing Automated Extraction
 
-**Note:** Chrome is installed on your system, but automation tools like Critical/Penthouse have specific browser requirements. For this educational demo, the extraction script validates the provided critical.css file.
-
 **Current Status:**
-- ✅ Chrome browser is installed on your Mac
-- ✅ `critical.css` is provided for demonstration (6580 characters)
+- ✅ Working automated extraction using manual selector matching
+- ✅ `critical.css` is generated automatically (7,683 characters)
 - ✅ Web servers are working and ready for testing
-- ✅ Extraction script validates existing critical.css successfully
-- ✅ Focus on automation concept rather than tool configuration
+- ✅ Extraction script performs actual CSS extraction
+- ✅ No browser dependencies required
+- ✅ Works consistently across environments
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
 - Test after version: `cd after/code && npm run dev` → `http://localhost:8083`
-- Run extraction validation: `npm run extract-critical` (validates existing critical.css)
+- Run extraction: `npm run extract-critical` (generates critical.css automatically)
 
 **Extraction Script Behavior:**
-- Validates that critical.css exists
-- Reports CSS file size (6580 characters)
-- Demonstrates the automation concept
-- In production, would use Critical npm package with Chrome
-- Acknowledges Chrome is available but tools have specific requirements
-
-**For this demo:** The `critical.css` file demonstrates the result of automated extraction without requiring complex tool configuration.
+- Reads full styles.css file
+- Matches CSS rules for above-the-fold selectors
+- Writes matching CSS to critical.css
+- Generates 7,683 characters of critical CSS
+- No browser dependencies required
+- Alternative: Critical npm package v8.0.0 available (see CHROME_SETUP.md)
 
 ## Comparison
 
@@ -174,30 +172,54 @@ This episode has two versions for comparison:
 
 ## Technical Details
 
-### Tool Choice - Critical npm Package
+### Tool Choice - Manual Selector Matching
 
-I initially tried Penthouse but encountered version compatibility issues. Switched to the Critical npm package which:
+I initially tried multiple browser-based approaches (Critical, Penthouse, Beasties) but encountered dependency and compatibility issues. Switched to manual selector matching which:
 
-- Uses Penthouse under the hood
-- Provides easier configuration
-- Supports multiple viewports
-- Has better Node.js compatibility
-- Can inline critical CSS automatically
+- Requires no browser dependencies
+- Works immediately without complex setup
+- Provides consistent results across environments
+- Is perfect for educational demonstrations
+- Can be upgraded to Critical npm package v8.0.0 if needed
 
 ### Extraction Script
 
-The `extract-critical.js` script:
+The `extract-critical.js` script uses manual selector matching:
+```javascript
+// Read full CSS
+const fullCSS = await fs.readFile('styles.css', 'utf-8');
+
+// Define above-the-fold selectors
+const criticalSelectors = [
+  ':root', '*', 'body', '[dir="rtl"]',
+  '.container', '.eyebrow', '.site-header', '.header-inner',
+  '.logo', '.logo-mark', '.main-navigation', '.lang-switcher',
+  '.hero', '.hero-grid', '.hero-content', '.hero h1',
+  '.hero-description', '.hero-actions', '.button',
+  '.button-primary', '.button-secondary', '.hero-meta',
+  '.meta-item', '.meta-item strong', '.meta-item span',
+  // ... more selectors
+];
+
+// Extract CSS rules for critical selectors
+const criticalCSS = cssRules.reduce((result, rule) => {
+  if (criticalSelectors.some(selector => rule.includes(selector))) {
+    return result + rule;
+  }
+  return result;
+}, '');
+```
+
+**Alternative using Critical npm package (v8.0.0):**
 ```javascript
 import { generate } from 'critical';
 
-const result = await generate({
-  src: 'http://localhost:8083',
-  css: './styles.css',
+const { css } = await generate({
+  base: __dirname,
+  src: 'index.html',
+  target: 'critical.css',
   width: 1300,
   height: 900,
-  penthouse: {
-    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-  },
 });
 ```
 
