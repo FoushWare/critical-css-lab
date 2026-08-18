@@ -5,14 +5,14 @@
 ### Option 1: Using Critical npm Package
 
 ```bash
-cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/after/code
+cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/before/code
 npm install critical@5.0.3
 ```
 
 ### Option 2: Using Penthouse npm Package
 
 ```bash
-cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/after/code
+cd /Users/a.fouad/Projects/critical-css-lab/eps03-automated-critical-css/before/code
 npm install penthouse@2.3.3
 ```
 

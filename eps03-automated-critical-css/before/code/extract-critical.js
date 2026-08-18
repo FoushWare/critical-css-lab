@@ -14,9 +14,10 @@ async function extractCriticalCSS() {
     console.log('🔍 Validating Critical CSS extraction...');
     
     // For this educational demo, we validate the provided critical.css
-    // This demonstrates the automation concept without complex Chrome setup
+    // The Critical npm package configuration requires specific Chrome versions
+    // See CHROME_SETUP.md for manual Critical package setup instructions
     console.log('📝 Note: Chrome is installed on your system');
-    console.log('💡 In production, you would use Critical npm package with Chrome');
+    console.log('💡 Manual Critical package setup: See CHROME_SETUP.md');
     console.log('🎯 For this demo, we validate the provided critical.css');
     
     // Verify critical.css exists
