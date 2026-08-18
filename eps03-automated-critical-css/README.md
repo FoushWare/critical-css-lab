@@ -117,13 +117,14 @@ This episode has two versions for comparison:
 
 ### Testing Automated Extraction
 
-**Note:** The automated extraction script now validates the provided critical.css file without requiring Chrome browser setup.
+**Note:** The automated extraction script validates the provided critical.css file and demonstrates the automation concept without requiring Chrome browser setup.
 
 **Current Status:**
-- ✅ `critical.css` is already provided for demonstration
+- ✅ `critical.css` is provided for demonstration (6580 characters)
 - ✅ Web servers are working and ready for testing
-- ✅ Extraction script validates existing critical.css
+- ✅ Extraction script validates existing critical.css successfully
 - ✅ No Chrome browser setup required
+- ✅ Focus on automation concept rather than tool setup
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
@@ -132,7 +133,7 @@ This episode has two versions for comparison:
 
 **Extraction Script Behavior:**
 - Validates that critical.css exists
-- Reports CSS file size
+- Reports CSS file size (6580 characters)
 - Demonstrates the automation concept
 - In production, would use Critical npm package with Chrome
 

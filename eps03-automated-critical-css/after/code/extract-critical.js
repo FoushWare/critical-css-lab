@@ -11,26 +11,18 @@ const outputPath = path.join(__dirname, 'critical.css');
 
 async function extractCriticalCSS() {
   try {
-    console.log('🔍 Extracting Critical CSS using Critical...');
+    console.log('🔍 Extracting Critical CSS...');
     
-    // For this educational demo, we simulate the extraction by copying
-    // the already-provided critical.css (same as Episode 2's manual extraction)
-    // In production, you would use the actual Critical npm package
-    
+    // For this educational demo, we validate the provided critical.css
+    // This demonstrates the automation concept without Chrome setup issues
     console.log('📝 Note: Using provided critical.css for educational demo');
-    console.log('💡 In production, you would run: npm run extract-critical with Chrome setup');
+    console.log('💡 In production, you would use Critical npm package with Chrome');
     
     // Verify critical.css exists
-    try {
-      await fs.access(outputPath);
-      const stats = await fs.stat(outputPath);
-      console.log('✅ Critical CSS file exists (critical.css)');
-      console.log(`📊 CSS size: ${stats.size} characters`);
-    } catch (error) {
-      console.log('⚠️  Critical CSS file not found, creating from styles.css...');
-      // This would be where the actual extraction happens in production
-      console.log('📝 In production, this would use Critical npm package with Chrome');
-    }
+    const stats = await fs.stat(outputPath);
+    console.log('✅ Critical CSS file exists (critical.css)');
+    console.log(`📊 CSS size: ${stats.size} characters`);
+    console.log('🎯 This demonstrates the result of automated extraction');
     
   } catch (error) {
     console.error('❌ Error with Critical CSS:', error);
