@@ -3,5 +3,8 @@
   "scripts": {
     "dev": "node server.js",
     "extract-critical": "node extract-critical.js"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
   }
 }

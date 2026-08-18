@@ -1,3 +1,4 @@
+import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
@@ -6,76 +7,43 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = 8082;
-
 const outputPath = path.join(__dirname, 'critical.css');
 
 async function extractCriticalCSS() {
   try {
-    console.log('🔍 Extracting Critical CSS manually (above-the-fold selectors)...');
+    console.log('🔍 Extracting Critical CSS using Playwright with system Chrome...');
     
-    // Read the full CSS
-    const fullCSS = await fs.readFile(path.join(__dirname, 'styles.css'), 'utf-8');
+    // Launch browser with system Chrome
+    const browser = await chromium.launch({
+      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      headless: true,
+    });
+
+    const page = await browser.newPage();
     
-    // Define above-the-fold selectors based on the page structure
-    const criticalSelectors = [
-      ':root',
-      '*',
-      'body',
-      '[dir="rtl"]',
-      '.container',
-      '.eyebrow',
-      '.site-header',
-      '.header-inner',
-      '.logo',
-      '.logo-mark',
-      '.main-navigation',
-      '.main-navigation span',
-      '.lang-switcher',
-      '.hero',
-      '.hero-grid',
-      '.hero-content',
-      '.hero h1',
-      '.hero h1 span',
-      '.hero-description',
-      '[dir="rtl"] .hero-description',
-      '.hero-actions',
-      '.button',
-      '.button.clickable',
-      '.button-primary',
-      '.button-secondary',
-      '.hero-meta',
-      '.meta-item',
-      '.meta-item strong',
-      '.meta-item span',
-      '.meta-divider',
-      '[dir="rtl"] .hero-grid',
-      '[dir="rtl"] .logo',
-      '[dir="rtl"] .main-navigation',
-      '[dir="rtl"] .hero-actions',
-      '[dir="rtl"] .hero-meta',
-      '[dir="rtl"] body',
-      '[dir="rtl"] h1',
-      '[dir="rtl"] h2',
-      '[dir="rtl"] h3',
-      '[dir="rtl"] .hero h1',
-      '[dir="rtl"] p',
-      'button',
-    ];
+    // Set viewport
+    await page.setViewportSize({ width: 1300, height: 900 });
     
-    // Extract CSS rules for critical selectors
-    const cssRules = fullCSS.split('}');
-    const criticalCSS = cssRules.reduce((result, rule) => {
-      const ruleWithBrace = rule + '}';
-      if (criticalSelectors.some(selector => ruleWithBrace.includes(selector))) {
-        return result + ruleWithBrace;
-      }
-      return result;
-    }, '');
+    // Navigate to the page
+    await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle' });
+    
+    // Extract critical CSS using Playwright's coverage API
+    await page.coverage.startCSSCoverage();
+    await page.reload({ waitUntil: 'networkidle' });
+    const coverage = await page.coverage.stopCSSCoverage();
+    
+    // Filter for used CSS rules
+    const criticalCSS = coverage
+      .filter(entry => entry.url.includes('styles.css'))
+      .map(entry => entry.text)
+      .join('\n');
+    
+    await browser.close();
     
     await fs.writeFile(outputPath, criticalCSS);
     console.log('✅ Critical CSS extracted to critical.css');
     console.log(`📊 CSS size: ${criticalCSS.length} characters`);
-    console.log('🎯 Successfully extracted above-the-fold CSS (manual selector matching)');
+    console.log('🎯 Successfully extracted using Playwright with system Chrome');
     
   } catch (error) {
     console.error('❌ Error extracting Critical CSS:', error);

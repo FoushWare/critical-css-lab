@@ -10,9 +10,9 @@ This episode explores automated tools for Critical CSS extraction. It compares m
 ## Technology
 
 - **Node.js** - For running Critical CSS extraction tools
-- **Manual Selector Matching** - Browser-free extraction using defined above-the-fold selectors
+- **Playwright** - Browser automation for dynamic CSS extraction with system Chrome
 - **Custom Server** - Simulates network delay for realistic testing
-- **Critical npm package (v8.0.0)** - Alternative browser-based extraction (optional)
+- **System Chrome** - Uses your installed Chrome browser for extraction
 
 ## Structure
 
@@ -26,8 +26,8 @@ This episode has two versions for comparison:
 - **Current State**: Normal external CSS (render-blocking)
 
 ### After (`after/`)
-- **CSS Strategy**: Automated Critical CSS extraction (selector-based)
-- **Approach**: Using manual selector matching for automated extraction
+- **CSS Strategy**: Automated Critical CSS extraction (Playwright-based)
+- **Approach**: Using Playwright with system Chrome for dynamic extraction
 - **Port**: 8083
 - **Focus**: Automation time investment and accuracy
 - **Current State**: External critical.css + async full styles.css
@@ -49,17 +49,18 @@ This episode has two versions for comparison:
 
 3. **After Version (Automated Extraction)**
    - Same starting point as before (normal external CSS)
-   - Added automated extraction script using manual selector matching
-   - Added `critical.css` file (generated via automated extraction)
+   - Added automated extraction script using Playwright with system Chrome
+   - Added `critical.css` file (generated via dynamic browser extraction)
    - Uses external `critical.css` instead of inline styles
-   - Demonstrates the automated approach without browser dependencies
+   - Demonstrates the automated approach with real browser automation
 
 4. **Tool Configuration**
-   - Manual selector matching approach (no browser required)
-   - Defines above-the-fold selectors (hero, header, navigation, etc.)
-   - Extracts CSS rules matching defined selectors
-   - Generates 7,683 characters of critical CSS
-   - Alternative: Critical npm package v8.0.0 available (optional)
+   - Playwright with system Chrome for dynamic extraction
+   - Uses CSS coverage API to determine used CSS
+   - Viewport: 1300x900 (desktop)
+   - Extracts CSS based on actual browser usage
+   - Generates 14,362 characters of critical CSS
+   - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
    - Updated navigation: EPS03, Manual Critical CSS / Automated Critical CSS
@@ -118,25 +119,26 @@ This episode has two versions for comparison:
 ### Testing Automated Extraction
 
 **Current Status:**
-- ✅ Working automated extraction using manual selector matching
-- ✅ `critical.css` is generated automatically (7,683 characters)
+- ✅ Working automated extraction using Playwright with system Chrome
+- ✅ `critical.css` is generated dynamically (14,362 characters)
 - ✅ Web servers are working and ready for testing
-- ✅ Extraction script performs actual CSS extraction
-- ✅ No browser dependencies required
-- ✅ Works consistently across environments
+- ✅ Extraction script performs actual CSS extraction via coverage API
+- ✅ Uses system Chrome browser
+- ✅ Dynamic extraction based on actual CSS usage
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
 - Test after version: `cd after/code && npm run dev` → `http://localhost:8083`
-- Run extraction: `npm run extract-critical` (generates critical.css automatically)
+- Run extraction: `npm run extract-critical` (generates critical.css dynamically)
 
 **Extraction Script Behavior:**
-- Reads full styles.css file
-- Matches CSS rules for above-the-fold selectors
-- Writes matching CSS to critical.css
-- Generates 7,683 characters of critical CSS
-- No browser dependencies required
-- Alternative: Critical npm package v8.0.0 available (see CHROME_SETUP.md)
+- Launches Playwright with system Chrome
+- Sets viewport to 1300x900
+- Enables CSS coverage tracking
+- Extracts CSS based on actual browser usage
+- Generates 14,362 characters of critical CSS
+- Uses your installed Chrome browser
+- True dynamic extraction via coverage API
 
 ## Comparison
 
@@ -172,42 +174,51 @@ This episode has two versions for comparison:
 
 ## Technical Details
 
-### Tool Choice - Manual Selector Matching
+### Tool Choice - Playwright with System Chrome
 
-I initially tried multiple browser-based approaches (Critical, Penthouse, Beasties) but encountered dependency and compatibility issues. Switched to manual selector matching which:
+I chose Playwright with system Chrome for dynamic extraction because:
 
-- Requires no browser dependencies
-- Works immediately without complex setup
-- Provides consistent results across environments
-- Is perfect for educational demonstrations
-- Can be upgraded to Critical npm package v8.0.0 if needed
+- Uses your installed Chrome browser (no downloads needed)
+- Provides true dynamic extraction via CSS coverage API
+- Extracts CSS based on actual browser usage, not predefined selectors
+- Modern, well-maintained project with good system Chrome integration
+- Accurate viewport-based extraction
+- Better alternative to older tools with dependency issues
+
+**Why not other tools:**
+- Critical npm package: Required Chrome download via Puppeteer (complex setup)
+- Penthouse: Had version compatibility issues with old Puppeteer
+- Beasties: Static analysis approach, had compatibility issues
+- Manual selector matching: Not truly dynamic, requires maintenance
 
 ### Extraction Script
 
-The `extract-critical.js` script uses manual selector matching:
+The `extract-critical.js` script uses Playwright with system Chrome:
 ```javascript
-// Read full CSS
-const fullCSS = await fs.readFile('styles.css', 'utf-8');
+import { chromium } from 'playwright';
 
-// Define above-the-fold selectors
-const criticalSelectors = [
-  ':root', '*', 'body', '[dir="rtl"]',
-  '.container', '.eyebrow', '.site-header', '.header-inner',
-  '.logo', '.logo-mark', '.main-navigation', '.lang-switcher',
-  '.hero', '.hero-grid', '.hero-content', '.hero h1',
-  '.hero-description', '.hero-actions', '.button',
-  '.button-primary', '.button-secondary', '.hero-meta',
-  '.meta-item', '.meta-item strong', '.meta-item span',
-  // ... more selectors
-];
+// Launch browser with system Chrome
+const browser = await chromium.launch({
+  executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  headless: true,
+});
 
-// Extract CSS rules for critical selectors
-const criticalCSS = cssRules.reduce((result, rule) => {
-  if (criticalSelectors.some(selector => rule.includes(selector))) {
-    return result + rule;
-  }
-  return result;
-}, '');
+const page = await browser.newPage();
+await page.setViewportSize({ width: 1300, height: 900 });
+await page.goto('http://localhost:8083', { waitUntil: 'networkidle' });
+
+// Extract critical CSS using Playwright's coverage API
+await page.coverage.startCSSCoverage();
+await page.reload({ waitUntil: 'networkidle' });
+const coverage = await page.coverage.stopCSSCoverage();
+
+// Filter for used CSS rules
+const criticalCSS = coverage
+  .filter(entry => entry.url.includes('styles.css'))
+  .map(entry => entry.text)
+  .join('\n');
+
+await browser.close();
 ```
 
 **Alternative using Critical npm package (v8.0.0):**

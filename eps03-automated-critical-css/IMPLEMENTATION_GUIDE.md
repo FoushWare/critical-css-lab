@@ -92,7 +92,7 @@ Open both URLs in different browser tabs:
 
 ### Step 4: Test Automated Extraction Script
 
-The automated extraction script now performs **actual Critical CSS extraction** using manual selector matching. This approach requires no browser dependencies and works immediately.
+The automated extraction script now uses **Playwright with system Chrome** for dynamic Critical CSS extraction. This approach extracts CSS based on actual browser usage rather than predefined selectors.
 
 **Run the extraction:**
 ```bash
@@ -102,19 +102,20 @@ npm run extract-critical
 
 **Expected Output:**
 ```
-🔍 Extracting Critical CSS manually (above-the-fold selectors)...
+🔍 Extracting Critical CSS using Playwright with system Chrome...
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 7683 characters
-🎯 Successfully extracted above-the-fold CSS (manual selector matching)
+📊 CSS size: 14362 characters
+🎯 Successfully extracted using Playwright with system Chrome
 ```
 
 **What This Does:**
-- Reads the full styles.css file
-- Matches CSS rules for above-the-fold selectors (hero, header, navigation, etc.)
-- Writes the matching CSS to critical.css
-- Generates real critical CSS (7,683 characters)
-- No browser dependencies required
-- Works consistently across environments
+- Launches Playwright with your system Chrome browser
+- Sets viewport to 1300x900 (desktop)
+- Navigates to the local server
+- Enables CSS coverage tracking
+- Extracts CSS that was actually used during rendering
+- Writes the extracted CSS to critical.css (14,362 characters)
+- Provides true dynamic extraction based on actual usage
 
 **This Works:** The extraction script runs successfully without Chrome setup!
 
