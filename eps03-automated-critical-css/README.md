@@ -57,9 +57,10 @@ This episode has two versions for comparison:
 4. **Tool Configuration**
    - Playwright with system Chrome for dynamic extraction
    - Uses CSS coverage API to determine used CSS
-   - Viewport: 1300x900 (desktop)
-   - Extracts CSS based on actual browser usage
-   - Generates 14,362 characters of critical CSS
+   - Multi-viewport support: mobile (390x844), tablet (768x1024), desktop (1300x900)
+   - Extracts CSS based on actual browser usage across devices
+   - Merges and deduplicates CSS from all viewports
+   - Generates 13,977 characters of comprehensive critical CSS
    - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
@@ -180,9 +181,10 @@ I chose Playwright with system Chrome for dynamic extraction because:
 
 - Uses your installed Chrome browser (no downloads needed)
 - Provides true dynamic extraction via CSS coverage API
-- Extracts CSS based on actual browser usage, not predefined selectors
+- Extracts CSS based on actual browser usage across multiple viewports
 - Modern, well-maintained project with good system Chrome integration
-- Accurate viewport-based extraction
+- Accurate multi-viewport extraction (mobile, tablet, desktop)
+- Automatic deduplication of CSS rules across viewports
 - Better alternative to older tools with dependency issues
 
 **Why not other tools:**
@@ -193,32 +195,52 @@ I chose Playwright with system Chrome for dynamic extraction because:
 
 ### Extraction Script
 
-The `extract-critical.js` script uses Playwright with system Chrome:
+The `extract-critical.js` script uses Playwright with system Chrome for multi-viewport extraction:
 ```javascript
 import { chromium } from 'playwright';
 
-// Launch browser with system Chrome
+// Define viewports for different devices
+const viewports = [
+  { name: 'mobile', width: 390, height: 844 },   // iPhone 12/13/14
+  { name: 'tablet', width: 768, height: 1024 },  // iPad
+  { name: 'desktop', width: 1300, height: 900 },  // Desktop
+];
+
 const browser = await chromium.launch({
   executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   headless: true,
 });
 
-const page = await browser.newPage();
-await page.setViewportSize({ width: 1300, height: 900 });
-await page.goto('http://localhost:8083', { waitUntil: 'networkidle' });
+const allCSS = new Set();
 
-// Extract critical CSS using Playwright's coverage API
-await page.coverage.startCSSCoverage();
-await page.reload({ waitUntil: 'networkidle' });
-const coverage = await page.coverage.stopCSSCoverage();
-
-// Filter for used CSS rules
-const criticalCSS = coverage
-  .filter(entry => entry.url.includes('styles.css'))
-  .map(entry => entry.text)
-  .join('\n');
+for (const viewport of viewports) {
+  const page = await browser.newPage();
+  await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  await page.goto('http://localhost:8083', { waitUntil: 'networkidle' });
+  
+  await page.coverage.startCSSCoverage();
+  await page.reload({ waitUntil: 'networkidle' });
+  const coverage = await page.coverage.stopCSSCoverage();
+  
+  // Add CSS rules to set for deduplication
+  coverage
+    .filter(entry => entry.url.includes('styles.css'))
+    .forEach(entry => {
+      const cssRules = entry.text.split('}');
+      cssRules.forEach(rule => {
+        if (rule.trim()) {
+          allCSS.add(rule.trim() + '}');
+        }
+      });
+    });
+  
+  await page.close();
+}
 
 await browser.close();
+
+// Merge all CSS rules
+const criticalCSS = Array.from(allCSS).join('\n');
 ```
 
 **Alternative using Critical npm package (v8.0.0):**

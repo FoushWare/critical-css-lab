@@ -92,7 +92,7 @@ Open both URLs in different browser tabs:
 
 ### Step 4: Test Automated Extraction Script
 
-The automated extraction script now uses **Playwright with system Chrome** for dynamic Critical CSS extraction. This approach extracts CSS based on actual browser usage rather than predefined selectors.
+The automated extraction script now uses **Playwright with system Chrome** for dynamic Critical CSS extraction across multiple viewports. This approach extracts CSS based on actual browser usage for mobile, tablet, and desktop.
 
 **Run the extraction:**
 ```bash
@@ -103,19 +103,26 @@ npm run extract-critical
 **Expected Output:**
 ```
 🔍 Extracting Critical CSS using Playwright with system Chrome...
+📱 Extracting for multiple viewports: mobile, tablet, desktop
+  🔄 Processing mobile (390x844)...
+  ✅ mobile extraction complete
+  🔄 Processing tablet (768x1024)...
+  ✅ tablet extraction complete
+  🔄 Processing desktop (1300x900)...
+  ✅ desktop extraction complete
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 14362 characters
+📊 CSS size: 13977 characters
 🎯 Successfully extracted using Playwright with system Chrome
+📱 Viewports covered: mobile, tablet, desktop
 ```
 
 **What This Does:**
 - Launches Playwright with your system Chrome browser
-- Sets viewport to 1300x900 (desktop)
-- Navigates to the local server
-- Enables CSS coverage tracking
-- Extracts CSS that was actually used during rendering
-- Writes the extracted CSS to critical.css (14,362 characters)
-- Provides true dynamic extraction based on actual usage
+- Iterates through mobile (390x844), tablet (768x1024), and desktop (1300x900) viewports
+- For each viewport: navigates to local server, enables CSS coverage tracking, extracts used CSS
+- Merges and deduplicates CSS from all viewports
+- Writes the comprehensive critical CSS to critical.css (13,977 characters)
+- Provides true dynamic extraction based on actual usage across devices
 
 **This Works:** The extraction script runs successfully without Chrome setup!
 
