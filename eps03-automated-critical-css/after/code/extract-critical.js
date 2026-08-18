@@ -40,25 +40,52 @@ async function extractCriticalCSS() {
       // Navigate to the page
       await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle' });
       
-      // Extract critical CSS using Playwright's coverage API
-      await page.coverage.startCSSCoverage();
-      await page.reload({ waitUntil: 'networkidle' });
-      const coverage = await page.coverage.stopCSSCoverage();
-      
-      // Filter for used CSS rules and add to set (deduplicate)
-      coverage
-        .filter(entry => entry.url.includes('styles.css'))
-        .forEach(entry => {
-          const cssRules = entry.text.split('}');
-          cssRules.forEach(rule => {
-            if (rule.trim()) {
-              allCSS.add(rule.trim() + '}');
+      // Extract critical CSS using bounding-box approach
+      const criticalRules = await page.evaluate((vpHeight) => {
+        const used = [];
+        const sheets = Array.from(document.styleSheets);
+        
+        for (const sheet of sheets) {
+          try {
+            const rules = sheet.cssRules || sheet.rules;
+            if (!rules) continue;
+            
+            for (const rule of rules) {
+              if (!rule.selectorText) continue;
+              
+              try {
+                const elements = document.querySelectorAll(rule.selectorText);
+                for (const el of elements) {
+                  const rect = el.getBoundingClientRect();
+                  // Check if element is within viewport (above the fold)
+                  if (rect.top < vpHeight && rect.bottom > 0) {
+                    used.push(rule.cssText);
+                    break; // Only need one element to be visible
+                  }
+                }
+              } catch (e) {
+                // Invalid selector or other DOM issues
+                continue;
+              }
             }
-          });
-        });
+          } catch (e) {
+            // Cross-origin stylesheet or other access issues
+            continue;
+          }
+        }
+        
+        return used;
+      }, viewport.height);
+      
+      // Add CSS rules to set for deduplication
+      criticalRules.forEach(rule => {
+        if (rule && rule.trim()) {
+          allCSS.add(rule.trim());
+        }
+      });
       
       await page.close();
-      console.log(`  ✅ ${viewport.name} extraction complete`);
+      console.log(`  ✅ ${viewport.name} extraction complete (${criticalRules.length} rules)`);
     }
 
     await browser.close();
@@ -71,6 +98,7 @@ async function extractCriticalCSS() {
     console.log(`📊 CSS size: ${criticalCSS.length} characters`);
     console.log(`🎯 Successfully extracted using Playwright with system Chrome`);
     console.log(`📱 Viewports covered: ${viewports.map(v => v.name).join(', ')}`);
+    console.log(`🔢 Total unique CSS rules: ${allCSS.size}`);
     
   } catch (error) {
     console.error('❌ Error extracting Critical CSS:', error);

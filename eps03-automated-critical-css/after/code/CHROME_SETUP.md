@@ -19,11 +19,14 @@ The script:
 3. For each viewport:
    - Sets appropriate dimensions
    - Navigates to the local server
-   - Enables CSS coverage tracking
-   - Reloads the page to capture used CSS
-   - Extracts CSS that was actually used during rendering
+   - Evaluates JavaScript to walk the DOM
+   - Uses `getBoundingClientRect()` to determine element visibility
+   - Keeps only CSS rules for elements within viewport bounds
+   - Extracts actual above-the-fold CSS, not just used CSS
 4. Merges and deduplicates CSS from all viewports
 5. Writes the comprehensive critical CSS to critical.css
+
+**Key Improvement**: Uses bounding-box detection (`getBoundingClientRect()`) to determine which CSS rules are actually needed for above-the-fold content, not just which rules were used anywhere on the page.
 
 ## Viewports Covered
 
@@ -57,26 +60,28 @@ Expected output:
 🔍 Extracting Critical CSS using Playwright with system Chrome...
 📱 Extracting for multiple viewports: mobile, tablet, desktop
   🔄 Processing mobile (390x844)...
-  ✅ mobile extraction complete
+  ✅ mobile extraction complete (41 rules)
   🔄 Processing tablet (768x1024)...
-  ✅ tablet extraction complete
+  ✅ tablet extraction complete (47 rules)
   🔄 Processing desktop (1300x900)...
-  ✅ desktop extraction complete
+  ✅ desktop extraction complete (55 rules)
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 13977 characters
+📊 CSS size: 6452 characters
 🎯 Successfully extracted using Playwright with system Chrome
 📱 Viewports covered: mobile, tablet, desktop
+🔢 Total unique CSS rules: 52
 ```
 
 ## Benefits
 
 - **Multi-viewport coverage**: CSS optimized for mobile, tablet, and desktop
-- **Dynamic extraction**: CSS is extracted based on actual usage across devices
-- **Accurate**: Uses browser coverage API to determine what CSS is actually used
+- **True above-the-fold extraction**: Uses bounding-box detection, not just coverage
+- **Accurate**: Uses `getBoundingClientRect()` to determine viewport visibility
 - **Viewport-aware**: Respects the configured viewport dimensions for each device
 - **System Chrome**: Uses your installed Chrome, no additional downloads
-- **Real automation**: True browser-based extraction, not static analysis
+- **Real automation**: True browser-based extraction with DOM walking
 - **Deduplication**: Automatically removes duplicate CSS rules across viewports
+- **Optimized size**: Significantly smaller output (6,452 chars vs 13,977 chars with coverage)
 
 ## Alternative Approaches
 

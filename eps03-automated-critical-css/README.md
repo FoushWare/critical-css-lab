@@ -56,11 +56,11 @@ This episode has two versions for comparison:
 
 4. **Tool Configuration**
    - Playwright with system Chrome for dynamic extraction
-   - Uses CSS coverage API to determine used CSS
+   - Uses bounding-box detection with `getBoundingClientRect()` for true above-the-fold extraction
    - Multi-viewport support: mobile (390x844), tablet (768x1024), desktop (1300x900)
-   - Extracts CSS based on actual browser usage across devices
+   - DOM walking approach to determine viewport visibility
    - Merges and deduplicates CSS from all viewports
-   - Generates 13,977 characters of comprehensive critical CSS
+   - Generates 6,452 characters of optimized critical CSS (52 unique rules)
    - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
@@ -180,12 +180,13 @@ This episode has two versions for comparison:
 I chose Playwright with system Chrome for dynamic extraction because:
 
 - Uses your installed Chrome browser (no downloads needed)
-- Provides true dynamic extraction via CSS coverage API
-- Extracts CSS based on actual browser usage across multiple viewports
+- Provides true above-the-fold extraction via bounding-box detection
+- Extracts CSS based on actual viewport visibility using `getBoundingClientRect()`
 - Modern, well-maintained project with good system Chrome integration
 - Accurate multi-viewport extraction (mobile, tablet, desktop)
 - Automatic deduplication of CSS rules across viewports
 - Better alternative to older tools with dependency issues
+- Implements the same approach as critical/penthouse but with Playwright
 
 **Why not other tools:**
 - Critical npm package: Required Chrome download via Puppeteer (complex setup)
@@ -195,15 +196,15 @@ I chose Playwright with system Chrome for dynamic extraction because:
 
 ### Extraction Script
 
-The `extract-critical.js` script uses Playwright with system Chrome for multi-viewport extraction:
+The `extract-critical.js` script uses Playwright with system Chrome for multi-viewport extraction with bounding-box detection:
 ```javascript
 import { chromium } from 'playwright';
 
 // Define viewports for different devices
 const viewports = [
-  { name: 'mobile', width: 390, height: 844 },   // iPhone 12/13/14
-  { name: 'tablet', width: 768, height: 1024 },  // iPad
-  { name: 'desktop', width: 1300, height: 900 },  // Desktop
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'tablet', width: 768, height: 1024 },
+  { name: 'desktop', width: 1300, height: 900 },
 ];
 
 const browser = await chromium.launch({
@@ -218,21 +219,39 @@ for (const viewport of viewports) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   await page.goto('http://localhost:8083', { waitUntil: 'networkidle' });
   
-  await page.coverage.startCSSCoverage();
-  await page.reload({ waitUntil: 'networkidle' });
-  const coverage = await page.coverage.stopCSSCoverage();
-  
-  // Add CSS rules to set for deduplication
-  coverage
-    .filter(entry => entry.url.includes('styles.css'))
-    .forEach(entry => {
-      const cssRules = entry.text.split('}');
-      cssRules.forEach(rule => {
-        if (rule.trim()) {
-          allCSS.add(rule.trim() + '}');
+  // Extract critical CSS using bounding-box approach
+  const criticalRules = await page.evaluate((vpHeight) => {
+    const used = [];
+    const sheets = Array.from(document.styleSheets);
+    
+    for (const sheet of sheets) {
+      try {
+        const rules = sheet.cssRules || sheet.rules;
+        for (const rule of rules) {
+          if (!rule.selectorText) continue;
+          
+          const elements = document.querySelectorAll(rule.selectorText);
+          for (const el of elements) {
+            const rect = el.getBoundingClientRect();
+            // Check if element is within viewport (above the fold)
+            if (rect.top < vpHeight && rect.bottom > 0) {
+              used.push(rule.cssText);
+              break;
+            }
+          }
         }
-      });
-    });
+      } catch (e) {
+        continue;
+      }
+    }
+    return used;
+  }, viewport.height);
+  
+  criticalRules.forEach(rule => {
+    if (rule && rule.trim()) {
+      allCSS.add(rule.trim());
+    }
+  });
   
   await page.close();
 }
