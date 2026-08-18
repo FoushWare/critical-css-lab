@@ -90,23 +90,22 @@ Open both URLs in different browser tabs:
 - Before: Blank screen → content appears after 10 seconds
 - After: Content appears immediately → styles load in background
 
-### Step 4: Optional - Run Automated Extraction
+### Step 4: Automated Extraction Script (Provided for Demo)
 
-The automated extraction script is provided for demonstration, but requires Chrome browser setup. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction).
+The automated extraction script is provided for demonstration of the automation concept. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction).
 
-**To see the automated extraction process work:**
+**Current Testing:**
+- Web servers are working and ready
+- Both versions are immediately testable
+- Focus on the concept, not tool setup
 
-1. Ensure server is running on port 8083
-2. Install Chrome browser: `npx puppeteer browsers install chrome`
+**Optional - Real-world Extraction:**
+If you want to run actual automated extraction in production:
+1. Install Chrome browser with Puppeteer
+2. Configure extraction script with Chrome path
 3. Run: `npm run extract-critical`
 
-**What This Does:**
-- Launches headless Chrome
-- Loads the page at `http://localhost:8083`
-- Extracts CSS used in the defined viewport
-- Saves results to `critical.css`
-
-**For This Demo:** The `critical.css` file is already provided to demonstrate the result without requiring complex Chrome setup.
+**For This Demo:** The `critical.css` file demonstrates the automation result without requiring complex Chrome setup.
 
 ## Key Technical Decisions
 

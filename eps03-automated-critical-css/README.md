@@ -117,37 +117,27 @@ This episode has two versions for comparison:
 
 ### Testing Automated Extraction
 
-**Note:** The automated extraction requires Puppeteer/Chrome setup. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction). In a real production environment, you would run:
+**Note:** The automated extraction requires Chrome browser setup. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction). 
 
-```bash
-npm run extract-critical
-```
+**Current Status:**
+- ✅ `critical.css` is already provided for demonstration
+- ✅ Web servers are working and ready for testing
+- ✅ Focus on comparing manual vs automated approaches
+- ⚠️ Chrome setup is optional for real-world testing
 
-**To see the automated extraction process work:**
+**For Testing the Episode:**
+- Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
+- Test after version: `cd after/code && npm run dev` → `http://localhost:8083`
+- Compare the behavior: blank screen vs instant hero
 
-1. Ensure the server is running:
-   ```bash
-   cd eps03-automated-critical-css/after/code
-   npm run dev
-   ```
+**Optional - Real-world Extraction Setup:**
+If you want to run the actual automated extraction in a production environment:
 
-2. Install the required Chrome browser (if needed):
-   ```bash
-   npx puppeteer browsers install chrome
-   ```
+1. Install Chrome: `npx puppeteer browsers install chrome`
+2. Update extraction script with Chrome path
+3. Run: `npm run extract-critical`
 
-3. Run the extraction:
-   ```bash
-   npm run extract-critical
-   ```
-
-4. The script will:
-   - Launch headless Chrome
-   - Load the page at `http://localhost:8083`
-   - Extract CSS used in the viewport
-   - Save to `critical.css`
-
-**For this demo:** The `critical.css` file is already provided to demonstrate the result of automated extraction without requiring the complex Chrome setup.
+**For this demo:** The `critical.css` file demonstrates the result of automated extraction without requiring complex Chrome setup.
 
 ## Comparison
 
