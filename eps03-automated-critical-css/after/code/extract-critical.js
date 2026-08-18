@@ -19,7 +19,6 @@ async function extractCriticalCSS() {
       css: path.join(__dirname, 'styles.css'),
       width: 1300,
       height: 900,
-      timeout: 30000,
       penthouse: {
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },

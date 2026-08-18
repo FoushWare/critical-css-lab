@@ -184,14 +184,16 @@ I initially tried Penthouse but encountered version compatibility issues. Switch
 
 The `extract-critical.js` script:
 ```javascript
-import critical from 'critical';
+import { generate } from 'critical';
 
-const result = await critical.generate({
+const result = await generate({
   src: 'http://localhost:8083',
   css: './styles.css',
   width: 1300,
   height: 900,
-  timeout: 30000,
+  penthouse: {
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  },
 });
 ```
 
