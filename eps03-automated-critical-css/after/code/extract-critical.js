@@ -1,3 +1,4 @@
+import { generate } from 'critical';
 import fs from 'node:fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
@@ -11,22 +12,30 @@ const outputPath = path.join(__dirname, 'critical.css');
 
 async function extractCriticalCSS() {
   try {
-    console.log('🔍 Validating Critical CSS extraction...');
+    console.log('🔍 Extracting Critical CSS using Critical with system Chrome...');
     
-    // For this educational demo, we validate the provided critical.css
-    // This demonstrates the automation concept without complex Chrome setup
-    console.log('📝 Note: Chrome is installed on your system');
-    console.log('💡 In production, you would use Critical npm package with Chrome');
-    console.log('🎯 For this demo, we validate the provided critical.css');
+    const result = await generate({
+      src: `http://localhost:${PORT}`,
+      css: path.join(__dirname, 'styles.css'),
+      width: 1300,
+      height: 900,
+      penthouse: {
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      },
+    });
+
+    // Critical returns an object with css property
+    const criticalCSS = result.css || result;
     
-    // Verify critical.css exists
-    const stats = await fs.stat(outputPath);
-    console.log('✅ Critical CSS file exists (critical.css)');
-    console.log(`📊 CSS size: ${stats.size} characters`);
-    console.log('🎯 This demonstrates the result of automated extraction');
+    await fs.writeFile(outputPath, criticalCSS);
+    console.log('✅ Critical CSS extracted to critical.css');
+    console.log(`📊 CSS size: ${criticalCSS.length} characters`);
+    console.log('🎯 Successfully extracted using system Chrome');
     
   } catch (error) {
-    console.error('❌ Error with Critical CSS:', error);
+    console.error('❌ Error extracting Critical CSS:', error);
+    console.log('💡 See CHROME_SETUP.md for installation instructions');
     process.exit(1);
   }
 }
