@@ -3,8 +3,5 @@
   "scripts": {
     "dev": "node server.js",
     "extract-critical": "node extract-critical.js"
-  },
-  "dependencies": {
-    "critical": "^5.0.3"
   }
 }
