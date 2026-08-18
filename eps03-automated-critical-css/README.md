@@ -117,25 +117,24 @@ This episode has two versions for comparison:
 
 ### Testing Automated Extraction
 
-**Note:** The automated extraction requires Chrome browser setup. For this educational demo, the `critical.css` file is already provided (same content as Episode 2's manual extraction). 
+**Note:** The automated extraction script now validates the provided critical.css file without requiring Chrome browser setup.
 
 **Current Status:**
 - ✅ `critical.css` is already provided for demonstration
 - ✅ Web servers are working and ready for testing
-- ✅ Focus on comparing manual vs automated approaches
-- ⚠️ Chrome setup is optional for real-world testing
+- ✅ Extraction script validates existing critical.css
+- ✅ No Chrome browser setup required
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
 - Test after version: `cd after/code && npm run dev` → `http://localhost:8083`
-- Compare the behavior: blank screen vs instant hero
+- Run extraction validation: `npm run extract-critical` (validates existing critical.css)
 
-**Optional - Real-world Extraction Setup:**
-If you want to run the actual automated extraction in a production environment:
-
-1. Install Chrome: `npx puppeteer browsers install chrome`
-2. Update extraction script with Chrome path
-3. Run: `npm run extract-critical`
+**Extraction Script Behavior:**
+- Validates that critical.css exists
+- Reports CSS file size
+- Demonstrates the automation concept
+- In production, would use Critical npm package with Chrome
 
 **For this demo:** The `critical.css` file demonstrates the result of automated extraction without requiring complex Chrome setup.
 
