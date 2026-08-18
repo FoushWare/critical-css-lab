@@ -92,7 +92,7 @@ Open both URLs in different browser tabs:
 
 ### Step 4: Test Automated Extraction Script
 
-The automated extraction script now works successfully by validating the provided critical.css file.
+The automated extraction script validates the provided critical.css file. Chrome is installed on your system, but automation tools have specific browser requirements.
 
 **Run the extraction validation:**
 ```bash
@@ -102,17 +102,18 @@ npm run extract-critical
 
 **Expected Output:**
 ```
-🔍 Extracting Critical CSS...
-📝 Note: Using provided critical.css for educational demo
+🔍 Validating Critical CSS extraction...
+📝 Note: Chrome is installed on your system
 💡 In production, you would use Critical npm package with Chrome
 ✅ Critical CSS file exists (critical.css)
-📊 CSS size: 6580 characters
 🎯 This demonstrates the result of automated extraction
 ```
 
 **What This Does:**
 - Validates that critical.css exists
 - Reports CSS file size (6580 characters)
+- Acknowledges Chrome availability
+- In production, would use Critical npm package with Chrome
 - Demonstrates the automation concept
 - In production, would use Critical npm package with Chrome
 

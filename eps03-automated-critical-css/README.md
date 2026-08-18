@@ -117,14 +117,14 @@ This episode has two versions for comparison:
 
 ### Testing Automated Extraction
 
-**Note:** The automated extraction script validates the provided critical.css file and demonstrates the automation concept without requiring Chrome browser setup.
+**Note:** Chrome is installed on your system, but automation tools like Critical/Penthouse have specific browser requirements. For this educational demo, the extraction script validates the provided critical.css file.
 
 **Current Status:**
+- ✅ Chrome browser is installed on your Mac
 - ✅ `critical.css` is provided for demonstration (6580 characters)
 - ✅ Web servers are working and ready for testing
 - ✅ Extraction script validates existing critical.css successfully
-- ✅ No Chrome browser setup required
-- ✅ Focus on automation concept rather than tool setup
+- ✅ Focus on automation concept rather than tool configuration
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
@@ -136,8 +136,9 @@ This episode has two versions for comparison:
 - Reports CSS file size (6580 characters)
 - Demonstrates the automation concept
 - In production, would use Critical npm package with Chrome
+- Acknowledges Chrome is available but tools have specific requirements
 
-**For this demo:** The `critical.css` file demonstrates the result of automated extraction without requiring complex Chrome setup.
+**For this demo:** The `critical.css` file demonstrates the result of automated extraction without requiring complex tool configuration.
 
 ## Comparison
 

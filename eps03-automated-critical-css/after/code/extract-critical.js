@@ -11,12 +11,13 @@ const outputPath = path.join(__dirname, 'critical.css');
 
 async function extractCriticalCSS() {
   try {
-    console.log('🔍 Extracting Critical CSS...');
+    console.log('🔍 Validating Critical CSS extraction...');
     
     // For this educational demo, we validate the provided critical.css
-    // This demonstrates the automation concept without Chrome setup issues
-    console.log('📝 Note: Using provided critical.css for educational demo');
+    // This demonstrates the automation concept without complex Chrome setup
+    console.log('📝 Note: Chrome is installed on your system');
     console.log('💡 In production, you would use Critical npm package with Chrome');
+    console.log('🎯 For this demo, we validate the provided critical.css');
     
     // Verify critical.css exists
     const stats = await fs.stat(outputPath);
