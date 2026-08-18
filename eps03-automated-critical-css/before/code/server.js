@@ -1,8 +1,10 @@
-const http = require("node:http");
-const fs = require("node:fs/promises");
-const path = require("node:path");
+import http from "node:http";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(process.argv[1]);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const rootDir = __dirname;
 
 const PORT = 8082;

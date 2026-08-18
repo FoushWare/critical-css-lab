@@ -1,6 +1,10 @@
-const critical = require('critical');
-const fs = require('node:fs/promises');
-const path = require('node:path');
+import { generate } from 'critical';
+import fs from 'node:fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 8082;
 
@@ -10,7 +14,7 @@ async function extractCriticalCSS() {
   try {
     console.log('🔍 Extracting Critical CSS using Critical...');
     
-    const result = await critical.generate({
+    const result = await generate({
       src: `http://localhost:${PORT}`,
       css: path.join(__dirname, 'styles.css'),
       width: 1300,
