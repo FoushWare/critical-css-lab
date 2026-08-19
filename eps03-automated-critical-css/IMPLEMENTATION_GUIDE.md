@@ -105,16 +105,16 @@ npm run extract-critical
 🔍 Extracting Critical CSS using Playwright with system Chrome...
 📱 Extracting for multiple viewports: mobile, tablet, desktop
   🔄 Processing mobile (390x844)...
-  ✅ mobile extraction complete (85 rules)
+  ✅ mobile extraction complete (129 rules)
   🔄 Processing tablet (768x1024)...
-  ✅ tablet extraction complete (93 rules)
+  ✅ tablet extraction complete (143 rules)
   🔄 Processing desktop (1300x900)...
-  ✅ desktop extraction complete (104 rules)
+  ✅ desktop extraction complete (162 rules)
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 13173 characters
+📊 CSS size: 19420 characters
 🎯 Successfully extracted using Playwright with system Chrome
 📱 Viewports covered: mobile, tablet, desktop
-🔢 Total unique CSS rules: 110
+🔢 Total unique CSS rules: 170
 ```
 
 **What This Does:**
@@ -122,10 +122,12 @@ npm run extract-critical
 - Iterates through mobile (390x844), tablet (768x1024), and desktop (1300x900) viewports
 - For each viewport: navigates to local server, uses DOM walking with `getBoundingClientRect()`
 - Handles `@media` rules by checking if they apply to the current viewport
+- Uses shared counter (counter.value++) to prevent index collisions in nested @media rules
 - Keeps only CSS rules for elements within viewport bounds (true above-the-fold detection)
-- Uses position-based deduplication to preserve original CSS cascade order
+- Uses numeric position keys (sheetIndex * 1e6 + currentIndex) for order preservation
+- Maintains original CSS cascade order with numeric sorting (a[0] - b[0])
 - Merges and deduplicates CSS from all viewports
-- Writes the comprehensive critical CSS to critical.css (13,173 characters, 110 unique rules)
+- Writes the comprehensive critical CSS to critical.css (19,420 characters, 170 unique rules)
 - Provides true above-the-fold extraction with media query support and order preservation
 
 **This Works:** The extraction script runs successfully without Chrome setup!

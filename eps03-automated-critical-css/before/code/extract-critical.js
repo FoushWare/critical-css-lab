@@ -47,15 +47,15 @@ async function extractCriticalCSS() {
         const used = [];
         const sheets = Array.from(document.styleSheets);
         
-        function collectRules(rules, sheetIndex, ruleIndex, vpWidth, vpHeight, used) {
+        function collectRules(rules, sheetIndex, counter, vpWidth, vpHeight, used) {
           for (const rule of rules) {
-            const currentRuleIndex = ruleIndex++;
+            const currentIndex = counter.value++;
             
             // Handle @media rules
             if (rule.type === CSSRule.MEDIA_RULE) {
               // Check if this media query applies to the current viewport
               if (window.matchMedia(rule.conditionText).matches) {
-                collectRules(rule.cssRules, sheetIndex, currentRuleIndex, vpWidth, vpHeight, used);
+                collectRules(rule.cssRules, sheetIndex, counter, vpWidth, vpHeight, used);
               }
               continue;
             }
@@ -69,10 +69,10 @@ async function extractCriticalCSS() {
                 const rect = el.getBoundingClientRect();
                 // Check if element is within viewport (above the fold)
                 if (rect.top < vpHeight && rect.bottom > 0) {
-                  // Store with position key for order preservation
+                  // Store with numeric position key for order preservation
                   used.push({
                     cssText: rule.cssText,
-                    position: `${sheetIndex}_${currentRuleIndex}`
+                    position: sheetIndex * 1e6 + currentIndex
                   });
                   break; // Only need one element to be visible
                 }
@@ -88,7 +88,7 @@ async function extractCriticalCSS() {
           try {
             const rules = sheets[sheetIndex].cssRules || sheets[sheetIndex].rules;
             if (!rules) continue;
-            collectRules(rules, sheetIndex, 0, vpWidth, vpHeight, used);
+            collectRules(rules, sheetIndex, { value: 0 }, vpWidth, vpHeight, used);
           } catch (e) {
             // Cross-origin stylesheet or other access issues
             continue;
@@ -113,7 +113,7 @@ async function extractCriticalCSS() {
     
     // Sort by position to preserve original source order, then join
     const sortedRules = Array.from(cssRulesMap.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
+      .sort((a, b) => a[0] - b[0])
       .map(entry => entry[1]);
     
     const criticalCSS = sortedRules.join('\n');

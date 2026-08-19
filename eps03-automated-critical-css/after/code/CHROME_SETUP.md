@@ -29,7 +29,8 @@ The script:
 **Key Improvement**: Uses bounding-box detection (`getBoundingClientRect()`) to determine which CSS rules are actually needed for above-the-fold content, not just which rules were used anywhere on the page. Also includes:
 
 - **Media query support**: Properly handles `@media` rules by checking if they apply to the current viewport
-- **Order preservation**: Uses Map with position keys to maintain original CSS cascade order
+- **Order preservation**: Uses numeric position keys with monotonically-increasing counter to maintain original CSS cascade order
+- **Index collision prevention**: Shared counter prevents rule index collisions when traversing nested @media rules
 - **Responsive CSS**: Now includes mobile/tablet-specific media queries that match the viewport
 
 ## Viewports Covered
@@ -64,16 +65,16 @@ Expected output:
 🔍 Extracting Critical CSS using Playwright with system Chrome...
 📱 Extracting for multiple viewports: mobile, tablet, desktop
   🔄 Processing mobile (390x844)...
-  ✅ mobile extraction complete (85 rules)
+  ✅ mobile extraction complete (129 rules)
   🔄 Processing tablet (768x1024)...
-  ✅ tablet extraction complete (93 rules)
+  ✅ tablet extraction complete (143 rules)
   🔄 Processing desktop (1300x900)...
-  ✅ desktop extraction complete (104 rules)
+  ✅ desktop extraction complete (162 rules)
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 13173 characters
+📊 CSS size: 19420 characters
 🎯 Successfully extracted using Playwright with system Chrome
 📱 Viewports covered: mobile, tablet, desktop
-🔢 Total unique CSS rules: 110
+🔢 Total unique CSS rules: 170
 ```
 
 ## Benefits
@@ -81,7 +82,8 @@ Expected output:
 - **Multi-viewport coverage**: CSS optimized for mobile, tablet, and desktop
 - **True above-the-fold extraction**: Uses bounding-box detection, not just coverage
 - **Media query support**: Properly handles `@media` rules for responsive design
-- **Order preservation**: Maintains original CSS cascade order using position-based deduplication
+- **Order preservation**: Maintains original CSS cascade order using numeric position keys
+- **Index collision prevention**: Shared counter prevents rule loss in nested @media rules
 - **Accurate**: Uses `getBoundingClientRect()` to determine viewport visibility
 - **Viewport-aware**: Respects the configured viewport dimensions for each device
 - **System Chrome**: Uses your installed Chrome, no additional downloads

@@ -60,9 +60,10 @@ This episode has two versions for comparison:
    - Multi-viewport support: mobile (390x844), tablet (768x1024), desktop (1300x900)
    - DOM walking approach to determine viewport visibility
    - Media query support: Handles `@media` rules with viewport matching
-   - Order preservation: Uses position-based deduplication to maintain CSS cascade
+   - Order preservation: Uses numeric position keys with shared counter to maintain CSS cascade
+   - Index collision prevention: Monotonically-increasing counter prevents rule loss in nested @media
    - Merges and deduplicates CSS from all viewports
-   - Generates 13,173 characters of optimized critical CSS (110 unique rules)
+   - Generates 19,420 characters of optimized critical CSS (170 unique rules)
    - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
@@ -123,7 +124,7 @@ This episode has two versions for comparison:
 
 **Current Status:**
 - ✅ Working automated extraction using Playwright with system Chrome
-- ✅ `critical.css` is generated dynamically (13,173 characters for after, 6,720 for before)
+- ✅ `critical.css` is generated dynamically (19,420 characters for after, 6,246 for before)
 - ✅ Web servers are working and ready for testing
 - ✅ Extraction script performs actual CSS extraction via bounding-box detection
 - ✅ Uses system Chrome browser
@@ -131,6 +132,7 @@ This episode has two versions for comparison:
 - ✅ Order-preserving deduplication maintains CSS cascade
 - ✅ Multi-viewport coverage (mobile, tablet, desktop)
 - ✅ Responsive CSS properly handled with media query matching
+- ✅ Index collision prevention prevents rule loss in nested @media rules
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
@@ -189,6 +191,7 @@ I chose Playwright with system Chrome for dynamic extraction because:
 - Extracts CSS based on actual viewport visibility using `getBoundingClientRect()`
 - Handles `@media` rules properly for responsive design
 - Maintains CSS cascade order with position-based deduplication
+- Index collision prevention with shared counter for nested @media rules
 - Modern, well-maintained project with good system Chrome integration
 - Accurate multi-viewport extraction (mobile, tablet, desktop)
 - Implements the same approach as critical/penthouse but with Playwright
@@ -228,14 +231,14 @@ for (const viewport of viewports) {
   
   // Extract critical CSS with media query support
   const criticalRules = await page.evaluate(({ vpWidth, vpHeight }) => {
-    function collectRules(rules, sheetIndex, ruleIndex, vpWidth, vpHeight, used) {
+    function collectRules(rules, sheetIndex, counter, vpWidth, vpHeight, used) {
       for (const rule of rules) {
-        const currentRuleIndex = ruleIndex++;
+        const currentIndex = counter.value++;
         
         // Handle @media rules
         if (rule.type === CSSRule.MEDIA_RULE) {
           if (window.matchMedia(rule.conditionText).matches) {
-            collectRules(rule.cssRules, sheetIndex, currentRuleIndex, vpWidth, vpHeight, used);
+            collectRules(rule.cssRules, sheetIndex, counter, vpWidth, vpHeight, used);
           }
           continue;
         }
@@ -248,7 +251,7 @@ for (const viewport of viewports) {
           if (rect.top < vpHeight && rect.bottom > 0) {
             used.push({
               cssText: rule.cssText,
-              position: `${sheetIndex}_${currentRuleIndex}`
+              position: sheetIndex * 1e6 + currentIndex
             });
             break;
           }
@@ -261,7 +264,7 @@ for (const viewport of viewports) {
     for (let sheetIndex = 0; sheetIndex < sheets.length; sheetIndex++) {
       const rules = sheets[sheetIndex].cssRules || sheets[sheetIndex].rules;
       if (!rules) continue;
-      collectRules(rules, sheetIndex, 0, vpWidth, vpHeight, used);
+      collectRules(rules, sheetIndex, { value: 0 }, vpWidth, vpHeight, used);
     }
     return used;
   }, { vpWidth: viewport.width, vpHeight: viewport.height });
@@ -279,7 +282,7 @@ await browser.close();
 
 // Sort by position to preserve original source order
 const sortedRules = Array.from(cssRulesMap.entries())
-  .sort((a, b) => a[0].localeCompare(b[0]))
+  .sort((a, b) => a[0] - b[0])
   .map(entry => entry[1]);
 
 const criticalCSS = sortedRules.join('\n');
