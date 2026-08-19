@@ -63,7 +63,7 @@ This episode has two versions for comparison:
    - Order preservation: Uses numeric position keys with shared counter to maintain CSS cascade
    - Index collision prevention: Monotonically-increasing counter prevents rule loss in nested @media
    - Merges and deduplicates CSS from all viewports
-   - Generates 19,420 characters of optimized critical CSS (170 unique rules)
+   - Generates 25,375 characters of optimized critical CSS (219 unique rules)
    - System Chrome path: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
 
 5. **Content Updates**
@@ -124,7 +124,7 @@ This episode has two versions for comparison:
 
 **Current Status:**
 - ✅ Working automated extraction using Playwright with system Chrome
-- ✅ `critical.css` is generated dynamically (19,420 characters for after, 6,246 for before)
+- ✅ `critical.css` is generated dynamically (25,375 characters for after, 6,818 for before)
 - ✅ Web servers are working and ready for testing
 - ✅ Extraction script performs actual CSS extraction via bounding-box detection
 - ✅ Uses system Chrome browser
@@ -133,6 +133,7 @@ This episode has two versions for comparison:
 - ✅ Multi-viewport coverage (mobile, tablet, desktop)
 - ✅ Responsive CSS properly handled with media query matching
 - ✅ Index collision prevention prevents rule loss in nested @media rules
+- ✅ Falsy check fix prevents dropping first CSS rule (position 0)
 
 **For Testing the Episode:**
 - Test before version: `cd before/code && npm run dev` → `http://localhost:8082`
@@ -270,7 +271,7 @@ for (const viewport of viewports) {
   }, { vpWidth: viewport.width, vpHeight: viewport.height });
   
   criticalRules.forEach(rule => {
-    if (rule && rule.cssText && rule.position) {
+    if (rule && rule.cssText && rule.position !== undefined) {
       cssRulesMap.set(rule.position, rule.cssText);
     }
   });

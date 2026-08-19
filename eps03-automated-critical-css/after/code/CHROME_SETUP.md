@@ -31,6 +31,7 @@ The script:
 - **Media query support**: Properly handles `@media` rules by checking if they apply to the current viewport
 - **Order preservation**: Uses numeric position keys with monotonically-increasing counter to maintain original CSS cascade order
 - **Index collision prevention**: Shared counter prevents rule index collisions when traversing nested @media rules
+- **Falsy check fix**: Uses `position !== undefined` instead of truthiness to prevent dropping first rule (position 0)
 - **Responsive CSS**: Now includes mobile/tablet-specific media queries that match the viewport
 
 ## Viewports Covered
@@ -65,16 +66,16 @@ Expected output:
 🔍 Extracting Critical CSS using Playwright with system Chrome...
 📱 Extracting for multiple viewports: mobile, tablet, desktop
   🔄 Processing mobile (390x844)...
-  ✅ mobile extraction complete (129 rules)
+  ✅ mobile extraction complete (175 rules)
   🔄 Processing tablet (768x1024)...
-  ✅ tablet extraction complete (143 rules)
+  ✅ tablet extraction complete (195 rules)
   🔄 Processing desktop (1300x900)...
-  ✅ desktop extraction complete (162 rules)
+  ✅ desktop extraction complete (210 rules)
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 19420 characters
+📊 CSS size: 25375 characters
 🎯 Successfully extracted using Playwright with system Chrome
 📱 Viewports covered: mobile, tablet, desktop
-🔢 Total unique CSS rules: 170
+🔢 Total unique CSS rules: 219
 ```
 
 ## Benefits
@@ -84,12 +85,14 @@ Expected output:
 - **Media query support**: Properly handles `@media` rules for responsive design
 - **Order preservation**: Maintains original CSS cascade order using numeric position keys
 - **Index collision prevention**: Shared counter prevents rule loss in nested @media rules
+- **Falsy check fix**: Uses `position !== undefined` to prevent dropping first rule (position 0)
 - **Accurate**: Uses `getBoundingClientRect()` to determine viewport visibility
 - **Viewport-aware**: Respects the configured viewport dimensions for each device
 - **System Chrome**: Uses your installed Chrome, no additional downloads
 - **Real automation**: True browser-based extraction with DOM walking
 - **Deduplication**: Automatically removes duplicate CSS rules across viewports
 - **Responsive CSS**: Includes viewport-specific media queries that match each device
+- **No silent data loss**: All CSS rules including the first one are properly captured
 
 ## Alternative Approaches
 

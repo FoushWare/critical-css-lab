@@ -100,7 +100,7 @@ async function extractCriticalCSS() {
       
       // Add CSS rules to Map for order-preserving deduplication
       criticalRules.forEach(rule => {
-        if (rule && rule.cssText && rule.position) {
+        if (rule && rule.cssText && rule.position !== undefined) {
           cssRulesMap.set(rule.position, rule.cssText);
         }
       });
