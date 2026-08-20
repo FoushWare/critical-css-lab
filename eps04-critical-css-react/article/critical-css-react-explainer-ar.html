@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٤: Critical CSS مع React</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --bg:#12151f;
+  --surface:#1a2030;
+  --surface2:#212844;
+  --line:rgba(255,255,255,.09);
+  --text:#eef0f8;
+  --muted:#8d93ac;
+  --coral:#ff6b4a;
+  --coral-dim:#3a2620;
+  --teal:#5eead4;
+  --teal-dim:#183430;
+  --yellow:#ffd166;
+  --purple:#a78bfa;
+  --pink:#f472b6;
+  --blue:#60a5fa;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    var(--bg);
+  color:var(--text);
+  font-family:'Tajawal',sans-serif;
+  line-height:1.85;
+}
+code, .mono{
+  font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate;
+  display:inline-block; background:var(--surface2); color:var(--yellow);
+  border:1px solid var(--line); border-radius:6px;
+  padding:1px 7px; font-size:.88em; line-height:1.6;
+}
+h2 code, h3 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:13px; font-weight:700; letter-spacing:.02em;
+  color:var(--coral); background:var(--coral-dim);
+  border:1px solid rgba(255,107,74,.35);
+  padding:6px 14px; border-radius:999px; margin-bottom:20px;
+}
+h1{ font-size:40px; font-weight:800; margin:0 0 14px; line-height:1.35; }
+h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:660px; margin:0 0 36px; }
+
+.hero-row{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  margin-bottom:8px; direction:ltr;
+}
+.hero-box{
+  height:52px; padding:0 16px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; color:#12151f; text-align:center;
+  font-family:'JetBrains Mono',monospace; white-space:nowrap;
+  animation:pop .6s ease both; flex:0 0 auto;
+}
+.hero-arrow{
+  display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:20px; font-weight:700; animation:pop .6s ease both;
+  flex:0 0 auto;
+}
+@keyframes pop{ from{ transform:scale(.4) translateY(20px); opacity:0; } to{ transform:scale(1) translateY(0); opacity:1; } }
+.hero-box.c1{ background:var(--coral); animation-delay:.05s; }
+.hero-box.c2{ background:var(--yellow); animation-delay:.15s; }
+.hero-box.c3{ background:var(--purple); animation-delay:.25s; }
+.hero-box.c4{ background:var(--pink); animation-delay:.35s; }
+.hero-box.c5{ background:var(--teal); animation-delay:.45s; }
+.hero-box.c6{ background:var(--blue); animation-delay:.55s; }
+
+section.lesson{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:36px 36px 40px;
+  margin-top:28px;
+}
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; }
+h2{ font-size:25px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+
+.callout{
+  display:flex; gap:12px; align-items:flex-start;
+  background:var(--surface2); border:1px solid var(--line);
+  border-radius:14px; padding:16px 18px; margin:20px 0;
+  font-size:15px; color:#dfe2f2;
+}
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); }
+.callout.good{ border-color:rgba(94,234,212,.35); }
+
+.code-block{
+  background:#0d0f17; border:1px solid var(--line);
+  border-radius:12px; padding:16px 18px;
+  font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px;
+  direction:ltr; text-align:left; unicode-bidi:embed;
+}
+.code-block .prop{ color:var(--teal); }
+.code-block .val{ color:var(--yellow); }
+.code-block .sel{ color:var(--muted); }
+.code-block .cm{ color:#5b6280; font-style:italic; }
+
+/* pipeline diagram */
+.pipeline{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  margin-top:18px; direction:ltr;
+}
+.pipe-step{
+  background:var(--surface2); border:1px solid var(--line); border-radius:12px;
+  padding:12px 14px; font-size:12.5px; font-weight:700; text-align:center;
+  font-family:'JetBrains Mono',monospace; display:flex; flex-direction:column; justify-content:center;
+  min-width:92px; flex:0 0 auto;
+}
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{
+  display:flex; align-items:center; justify-content:center;
+  color:var(--muted); font-size:18px; flex:0 0 auto;
+}
+
+/* timeline bars */
+.timeline-wrap{ margin-top:10px; }
+.timeline-row{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.timeline-label{ width:150px; flex:0 0 auto; font-size:13.5px; font-weight:700; }
+.timeline-track{ flex:1; background:var(--surface2); border-radius:8px; height:30px; position:relative; overflow:hidden; border:1px solid var(--line); }
+.timeline-fill{ height:100%; border-radius:8px 8px 8px 0; display:flex; align-items:center; padding:0 10px; font-size:11px; font-weight:700; color:#12151f; font-family:'JetBrains Mono',monospace; white-space:nowrap; transition:width .5s ease; direction:ltr; margin-inline-start:0; }
+.timeline-fill.blank{ background:var(--coral); }
+.timeline-fill.instant{ background:var(--teal); width:4%; }
+
+/* lab */
+.lab{ display:grid; grid-template-columns:220px 1fr; gap:26px; margin-top:14px; }
+.controls{ display:flex; flex-direction:column; gap:16px; }
+.group-label{ font-size:13px; font-weight:700; color:var(--muted); margin-bottom:8px; display:block; }
+.btn-row{ display:flex; flex-wrap:wrap; gap:6px; }
+.btn{
+  font-family:'JetBrains Mono',monospace; direction:ltr;
+  background:var(--surface2); color:var(--text); border:1px solid var(--line);
+  border-radius:8px; padding:8px 12px; font-size:12.5px; cursor:pointer;
+  transition:.15s;
+}
+.btn:hover{ border-color:var(--coral); }
+.btn.active{ background:var(--coral); color:#3a1a0e; border-color:var(--coral); font-weight:700; }
+.lab-view{ display:flex; flex-direction:column; gap:14px; }
+.lab-note{ font-size:14px; color:var(--muted); }
+.lab-status{ font-size:14px; font-weight:700; font-family:'JetBrains Mono',monospace; direction:ltr; text-align:right; }
+
+/* gallery */
+.gallery-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-top:8px; }
+.gallery-card{ background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:18px; }
+.gallery-card h4{ margin:0 0 8px; font-size:15.5px; font-weight:800; }
+.gallery-card p{ margin:0; font-size:14px; color:var(--muted); }
+.gallery-card .tag{ display:inline-block; font-size:11px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border-radius:6px; padding:2px 8px; margin-bottom:8px; }
+
+/* cheat sheet */
+.cheat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:8px; }
+.cheat-col h3{ font-size:15px; margin:0 0 12px; color:var(--teal); }
+.cheat-row{ display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:14.5px; }
+.cheat-row span{ color:var(--muted); text-align:left; }
+.cheat-row:last-child{ border-bottom:none; }
+
+/* table */
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14.5px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); }
+table.stack-table th{ color:var(--teal); font-size:13px; }
+table.stack-table td:first-child{ direction:ltr; text-align:right; }
+
+/* resources */
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; flex:0 0 auto; padding-top:2px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; }
+.res-item .body span{ font-size:13.5px; color:var(--muted); }
+
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٤</div>
+  <h1>Critical CSS مع <span>React</span></h1>
+  <p class="subtitle">جرّبت Critical CSS مع HTML عادي واشتغل زي السحر. عملت نفس الفكرة في React، والمكسب طلع أقل بكتير. النهاردة هنفهم ليه، خطوة خطوة، من غير لخبطة.</p>
+
+  <div class="hero-row">
+    <div class="hero-box c1">HTML</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-box c2">JS Bundle</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-box c3">Render</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-box c4">Virtual DOM</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-box c5">CSS</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-box c6">Paint</div>
+  </div>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 مراجعة سريعة</div>
+    <h2>Critical CSS بيكسبك إيه أصلًا؟</h2>
+    <p class="desc">المتصفح <strong>مينفعش يرسم الصفحة</strong> قبل ما يحمّل ويحلّل ملفات الـ <code>CSS</code> المرتبطة بيها، يعني الـ CSS بيبقى <strong>Render-blocking</strong>. فكرة Critical CSS بسيطة: بدل ما نستنى كل الـ CSS، وندي المتصفح بس الجزء اللي محتاجه عشان يرسم أول حاجة ظاهرة — الـ Header والـ Hero — ونحطه مباشرة جوّه <code>&lt;style&gt;</code> في الـ <code>&lt;head&gt;</code>. ساعتها مفيش Network Request يوقف الرسم.</p>
+    <div class="code-block"><span class="cm">&lt;!-- ده موجود جوّه الـ HTML نفسه، مفيش Request --&gt;</span>
+<span class="sel">&lt;head&gt;</span>
+  <span class="sel">&lt;style&gt;</span>
+    .hero { <span class="prop">display</span>: <span class="val">flex</span>; <span class="prop">background</span>: <span class="val">#12151f</span>; }
+  <span class="sel">&lt;/style&gt;</span>
+
+  <span class="cm">&lt;!-- باقي الـ CSS يتحمّل عادي في الخلفية --&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"main.css"</span> <span class="sel">&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🟢 PIPELINE بتاع Vanilla HTML</div>
+    <h2>ليه الطريقة اشتغلت معاك بشكل واضح كده؟</h2>
+    <p class="desc">في HTML عادي، الرحلة من "المتصفح فتح الصفحة" لحد "الرسم" بسيطة جدًا وفيها خطوة Blocking واحدة بس.</p>
+    <div class="pipeline">
+      <div class="pipe-step">HTML <span class="t">اتعمله Parse</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">CSS <span class="t">بتوقف الرسم</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Paint 🎨</div>
+    </div>
+    <p class="desc" style="margin-top:18px;">عندك حاجة واحدة أساسية واقفة في طريق الـ Paint: <strong>الـ CSS</strong>. خدت الجزء المهم وحطيته Inline، والـ Block اختفى.</p>
+    <div class="callout good"><span class="ic">✅</span><div>بدل ما المتصفح يقول "هاتلي ملف CSS وبعدين أرسم"، بقى يقول "تمام، الـ CSS المهم موجود هنا... ارسم على طول". خطوة Blocking واحدة اتشالت بالكامل، وده سبب إن الفرق بين Before وAfter كان كبير قوي.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🔵 PIPELINE بتاع React CSR</div>
+    <h2>طيب ليه نفس الحركة مش بتدي نفس النتيجة في React؟</h2>
+    <p class="desc">لما تستخدم React بـ <code>CSR</code> — Client-Side Rendering — الـ HTML اللي السيرفر بيبعته الأول بيكون شبه فاضي:</p>
+    <div class="code-block"><span class="sel">&lt;body&gt;</span>
+  <span class="sel">&lt;div</span> <span class="prop">id</span>=<span class="val">"root"</span><span class="sel">&gt;&lt;/div&gt;</span>
+<span class="sel">&lt;/body&gt;</span></div>
+    <p class="desc" style="margin-top:16px;">مفيش Hero جاهز، مفيش Header جاهز، مفيش Content جاهز. مفيش حاجة تقريبًا يرسمها المتصفح 😅. لازم الأول JavaScript يوصل، وبعدين React يشتغل، وبعدين React يبني <strong>Virtual DOM</strong> — نسخة خفيفة في الميموري من شكل الصفحة — وبعدين يقارنها بالـ Real DOM (خطوة اسمها <code>Reconciliation</code>) عشان يعرف يحدّث إيه بالظبط، وبعد كل ده كله يجي دور الـ CSS.</p>
+    <div class="pipeline">
+      <div class="pipe-step">HTML <span class="t">Shell فاضي</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">JS Bundle <span class="t">تحميل + تشغيل</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">React Render <span class="t">بيني الشجرة</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">Virtual DOM <span class="t">Diff/Reconcile</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">Real DOM <span class="t">يتحدّث</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">CSS</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Paint 🎨</div>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>Critical CSS بيشيل <strong>بلوك واحد بس</strong> من الطريق. لكن في React CSR عندك أصلًا خطوات تانية كتير لازم تحصل قبل ما يبقى فيه حاجة تتترسم: تحميل الـ JS Bundle، تشغيله، React يعمل Render، بناء الـ Virtual DOM، الـ Diffing، وتحديث الـ Real DOM — وكل ده قبل ما الـ CSS يجيله دور أصلًا. يعني حتى لو قلت للـ CSS "اتفضل خد الـ Critical CSS ومتعطلش"، لسه قدامك <code>JS Bundle → Render → Virtual DOM → Real DOM</code> كلهم واقفين في الطابور. وده سبب الـ <strong>Diminishing Returns</strong> اللي شفته لما نقلت التجربة من Vanilla لـ React.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧩 نقطة محتاجة توضيح</div>
+    <h2>طب الـ Virtual DOM ده بيعمل إيه بالظبط؟</h2>
+    <p class="desc">الـ Virtual DOM مش حاجة سحرية، هو مجرد <strong>نسخة JavaScript خفيفة</strong> من شكل الصفحة، React بيبنيها في الميموري (مش على الشاشة). كل مرة الـ State يتغيّر، React:</p>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <div class="tag">١</div>
+        <h4>يبني Virtual DOM جديد</h4>
+        <p>نسخة جديدة كاملة من شكل الصفحة المفروض تبقى عليه، لسه مش لمست الشاشة الحقيقية.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">٢</div>
+        <h4>يقارن (Diffing)</h4>
+        <p>React يقارن النسخة الجديدة بالقديمة، ويحدد إيه اللي اتغيّر فعلًا — مش هيغيّر كل حاجة من الصفر.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">٣</div>
+        <h4>يحدّث الـ Real DOM</h4>
+        <p>بس الفروقات اللي لقاها هي اللي بتتطبّق على الـ DOM الحقيقي — ده اللي بيخلي React سريع نسبيًا.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">٤</div>
+        <h4>بعدين يجي دور CSS والـ Paint</h4>
+        <p>الشاشة متتلونش ولا تتترسم إلا بعد ما الخطوات التلاتة اللي فوق تخلص كلها.</p>
+      </div>
+    </div>
+    <p class="desc" style="margin-top:18px;">يعني الـ Virtual DOM مش عبء زيادة من غير فايدة — هو اللي بيخلي React يقدر يحدّث صفحات معقدة بكفاءة. بس بالنسبة لأول Paint، هو خطوة إضافية <strong>قبل</strong> الـ CSS، مش بعده.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧪 جرّبها بنفسك</div>
+    <h2>حط الـ Buildين جنب بعض</h2>
+    <p class="desc">استخدم نفس الـ <code>10s Artificial CSS Delay</code> اللي عملته في التجربة. بدّل بين الـ Build والـ Critical CSS، وشوف بنفسك مين اللي فعلًا بيحدد إمتى المستخدم هيشوف حاجة.</p>
+    <div class="lab">
+      <div class="controls">
+        <div>
+          <span class="group-label">BUILD</span>
+          <div class="btn-row" data-group="build">
+            <button class="btn active" data-value="vanilla">Vanilla HTML</button>
+            <button class="btn" data-value="react">React CSR</button>
+          </div>
+        </div>
+        <div>
+          <span class="group-label">CRITICAL CSS</span>
+          <div class="btn-row" data-group="critical">
+            <button class="btn" data-value="off">Off</button>
+            <button class="btn active" data-value="on">On</button>
+          </div>
+        </div>
+        <p class="lab-note" id="labExplain">Vanilla + Critical CSS: الـ Block الوحيد اختفى. الـ Hero بيظهر فورًا تقريبًا.</p>
+      </div>
+      <div class="lab-view">
+        <div class="timeline-wrap">
+          <div class="timeline-row">
+            <div class="timeline-label">JS Bundle + Virtual DOM</div>
+            <div class="timeline-track"><div class="timeline-fill" id="barJs" style="width:0%;background:var(--purple);"></div></div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">CSS Wait</div>
+            <div class="timeline-track"><div class="timeline-fill" id="barCss" style="width:4%;"></div></div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label">First Paint</div>
+            <div class="timeline-track"><div class="timeline-fill" id="barPaint" style="width:4%;background:var(--teal);"></div></div>
+          </div>
+        </div>
+        <div class="lab-status" id="labStatus">Time to First Paint: ~0.3s</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📋 عمليًا</div>
+    <h2>طيب أستخدم Critical CSS إزاي في React؟</h2>
+    <p class="desc">الفكرة لسه مفيدة، بس مكانها وأولويتها اتغيّروا. في Vanilla كنت بتحارب الـ CSS بس، أما في React CSR فأنت غالبًا بتحاول تتخطى <code>JS Bundle + Render + Virtual DOM + CSS</code> كلهم مع بعض.</p>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <div class="tag">يدويًا</div>
+        <h4>Inline للـ App Shell</h4>
+        <p>لو عندك Header أو Hero ثابتين، حط الـ HTML والـ CSS بتوعهم مباشرة في <code>index.html</code>، برّه الـ React root. المتصفح يرسمهم قبل ما JavaScript يبدأ أصلًا.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">Tooling</div>
+        <h4>@playform/critters</h4>
+        <p>Fork متطور من Critters، بيشتغل كـ Post-build plugin: يبص على الـ HTML اللي اتعمله Render أو Prerender، ويطلع الـ CSS المستخدم فعلًا Inline، والباقي Lazy.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">Framework</div>
+        <h4>انقل من CSR لـ SSR / SSG</h4>
+        <p>زي Next.js. أكبر نقلة ممكن تعملها — السيرفر يبعت HTML حقيقي، فالمتصفح يقدر يرسم قبل ما JS يشتغل بالكامل، وساعتها Critical CSS يرجع يبقى مؤثر تاني.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="tag">تجنّبه</div>
+        <h4>Runtime CSS-in-JS في الـ Critical Path</h4>
+        <p>زي styled-components وEmotion: الـ styles بتتولد أثناء الـ Render نفسه، يعني بتربط الـ CSS بالخطوة اللي أصلًا بتحاول تسبقها. لأول Paint، Plain CSS أو CSS Modules أبسط وأسرع.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>مين اللي بيوقف الـ First Paint؟</h2>
+    <table class="stack-table">
+      <tr><th>Stack</th><th>إيه اللي بيأخر الـ Paint؟</th></tr>
+      <tr><td>Vanilla HTML</td><td>CSS بس</td></tr>
+      <tr><td>React CSR</td><td>JS + Render + Virtual DOM + CSS</td></tr>
+      <tr><td>Next.js SSR/SSG</td><td>CSS غالبًا، لأن الـ HTML حقيقي من الأول</td></tr>
+    </table>
+    <div class="cheat-grid" style="margin-top:24px;">
+      <div class="cheat-col">
+        <h3>Critical CSS بيفيد قد إيه؟</h3>
+        <div class="cheat-row"><code>Vanilla HTML</code><span>🔥 تأثير ضخم</span></div>
+        <div class="cheat-row"><code>React CSR</code><span>🟡 تأثير محدود</span></div>
+        <div class="cheat-row"><code>Next.js SSR/SSG</code><span>🔥 تأثير كبير تاني</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 الخلاصة</div>
+    <h2>قبل ما تستخدم Critical CSS، اسأل نفسك ٣ أسئلة</h2>
+    <div class="cheat-grid">
+      <div class="cheat-col">
+        <div class="cheat-row"><code>الـ HTML اللي وصل حقيقي ولا فاضي؟</code><span>١</span></div>
+        <div class="cheat-row"><code>إيه أكبر حاجة واقفة قبل الـ Paint؟</code><span>٢</span></div>
+        <div class="cheat-row"><code>المشكلة فعلًا CSS؟</code><span>٣</span></div>
+      </div>
+    </div>
+    <p class="desc" style="margin-top:18px;">لو الإجابة "لا، المشكلة JavaScript"، يبقى متروحش تصلّح CSS — صلّح JavaScript الأول: قلّل حجم الـ Bundle، اعمل Code Splitting، استخدم Lazy Loading، انقل لـ SSR، أو قلّل شغل الـ Render نفسه. الحاجات دي هتعمل فرق أكبر بكتير من إنك تعمل Inline للـ CSS.</p>
+    <div class="callout"><span class="ic">🎯</span><div><strong>Critical CSS مش زرار Performance سحري.</strong> هو حل لمشكلة محددة: CSS هو اللي بيوقف الـ Paint. لو المشكلة عندك أصلًا JavaScript، فـ Critical CSS مش هيحل حاجة. باختصار: متصلّحش الـ CSS لو الـ JS هو اللي واقفلك الصفحة 😄</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://web.dev/articles/extract-critical-css" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>web.dev — Extract Critical CSS</strong><span>شرح من Google لفكرة Critical CSS، وإمتى استخدامه يبقى مفيد، والـ Trade-offs بتاعة الاستخراج التلقائي.</span></div>
+      </a>
+      <a class="res-item" href="https://github.com/PlayForm/Critters" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>@playform/critters على GitHub</strong><span>الـ Fork المتطور من Critters — بيعمل Inline للـ CSS المستخدم فعلًا، والباقي Lazy، مناسب جدًا مع Prerendering وSSR.</span></div>
+      </a>
+      <a class="res-item" href="https://nextjs.org/docs/app/guides/production-checklist" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>Next.js Production Checklist</strong><span>مجموعة تحسينات مهمة للـ Rendering والـ Bundling والـ Code Splitting، مفيدة لو بتتحرك من CSR لـ SSR/SSG.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/rendering-on-the-web" target="_blank" rel="noopener">
+        <div class="num">04</div>
+        <div class="body"><strong>web.dev — Rendering on the Web</strong><span>الفرق بين CSR وSSR وSSG وISR، وإزاي طريقة وصول الـ HTML للمتصفح بتغيّر شكل الـ First Paint بالكامل.</span></div>
+      </a>
+      <a class="res-item" href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Critical_rendering_path" target="_blank" rel="noopener">
+        <div class="num">05</div>
+        <div class="body"><strong>MDN — Critical Rendering Path</strong><span>الرحلة الكاملة من "المتصفح استقبل الـ Bytes" لحد "المستخدم شاف الـ Pixels"، شرح عميق ومفيد.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 الـ Hero بتاع الصفحة دي نفسها معمول بـ Plain Inline CSS — مفيش Framework، ومفيش JS Bundle واقف بينك وبين الـ First Paint.</footer>
+</div>
+
+<script>
+const state = { build:'vanilla', critical:'on' };
+const barJs = document.getElementById('barJs');
+const barCss = document.getElementById('barCss');
+const barPaint = document.getElementById('barPaint');
+const status = document.getElementById('labStatus');
+const explain = document.getElementById('labExplain');
+
+const messages = {
+  'vanilla-on': ['Vanilla + Critical CSS: الـ Block الوحيد اختفى. الـ Hero بيظهر فورًا تقريبًا.', 4, 4, 4, '~0.3s'],
+  'vanilla-off': ['Vanilla من غير Critical CSS: المتصفح بيستنى الـ CSS كامل قبل ما يرسم أي حاجة.', 4, 92, 92, '~9.8s'],
+  'react-on': ['React CSR + Critical CSS: الـ CSS بقى Off التطابير، بس الـ JS Bundle والـ Virtual DOM لسه واقفين.', 46, 4, 50, '~2.1s'],
+  'react-off': ['React CSR من غير Critical CSS: JS وRender وVirtual DOM وCSS كلهم في الطابور مع بعض.', 46, 92, 96, '~9.9s']
+};
+
+function render(){
+  const key = state.build + '-' + state.critical;
+  const [text, js, css, paint, time] = messages[key];
+  explain.textContent = text;
+  barJs.style.width = (state.build === 'react' ? js : 0) + '%';
+  barJs.parentElement.parentElement.style.display = state.build === 'react' ? 'flex' : 'none';
+  barCss.style.width = css + '%';
+  barCss.className = 'timeline-fill' + (css > 20 ? ' blank' : '');
+  barPaint.style.width = paint + '%';
+  status.textContent = 'Time to First Paint: ' + time;
+}
+
+document.querySelectorAll('.btn-row[data-group]').forEach(group=>{
+  const key = group.getAttribute('data-group');
+  group.querySelectorAll('.btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      group.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      state[key] = btn.getAttribute('data-value');
+      render();
+    });
+  });
+});
+render();
+</script>
+</body>
+</html>

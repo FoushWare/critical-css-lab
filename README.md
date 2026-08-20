@@ -16,8 +16,8 @@ This series explores how Critical CSS works and whether its benefits change when
 |---|---------|------------|--------|-------------|
 | 1 | CSS is Rendering Blocker | HTML/CSS | ✅ Completed | Establish baseline with CSS rendering block experiment |
 | 2 | Critical CSS Optimization | HTML/CSS | ✅ Completed | Extract and inline critical styles |
-| 3 | Automated Critical CSS Extraction | HTML/CSS | 📋 Planned | Tools for automated Critical CSS generation |
-| 4 | Critical CSS in React | React | 📋 Planned | Does Critical CSS work with client-side rendering? |
+| 3 | Automated Critical CSS Extraction | HTML/CSS | ✅ Completed | Tools for automated Critical CSS generation |
+| 4 | Critical CSS in React | React | ✅ Completed | Does Critical CSS work with client-side rendering? |
 | 5 | Critical CSS with Tailwind | Tailwind | 📋 Planned | Does Tailwind make Critical CSS unnecessary? |
 | 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
 | 7 | CSS Loading Strategies | HTML/CSS | 📋 Planned | Compare different CSS loading approaches |
@@ -51,7 +51,9 @@ Each episode has its own README with detailed instructions:
 
 - **Episode 1**: [eps01-css-is-rendering-blocker/README.md](eps01-css-is-rendering-blocker/README.md) - CSS rendering block experiment
 - **Episode 2**: [eps02-critical-css-optimization/README.md](eps02-critical-css-optimization/README.md) - Critical CSS optimization demonstration
-- **Episode 3-8**: Coming soon
+- **Episode 3**: [eps03-automated-critical-css/README.md](eps03-automated-critical-css/README.md) - Automated Critical CSS extraction tools
+- **Episode 4**: [eps04-critical-css-react/README.md](eps04-critical-css-react/README.md) - Critical CSS in React with client-side rendering (includes interactive Arabic explainer article)
+- **Episode 5-8**: Coming soon
 
 ## 📁 Project Structure
 
@@ -83,8 +85,45 @@ critical-css-lab/
 │           ├── server.js
 │           ├── package.json
 │           └── assets/
-├── eps03-automated-critical-css/            # 📋 Planned
-├── eps04-critical-css-react/            # 📋 Planned
+├── eps03-automated-critical-css/            # ✅ Completed
+│   ├── README.md
+│   ├── before/                         # Before: Manual extraction baseline
+│   │   └── code/
+│   │       ├── index.html
+│   │       ├── styles.css
+│   │       ├── critical.css
+│   │       ├── server.js
+│   │       ├── package.json
+│   │       └── assets/
+│   └── after/                          # After: Automated extraction
+│       └── code/
+│           ├── index.html
+│           ├── styles.css
+│           ├── critical.css
+│           ├── server.js
+│           ├── package.json
+│           └── assets/
+├── eps04-critical-css-react/            # ✅ Completed
+│   ├── README.md
+│   ├── article/                        # Interactive Arabic explainer article
+│   │   ├── README.md
+│   │   └── critical-css-react-explainer-ar.html
+│   ├── before/                         # Before: React CSR without Critical CSS
+│   │   └── code/
+│   │       ├── package.json
+│   │       ├── index.html
+│   │       ├── App.jsx                # React components
+│   │       ├── styles.css
+│   │       ├── server.js              # Custom server with CSS delay (port 8084)
+│   │       └── assets/
+│   └── after/                          # After: React CSR with Critical CSS
+│       └── code/
+│           ├── package.json
+│           ├── index.html
+│           ├── App.jsx                # React components
+│           ├── styles.css
+│           ├── server.js              # Custom server with CSS delay (port 8085)
+│           └── assets/
 ├── eps05-critical-css-tailwind/            # 📋 Planned
 ├── eps06-critical-css-nextjs/            # 📋 Planned
 ├── eps07-css-loading-strategies/            # 📋 Planned
