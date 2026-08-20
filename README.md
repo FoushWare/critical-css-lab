@@ -18,7 +18,7 @@ This series explores how Critical CSS works and whether its benefits change when
 | 2 | Critical CSS Optimization | HTML/CSS | ✅ Completed | Extract and inline critical styles |
 | 3 | Automated Critical CSS Extraction | HTML/CSS | ✅ Completed | Tools for automated Critical CSS generation |
 | 4 | Critical CSS in React | React | ✅ Completed | Does Critical CSS work with client-side rendering? |
-| 5 | Critical CSS with Tailwind | Tailwind | 📋 Planned | Does Tailwind make Critical CSS unnecessary? |
+| 5 | Critical CSS with Tailwind | Tailwind | ✅ Completed | Does Tailwind make Critical CSS unnecessary? |
 | 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
 | 7 | CSS Loading Strategies | HTML/CSS | 📋 Planned | Compare different CSS loading approaches |
 | 8 | Final Comparison | All | 📋 Planned | Comprehensive performance comparison |
@@ -53,7 +53,8 @@ Each episode has its own README with detailed instructions:
 - **Episode 2**: [eps02-critical-css-optimization/README.md](eps02-critical-css-optimization/README.md) - Critical CSS optimization demonstration
 - **Episode 3**: [eps03-automated-critical-css/README.md](eps03-automated-critical-css/README.md) - Automated Critical CSS extraction tools
 - **Episode 4**: [eps04-critical-css-react/README.md](eps04-critical-css-react/README.md) - Critical CSS in React with client-side rendering (includes interactive Arabic explainer article)
-- **Episode 5-8**: Coming soon
+- **Episode 5**: [eps05-critical-css-tailwind/README.md](eps05-critical-css-tailwind/README.md) - Critical CSS with Tailwind CSS utility-first framework
+- **Episode 6-8**: Coming soon
 
 ## 📁 Project Structure
 
@@ -124,7 +125,27 @@ critical-css-lab/
 │           ├── styles.css
 │           ├── server.js              # Custom server with CSS delay (port 8085)
 │           └── assets/
-├── eps05-critical-css-tailwind/            # 📋 Planned
+├── eps05-critical-css-tailwind/            # ✅ Completed
+│   ├── README.md
+│   ├── before/                         # Before: Tailwind without Critical CSS
+│   │   └── code/
+│   │       ├── package.json
+│   │       ├── tailwind.config.js
+│   │       ├── index.html            # HTML with Tailwind classes
+│   │       ├── input.css             # Tailwind source CSS
+│   │       ├── output.css            # Generated Tailwind CSS
+│   │       ├── server.js             # Custom server with CSS delay (port 8086)
+│   │       └── assets/
+│   └── after/                          # After: Tailwind with Critical CSS
+│       └── code/
+│           ├── package.json
+│           ├── tailwind.config.js
+│           ├── index.html            # HTML with critical Tailwind + async full CSS
+│           ├── input.css             # Tailwind source CSS
+│           ├── output.css            # Generated Tailwind CSS
+│           ├── critical.css          # Extracted critical Tailwind CSS
+│           ├── server.js             # Custom server with CSS delay (port 8087)
+│           └── assets/
 ├── eps06-critical-css-nextjs/            # 📋 Planned
 ├── eps07-css-loading-strategies/            # 📋 Planned
 └── eps08-final-comparison/            # 📋 Planned

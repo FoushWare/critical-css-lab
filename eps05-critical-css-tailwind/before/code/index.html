@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Does Tailwind CSS make Critical CSS unnecessary? See for yourself how utility-first CSS affects performance." />
+  <title>Does Tailwind CSS Make Critical CSS Unnecessary? | Critical CSS Lab</title>
+  <link rel="stylesheet" href="output.css" />
+</head>
+
+<body>
+  <header class="site-header sticky top-0 z-100 border-b border-border bg-white/90 backdrop-blur-16">
+    <div class="container header-inner min-h-72px flex items-center justify-between gap-32px mx-auto px-12">
+      <div class="logo inline-flex items-center gap-10px text-0.95rem font-800 cursor-default">
+        <span class="logo-mark w-32px h-32px grid place-items-center rounded-9px bg-primary text-white text-0.85rem">C</span>
+        <span>Critical CSS Lab</span>
+      </div>
+
+      <nav class="main-navigation flex items-center gap-32px" aria-label="Main navigation">
+        <span class="text-text-muted text-0.9rem font-600">EPS05</span>
+        <span class="text-text-muted text-0.9rem font-600">Tailwind CSS</span>
+        <button class="lang-switcher min-w-44px h-32px px-12px border border-border rounded-999px bg-surface text-primary text-0.8rem font-700 transition-all hover:border-primary hover:bg-[#eff6ff]" onclick="toggleLanguage()" aria-label="Switch language">
+          <span id="lang-label">AR</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="home" class="hero min-h-680px flex items-center overflow-hidden bg-gradient-to-br from-[rgba(37,99,235,0.18)]_85%_20%_transparent_35%_linear-gradient_180deg_#ffffff_0%_#f8fafc_100%">
+      <div class="container hero-grid grid grid-cols-[minmax(0,1.05fr)_minmax(400px,0.95fr)] items-center gap-64px mx-auto px-12">
+        <div class="hero-content py-80px animate-fadeInUp">
+          <p class="eyebrow relative inline-block mb-16px text-primary text-0.75rem font-800 tracking-0.12em uppercase" data-ar="مختبر أداء الويب" data-en="WEB PERFORMANCE LAB">
+            WEB PERFORMANCE LAB
+          </p>
+
+          <h1 class="max-w-760px m-0 text-[clamp(3.5rem,7vw,6.5rem)] font-800 leading-0.92 tracking-[-0.06em]" data-ar="هل Tailwind CSS يغني عن Critical CSS؟" data-en="Does Tailwind CSS Make Critical CSS Unnecessary?">
+            <span class="block text-primary" data-ar="هل Tailwind CSS يغني عن Critical CSS؟" data-en="Does Tailwind CSS Make Critical CSS Unnecessary?">Does Tailwind CSS Make Critical CSS Unnecessary?</span>
+          </h1>
+
+          <p class="hero-description max-w-620px mt-32px mb-0 text-text-muted text-1.125rem leading-1.8" data-ar="هل Tailwind CSS بيخليك محتاج Critical CSS؟ جرّب بنفسك وشوف النتيجة." data-en="Does Tailwind CSS eliminate the need for Critical CSS? Try it yourself and see the results.">
+            Does Tailwind CSS eliminate the need for Critical CSS? Try it yourself and see the results.
+          </p>
+
+          <div class="hero-actions flex items-center gap-12px mt-36px">
+            <button class="button button-primary clickable relative overflow-hidden min-h-48px inline-flex items-center justify-center px-22px rounded-999px text-0.9rem font-700 transition-all hover:-translate-y-2px hover:shadow-md bg-primary text-white animate-glow" onclick="location.reload()" data-ar="تحديث الصفحة" data-en="Refresh Page">
+              Refresh Page
+            </button>
+
+            <div class="button button-secondary border border-border bg-white text-text px-22px min-h-48px inline-flex items-center justify-center rounded-999px text-0.9rem font-700" data-ar="تأخير CSS: 10 ثواني" data-en="CSS Delay: 10s">
+              CSS Delay: 10s
+            </div>
+          </div>
+
+          <div class="hero-meta flex items-center gap-20px mt-56px">
+            <div class="meta-item flex flex-col gap-2px">
+              <strong class="text-0.85rem font-700 text-primary">EPS05</strong>
+              <span class="text-text-muted text-0.7rem uppercase tracking-0.08em" data-ar="Tailwind CSS" data-en="Tailwind CSS">Tailwind CSS</span>
+            </div>
+
+            <div class="meta-divider w-1px h-32px bg-border"></div>
+
+            <div class="meta-item flex flex-col gap-2px">
+              <strong class="text-0.85rem font-700">Tailwind</strong>
+              <span class="text-text-muted text-0.7rem uppercase tracking-0.08em" data-ar="CSS عادي" data-en="Normal CSS">Normal CSS</span>
+            </div>
+
+            <div class="meta-divider w-1px h-32px bg-border"></div>
+
+            <div class="meta-item flex flex-col gap-2px">
+              <strong class="text-0.85rem font-700" data-ar="قبل" data-en="Before">Before</strong>
+              <span class="text-text-muted text-0.7rem uppercase tracking-0.08em" data-ar="الحالة الأولية" data-en="Baseline">Baseline</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual relative min-h-500px grid place-items-center animate-fadeIn" aria-hidden="true">
+          <div class="browser-window w-min-560px overflow-hidden border border-[rgba(148,163,184,0.3)] rounded-20px bg-white shadow-xl transform rotate-2deg animate-float">
+            <div class="browser-toolbar h-48px flex items-center gap-16px px-16px border-b border-border bg-[#f8fafc]">
+              <div class="browser-controls flex gap-6px">
+                <span class="w-9px h-9px rounded-full bg-[#cbd5e1]"></span>
+                <span class="w-9px h-9px rounded-full bg-[#cbd5e1]"></span>
+                <span class="w-9px h-9px rounded-full bg-[#cbd5e1]"></span>
+              </div>
+              <div class="browser-address flex-1 px-12px py-6px rounded-6px bg-white text-text-muted text-0.7rem">
+                tailwind-critical.dev
+              </div>
+            </div>
+
+            <div class="browser-content min-h-360px px-48px py-48px bg-gradient-to-br from-[#eff6ff]_via-[#ffffff_55%]_to-[#eef2ff]">
+              <div class="browser-line-large w-80% h-32px rounded-999px bg-[#bfdbfe]"></div>
+              <div class="browser-line-medium w-60% h-14px rounded-999px bg-[#bfdbfe] mt-18px"></div>
+              <div class="browser-line-small w-45% h-10px rounded-999px bg-[#bfdbfe] mt-10px"></div>
+              <div class="browser-card-grid grid grid-cols-3 gap-12px mt-48px">
+                <div class="browser-card aspect-ratio-1/1 rounded-12px bg-white/80 border border-[rgba(148,163,184,0.2)]"></div>
+                <div class="browser-card aspect-ratio-1/1 rounded-12px bg-white/80 border border-[rgba(148,163,184,0.2)]"></div>
+                <div class="browser-card aspect-ratio-1/1 rounded-12px bg-white/80 border border-[rgba(148,163,184,0.2)]"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-badge badge-render absolute left-0 bottom-90px inline-flex items-center px-14px py-10px border border-border rounded-999px bg-white shadow-sm text-0.75rem font-700">
+            <span class="badge-dot w-7px h-7px mr-7px rounded-full bg-[#22c55e] animate-pulse-slow"></span>
+            <span data-ar="عرض" data-en="Display">Display</span>
+          </div>
+
+          <div class="floating-badge badge-css absolute right-0 top-70px inline-flex items-center px-14px py-10px border border-primary rounded-999px bg-primary text-white text-0.75rem font-700">
+            <span>CSS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS -->
+    <section class="metrics-section py-120px">
+      <div class="container mx-auto px-12">
+        <div class="section-intro section-intro-centered text-center mb-64px">
+          <p class="eyebrow text-primary text-0.75rem font-800 tracking-0.12em uppercase mb-8px" data-ar="تأثير Tailwind على الأداء" data-en="Tailwind Performance Impact">
+            Tailwind Performance Impact
+          </p>
+
+          <h2 class="text-[clamp(2rem,4vw,3rem)] font-800 tracking-[-0.04em] leading-1.1 my-16px mx-0 mb-24px" data-ar="ما تأثير Tailwind على CSS؟" data-en="What's the Impact of Tailwind CSS?">
+            What's the Impact of Tailwind CSS?
+          </h2>
+
+          <p class="text-text-muted text-1.125rem leading-1.8 max-w-620px mx-auto" data-ar="هل Tailwind CSS بيخلي Critical CSS غير ضروري؟ شاهد الأرقام." data-en="Does Tailwind CSS make Critical CSS unnecessary? See the numbers.">
+            Does Tailwind CSS make Critical CSS unnecessary? See the numbers.
+          </p>
+        </div>
+
+        <div class="metrics-grid grid grid-cols-4 gap-32px mt-48px">
+          <article class="metric-card p-32px border border-border rounded-md bg-surface animate-fadeInUp">
+            <div class="metric-label text-0.75rem font-700 uppercase tracking-0.08em text-text-muted mb-12px" data-ar="تأخير CSS" data-en="CSS Delay">
+              CSS Delay
+            </div>
+            <div class="metric-value text-2.5rem font-800 text-text leading-1 mb-8px highlight text-primary" data-ar="10.0s" data-en="10.0s">
+              10.0s
+            </div>
+            <div class="metric-status text-0.85rem text-text-muted warning text-warning" data-ar="CSS متأخر 10 ثواني" data-en="CSS delayed 10s">
+              CSS delayed 10s
+            </div>
+          </article>
+
+          <article class="metric-card p-32px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.1s">
+            <div class="metric-label text-0.75rem font-700 uppercase tracking-0.08em text-text-muted mb-12px" data-ar="FCP أول ظهور" data-en="First Paint">
+              First Paint
+            </div>
+            <div class="metric-value text-2.5rem font-800 text-text leading-1 mb-8px highlight text-primary" data-ar="~10.0s" data-en="~10.0s">
+              ~10.0s
+            </div>
+            <div class="metric-status text-0.85rem text-text-muted warning text-warning" data-ar="أول ظهور للمحتوى" data-en="First content visible">
+              First content visible
+            </div>
+          </article>
+
+          <article class="metric-card p-32px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.2s">
+            <div class="metric-label text-0.75rem font-700 uppercase tracking-0.08em text-text-muted mb-12px" data-ar="LCP أكبر ظهور" data-en="Largest Paint">
+              Largest Paint
+            </div>
+            <div class="metric-value text-2.5rem font-800 text-text leading-1 mb-8px highlight text-primary" data-ar="~10.1s" data-en="~10.1s">
+              ~10.1s
+            </div>
+            <div class="metric-status text-0.85rem text-text-muted warning text-warning" data-ar="أكبر محتوى ظاهر" data-en="Largest content visible">
+              Largest content visible
+            </div>
+          </article>
+
+          <article class="metric-card p-32px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.3s">
+            <div class="metric-label text-0.75rem font-700 uppercase tracking-0.08em text-text-muted mb-12px" data-ar="RB معيق للعرض" data-en="Blocking">
+              Blocking
+            </div>
+            <div class="metric-value text-2.5rem font-800 text-text leading-1 mb-8px highlight text-primary" data-ar="نعم" data-en="Yes">
+              Yes
+            </div>
+            <div class="metric-status text-0.85rem text-text-muted warning text-warning" data-ar="CSS يعيق rendering" data-en="CSS blocks rendering">
+              CSS blocks rendering
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- RENDERING PIPELINE -->
+    <section id="how-it-works" class="pipeline-section py-120px bg-gradient-to-b from-white to-[#f8fafc]">
+      <div class="container mx-auto px-12">
+        <div class="section-intro section-intro-centered text-center mb-64px">
+          <p class="eyebrow text-primary text-0.75rem font-800 tracking-0.12em uppercase mb-8px" data-ar="لماذا Tailwind CSS" data-en="Why Tailwind CSS">
+            Why Tailwind CSS
+          </p>
+
+          <h2 class="text-[clamp(2rem,4vw,3rem)] font-800 tracking-[-0.04em] leading-1.1 my-16px mx-0 mb-24px" data-ar="كيف يغير Tailwind معادلة CSS؟" data-en="How Does Tailwind Change the CSS Equation?">
+            How Does Tailwind Change the CSS Equation?
+          </h2>
+
+          <p class="text-text-muted text-1.125rem leading-1.8 max-w-620px mx-auto" data-ar="هل Tailwind CSS بيخلي Critical CSS غير ضروري؟ كيف بنفهم الفرق؟" data-en="Does Tailwind CSS make Critical CSS unnecessary? How do we understand the difference?">
+            Does Tailwind CSS make Critical CSS unnecessary? How do we understand the difference?
+          </p>
+        </div>
+
+        <div class="pipeline flex items-start gap-24px mt-64px flex-wrap">
+          <article class="pipeline-step flex-1 min-w-180px p-28px border border-border rounded-md bg-surface animate-fadeInUp">
+            <span class="step-number inline-block w-32px h-32px mb-16px rounded-999px bg-primary text-white text-0.85rem font-800 grid place-items-center">01</span>
+            <div class="step-icon w-48px h-48px mb-16px rounded-12px bg-[#eff6ff] text-primary text-0.75rem font-800 uppercase grid place-items-center">HTML</div>
+            <h3 class="text-1.125rem font-700 mb-12px m-0" data-ar="HTML" data-en="HTML">HTML</h3>
+            <p class="text-text-muted text-0.9rem leading-1.6 m-0" data-ar="HTML مع Tailwind classes" data-en="HTML with Tailwind classes">HTML with Tailwind classes</p>
+          </article>
+
+          <span class="pipeline-arrow text-2rem text-primary font-800 grid place-items-center animate-slideInRight">→</span>
+
+          <article class="pipeline-step flex-1 min-w-180px p-28px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.2s">
+            <span class="step-number inline-block w-32px h-32px mb-16px rounded-999px bg-primary text-white text-0.85rem font-800 grid place-items-center">02</span>
+            <div class="step-icon w-48px h-48px mb-16px rounded-12px bg-[#eff6ff] text-primary text-0.75rem font-800 uppercase grid place-items-center">Build</div>
+            <h3 class="text-1.125rem font-700 mb-12px m-0" data-ar="Tailwind Build" data-en="Tailwind Build">Tailwind Build</h3>
+            <p class="text-text-muted text-0.9rem leading-1.6 m-0" data-ar="توليد CSS من utilities" data-en="Generate CSS from utilities">Generate CSS from utilities</p>
+          </article>
+
+          <span class="pipeline-arrow text-2rem text-primary font-800 grid place-items-center animate-slideInRight" style="animation-delay: 0.35s">→</span>
+
+          <article class="pipeline-step flex-1 min-w-180px p-28px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.3s">
+            <span class="step-number inline-block w-32px h-32px mb-16px rounded-999px bg-primary text-white text-0.85rem font-800 grid place-items-center">03</span>
+            <div class="step-icon w-48px h-48px mb-16px rounded-12px bg-[#eff6ff] text-primary text-0.75rem font-800 uppercase grid place-items-center">CSS</div>
+            <h3 class="text-1.125rem font-700 mb-12px m-0" data-ar="Purged CSS" data-en="Purged CSS">Purged CSS</h3>
+            <p class="text-text-muted text-0.9rem leading-1.6 m-0" data-ar="CSS المستخدم فقط" data-en="Used CSS only">Used CSS only</p>
+          </article>
+
+          <span class="pipeline-arrow text-2rem text-primary font-800 grid place-items-center animate-slideInRight" style="animation-delay: 0.55s">→</span>
+
+          <article class="pipeline-step flex-1 min-w-180px p-28px border border-border rounded-md bg-surface animate-fadeInUp" style="animation-delay: 0.4s">
+            <span class="step-number inline-block w-32px h-32px mb-16px rounded-999px bg-primary text-white text-0.85rem font-800 grid place-items-center">04</span>
+            <div class="step-icon w-48px h-48px mb-16px rounded-12px bg-[#eff6ff] text-primary text-0.75rem font-800 uppercase grid place-items-center">Paint</div>
+            <h3 class="text-1.125rem font-700 mb-12px m-0" data-ar="عرض" data-en="Display">Display</h3>
+            <p class="text-text-muted text-0.9rem leading-1.6 m-0" data-ar="متى يظهر المحتوى؟" data-en="When does content appear?">When does content appear?</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Language Switcher
+    let currentLang = 'en';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      updateLanguage();
+    }
+
+    function updateLanguage() {
+      const elements = document.querySelectorAll('[data-en][data-ar]');
+      
+      elements.forEach(element => {
+        const enText = element.getAttribute('data-en');
+        const arText = element.getAttribute('data-ar');
+        
+        if (currentLang === 'ar' && arText) {
+          element.textContent = arText;
+        } else if (currentLang === 'en' && enText) {
+          element.textContent = enText;
+        }
+      });
+
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = currentLang === 'en' ? 'AR' : 'EN';
+      }
+
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Critical CSS Lab - EPS05 Tailwind CSS');
+      console.log('Language:', currentLang);
+      
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = 'AR';
+      }
+    });
+  </script>
+</body>
+</html>
