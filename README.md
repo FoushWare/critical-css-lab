@@ -18,7 +18,7 @@ This series explores how Critical CSS works and whether its benefits change when
 | 2 | Critical CSS Optimization | HTML/CSS | ✅ Completed | Extract and inline critical styles |
 | 3 | Automated Critical CSS Extraction | HTML/CSS | ✅ Completed | Tools for automated Critical CSS generation |
 | 4 | Critical CSS in React | React | ✅ Completed | Does Critical CSS work with client-side rendering? |
-| 5 | Critical CSS with Tailwind | Tailwind | ✅ Completed | Does Tailwind make Critical CSS unnecessary? |
+| 5 | Critical CSS with Tailwind | Tailwind | ✅ Completed | Tailwind CSS makes Critical CSS unnecessary |
 | 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
 | 7 | CSS Loading Strategies | HTML/CSS | 📋 Planned | Compare different CSS loading approaches |
 | 8 | Final Comparison | All | 📋 Planned | Comprehensive performance comparison |
