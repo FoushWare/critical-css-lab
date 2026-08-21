@@ -69,7 +69,7 @@ const server = http.createServer(async (req, res) => {
       contentTypes[extension] ||
       "application/octet-stream";
 
-    if (pathname === "/output.css" || pathname === "/code/output.css" || pathname.endsWith("output.css")) {
+    if (pathname === "/output.css" || pathname === "/code/output.css") {
       console.log(
         `[CSS] Request received. Delaying response by ${CSS_DELAY}ms...`
       );
