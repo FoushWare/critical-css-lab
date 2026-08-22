@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Loading Strategies - Critical CSS + Async</title>
+  <style>
+    /* Critical CSS - Inline for above-the-fold content */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: #f9fafb; color: #111827; line-height: 1.6; }
+    .container { min-height: 100vh; }
+    header { background: white; border-bottom: 1px solid #e5e7eb; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 0.5rem; }
+    .logo-text { font-size: 1.5rem; font-weight: bold; color: #2563eb; }
+    .logo-subtitle { font-weight: 600; color: #374151; }
+    nav { display: flex; align-items: center; gap: 1rem; }
+    .episode-badge, .strategy-badge, .loading-badge { font-size: 0.875rem; color: #6b7280; }
+    .hero { padding: 5rem 1.5rem; max-width: 72rem; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .hero-content .subtitle { font-size: 0.875rem; font-weight: 500; color: #2563eb; margin-bottom: 1rem; }
+    .hero-content h1 { font-size: 2.25rem; font-weight: bold; color: #111827; margin-bottom: 1rem; line-height: 1.2; }
+    .hero-content .description { font-size: 1.125rem; color: #6b7280; margin-bottom: 2rem; }
+    .actions { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; transition: background-color 0.2s; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .badge { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; }
+    .badge-info { background: #f3f4f6; color: #374151; }
+    .meta { display: flex; gap: 1.5rem; font-size: 0.875rem; }
+    .meta strong { color: #111827; }
+    .meta span { color: #6b7280; margin-left: 0.25rem; }
+    .separator { color: #d1d5db; }
+    @media (max-width: 768px) { .hero { grid-template-columns: 1fr; gap: 2rem; } }
+  </style>
+  <script>
+    function loadCSS(href) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+    // Load full CSS after page becomes interactive
+    window.addEventListener('DOMContentLoaded', function() {
+      loadCSS('styles.css');
+    });
+  </script>
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-text">C</span>
+        <span class="logo-subtitle">Critical CSS Lab</span>
+      </div>
+      <nav>
+        <span class="episode-badge">EPS07</span>
+        <span class="strategy-badge">Strategy 5</span>
+        <span class="loading-badge">Critical + Async</span>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="subtitle">WEB PERFORMANCE LAB</p>
+          <h1>CSS Loading Strategies</h1>
+          <p class="description">Compare different CSS loading techniques and their impact on page performance.</p>
+          
+          <div class="actions">
+            <button onclick="location.reload()" class="btn btn-primary">Refresh Page</button>
+            <div class="badge badge-info">Critical CSS + Async</div>
+          </div>
+
+          <div class="meta">
+            <div>
+              <strong>Strategy 5</strong>
+              <span>Critical + Async</span>
+            </div>
+            <div class="separator">|</div>
+            <div>
+              <strong>Port</strong>
+              <span>8094</span>
+            </div>
+            <div class="separator">|</div>
+            <div>
+              <strong>Method</strong>
+              <span>Best practice</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="browser-preview">
+          <div class="browser-header">
+            <div class="window-controls">
+              <span class="control control-red"></span>
+              <span class="control control-yellow"></span>
+              <span class="control control-green"></span>
+            </div>
+            <div class="address-bar">localhost:8094</div>
+          </div>
+          <div class="browser-content">
+            <div class="skeleton skeleton-hero"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text-short"></div>
+            <div class="skeleton-grid">
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <div class="metrics-header">
+          <p class="subtitle">Performance Metrics</p>
+          <h2>Critical CSS + Async Impact</h2>
+          <p>Inline critical CSS for immediate paint, async load rest for full styling.</p>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">CSS Load Time</div>
+            <div class="metric-value">~0.05s</div>
+            <div class="metric-desc">Critical inline</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">First Paint</div>
+            <div class="metric-value">~0.05s</div>
+            <div class="metric-desc">Styled content</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Largest Paint</div>
+            <div class="metric-value">~0.15s</div>
+            <div class="metric-desc">Full styles</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Blocking</div>
+            <div class="metric-value">No</div>
+            <div class="metric-desc">Optimal balance</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="strategies">
+        <div class="strategies-header">
+          <p class="subtitle">Loading Strategies</p>
+          <h2>Compare All Strategies</h2>
+          <p>See how different CSS loading techniques affect performance.</p>
+        </div>
+
+        <div class="strategies-grid">
+          <a href="http://localhost:8090" class="strategy-card">
+            <div class="strategy-num">01</div>
+            <div class="strategy-name">Blocking CSS</div>
+            <div class="strategy-desc">Standard blocking</div>
+            <div class="strategy-status">Port 8090</div>
+          </a>
+          <a href="http://localhost:8091" class="strategy-card">
+            <div class="strategy-num">02</div>
+            <div class="strategy-name">Media Attribute</div>
+            <div class="strategy-desc">Non-blocking trick</div>
+            <div class="strategy-status">Port 8091</div>
+          </a>
+          <a href="http://localhost:8092" class="strategy-card">
+            <div class="strategy-num">03</div>
+            <div class="strategy-name">Preload CSS</div>
+            <div class="strategy-desc">Early discovery</div>
+            <div class="strategy-status">Port 8092</div>
+          </a>
+          <a href="http://localhost:8093" class="strategy-card">
+            <div class="strategy-num">04</div>
+            <div class="strategy-name">Async Loading</div>
+            <div class="strategy-desc">JavaScript async</div>
+            <div class="strategy-status">Port 8093</div>
+          </a>
+          <a href="http://localhost:8094" class="strategy-card active">
+            <div class="strategy-num">05</div>
+            <div class="strategy-name">Critical + Async</div>
+            <div class="strategy-desc">Best practice</div>
+            <div class="strategy-status">Current</div>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Display performance metrics
+    window.addEventListener('load', () => {
+      const perfData = performance.getEntriesByType('navigation')[0];
+      const fp = performance.getEntriesByType('paint').find(p => p.name === 'first-paint');
+      const lcp = performance.getEntriesByType('largest-contentful-paint')[0];
+
+      console.log('Performance Metrics:', {
+        domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+        loadComplete: perfData.loadEventEnd - perfData.loadEventStart,
+        firstPaint: fp ? fp.startTime : 'N/A',
+        largestContentfulPaint: lcp ? lcp.startTime : 'N/A'
+      });
+    });
+  </script>
+</body>
+</html>

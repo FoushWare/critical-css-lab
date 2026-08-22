@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٨: المقارنة الشاملة — كل الاستراتيجيات جنب بعض</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{ background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px, var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85; }
+code, .mono{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block; background:var(--surface2); color:var(--yellow); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6; }
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; } h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+.ep-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+.callout{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2; }
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); } .callout.good{ border-color:rgba(94,234,212,.35); }
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12px; } table.stack-table td:first-child{ font-weight:700; white-space:nowrap; }
+.badge-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.badge{ font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface2); color:var(--muted); }
+.badge.bad{ color:var(--coral); border-color:rgba(255,107,74,.35); background:var(--coral-dim); }
+.badge.ok{ color:var(--teal); border-color:rgba(94,234,212,.35); background:var(--teal-dim); }
+.badge.mid{ color:var(--yellow); border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.1); }
+.tree{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+.tree-item{ background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+.tree-item .q{ font-weight:800; font-size:14.5px; margin-bottom:6px; color:var(--text); }
+.tree-item .a{ font-size:13.5px; color:var(--muted); }
+.tree-item .a b{ color:var(--teal); font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; }
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; } .res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٨ — الأخيرة</div>
+  <h1>المقارنة الشاملة: <span>كل الاستراتيجيات</span> جنب بعض</h1>
+  <p class="subtitle">سبع حلقات، سبع زوايا مختلفة لنفس المشكلة: إزاي تخلّي المتصفح يرسم الصفحة أسرع من غير ما يستنى CSS بالطول ده. الحلقة دي مش فيها حاجة جديدة — هي الخلاصة اللي تلخّص كل حاجة في جدول واحد وشجرة قرار تساعدك تختار.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🗺️ رحلة السلسلة</div>
+    <h2>من المشكلة للحل، خطوة بخطوة</h2>
+    <table class="stack-table">
+      <tr><th>الحلقة</th><th>الموضوع</th><th>أهم خلاصة</th></tr>
+      <tr><td><span class="ep-tag">EP01</span></td><td>CSS Render-Blocking</td><td>المتصفح بيوقف الرسم عمدًا عشان يمنع FOUC، والـ CSS ممكن يأخر JS كمان</td></tr>
+      <tr><td><span class="ep-tag">EP02</span></td><td>Critical CSS يدوي</td><td>يشتغل ويعلّمك المبدأ، لكن الصيانة بتنهار مع أول تعديل تصميم</td></tr>
+      <tr><td><span class="ep-tag">EP03</span></td><td>Critical CSS أوتوماتيك</td><td>الأدوات بتحل مشكلة الصيانة، بس بتضيف وقت Build وبتفوت المحتوى الـ Dynamic</td></tr>
+      <tr><td><span class="ep-tag">EP04</span></td><td>React CSR</td><td>مشكلة مضاعفة: HTML فاضي يستني JS، فـ Critical CSS بيستهدف Loading State مش المحتوى</td></tr>
+      <tr><td><span class="ep-tag">EP05</span></td><td>Tailwind CSS</td><td>الـ Purge بيقلل حجم المشكلة، لكن الملف لسه Render-blocking لو مالوش حل تحميل</td></tr>
+      <tr><td><span class="ep-tag">EP06</span></td><td>Next.js SSR</td><td>SSR بيحل مشكلة JS بتاعة CSR، مش مشكلة CSS — لسه محتاج <code>optimizeCss</code> أو حل يدوي</td></tr>
+      <tr><td><span class="ep-tag">EP07</span></td><td>استراتيجيات التحميل الخمسة</td><td>مفيش استراتيجية "الأفضل" مطلقًا — كل واحدة بتبادل سرعة بتعقيد</td></tr>
+    </table>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 الجدول الشامل</div>
+    <h2>مقارنة مباشرة بين كل الحلول</h2>
+    <table class="stack-table">
+      <tr><th>الاستراتيجية</th><th>Render-blocking؟</th><th>التعقيد</th><th>خطر الصيانة</th></tr>
+      <tr><td>Blocking عادي</td><td>Yes</td><td>صفر</td><td>لا يوجد</td></tr>
+      <tr><td>media="print"</td><td>No</td><td>منخفض</td><td>منخفض</td></tr>
+      <tr><td>Preload + Swap</td><td>No</td><td>منخفض</td><td>منخفض</td></tr>
+      <tr><td>Async JS</td><td>No</td><td>متوسط</td><td>متوسط (يعتمد على JS)</td></tr>
+      <tr><td>Critical CSS يدوي</td><td>No (above-the-fold)</td><td>متوسط</td><td>عالي جدًا</td></tr>
+      <tr><td>Critical CSS أوتوماتيك</td><td>No (above-the-fold)</td><td>عالي</td><td>متوسط (Build Pipeline)</td></tr>
+      <tr><td>Framework-native (optimizeCss..)</td><td>No</td><td>منخفض (سطر إعدادات)</td><td>منخفض، لكن يعتمد على الفريموورك</td></tr>
+    </table>
+    <div class="badge-row">
+      <span class="badge ok">الأبسط: Preload + Swap</span>
+      <span class="badge mid">الأدق: Critical CSS أوتوماتيك</span>
+      <span class="badge bad">الأخطر للصيانة: Critical CSS يدوي</span>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🌳 شجرة القرار</div>
+    <h2>إيه الأنسب لمشروعك؟</h2>
+    <div class="tree">
+      <div class="tree-item"><div class="q">صفحة واحدة / Landing Page بسيطة؟</div><div class="a">Inline كل الـ CSS لو تحت 14 KB — مفيش داعي لتعقيد إضافي. <b>(EP05, EP07)</b></div></div>
+      <div class="tree-item"><div class="q">موقع HTML متعدد الصفحات؟</div><div class="a">Preload + Swap للتحميل الأساسي، وCritical CSS أوتوماتيك لو عندك وقت Build كافي. <b>(EP02, EP03, EP07)</b></div></div>
+      <div class="tree-item"><div class="q">تطبيق React (CSR) بحت؟</div><div class="a">ركّز على تسريع الـ JS نفسه أولًا (Code Splitting)، وCritical CSS بس لتلوين Loading Skeleton. <b>(EP04)</b></div></div>
+      <div class="tree-item"><div class="q">مشروع Next.js؟</div><div class="a">جرّب <code>optimizeCss</code>/<code>inlineCss</code> الأول قبل أي أداة خارجية — سطر إعدادات واحد. <b>(EP06)</b></div></div>
+      <div class="tree-item"><div class="q">مشروع Tailwind CSS؟</div><div class="a">اعتبر الـ Purge خطوة أولى مش حل نهائي — لسه محتاج استراتيجية تحميل فوقه. <b>(EP05)</b></div></div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🎓 الخلاصة النهائية</div>
+    <h2>مفيش حل واحد يناسب الكل</h2>
+    <p class="desc">كل حلقة في السلسلة دي كانت في الحقيقة نفس الدرس من زاوية مختلفة: المتصفح بيحتاج الـ CSS قبل ما يرسم، والسؤال دايمًا هو "إزاي أقلل وقت الانتظار ده من غير ما أكسر حاجة تانية؟". الفرق بين الاستراتيجيات مش في "مين الأسرع" بالمطلق — الفرق في التكلفة اللي مستعد تدفعها: تعقيد Build، صيانة مستمرة، أو الاعتماد على JS.</p>
+    <div class="callout good"><span class="ic">✅</span><div>لو مضطر تختار نقطة بداية واحدة: ابدأ بـ <code>rel="preload"</code> + Swap (EP07) — أبسط حل بيشيل الـ Render-blocking بجهد أقل حاجة، وطوّر منه لو قسته وقلت محتاجه فعلًا.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 مصادر السلسلة كاملة</div>
+    <h2>أهم المراجع اللي مرت علينا</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://web.dev/articles/critical-rendering-path" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>web.dev — Critical Rendering Path</strong><span>نقطة البداية — أساس كل حاجة في السلسلة (EP01).</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/extract-critical-css" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>web.dev — Extract Critical CSS</strong><span>المبدأ اللي بنيت عليه EP02 وEP03.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/rendering-on-the-web" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Rendering on the Web</strong><span>الفرق بين CSR وSSR — أساس EP04 وEP06.</span></div>
+      </a>
+      <a class="res-item" href="https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizeCss" target="_blank" rel="noopener">
+        <div class="num">04</div>
+        <div class="body"><strong>Next.js Docs — optimizeCss</strong><span>الحل الجاهز اللي شفناه في EP06.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 سلسلة كاملة من 8 حلقات — من فهم المشكلة (EP01) لحد شجرة قرار عملية تختار بيها استراتيجيتك (EP08).</footer>
+</div>
+</body>
+</html>

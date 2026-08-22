@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٧: استراتيجيات تحميل CSS الخمسة</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    var(--bg);
+  color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85;
+}
+code, .mono{
+  font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate;
+  display:inline-block; background:var(--surface2); color:var(--yellow);
+  border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6;
+}
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+  color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35);
+  padding:6px 14px; border-radius:999px; margin-bottom:20px;
+}
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; }
+h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+
+.callout{
+  display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line);
+  border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2;
+}
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); }
+.callout.good{ border-color:rgba(94,234,212,.35); }
+
+.code-block{
+  background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+  font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left;
+}
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); }
+.code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; }
+.code-block .attr{ color:var(--pink); }
+
+.pipeline{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; direction:ltr; }
+.pipe-step{
+  background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+  font-size:12.5px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace;
+  display:flex; flex-direction:column; justify-content:center; min-width:100px; flex:0 0 auto;
+}
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{ display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; flex:0 0 auto; }
+
+.badge-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.badge{ font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface2); color:var(--muted); }
+.badge.bad{ color:var(--coral); border-color:rgba(255,107,74,.35); background:var(--coral-dim); }
+.badge.ok{ color:var(--teal); border-color:rgba(94,234,212,.35); background:var(--teal-dim); }
+.badge.mid{ color:var(--yellow); border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.1); }
+
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12.5px; }
+table.stack-table td:first-child{ font-weight:700; white-space:nowrap; }
+
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; }
+.res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٧</div>
+  <h1>استراتيجيات تحميل <span>CSS</span> الخمسة</h1>
+  <p class="subtitle">فيه أكتر من طريقة تخلّي المتصفح يحمّل الـ CSS، ومش كلهم بيمنعوا الرسم بنفس الشكل. جرّبنا 5 استراتيجيات مختلفة، كل واحدة شغّالة على بورت لوحدها، عشان نقارن سلوك كل طريقة بالظبط.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">1️⃣ الاستراتيجية الأولى — الأساس <span class="port-tag">Port 8090</span></div>
+    <h2>Blocking CSS — الطريقة التقليدية</h2>
+    <p class="desc">أبسط طريقة، وهي اللي بيستخدمها معظم الناس من غير ما ياخدوا بالهم. المتصفح بيوقف الرسم كامل لحد ما يجيب الملف ويحلّله.</p>
+    <div class="code-block"><span class="sel">&lt;head&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span><span class="sel">&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+    <div class="badge-row">
+      <span class="badge bad">Render-blocking: Yes</span>
+      <span class="badge ok">FOUC: مستحيل</span>
+      <span class="badge ok">تعقيد: صفر</span>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>المتصفح مش هيرسم أي بكسل قبل ما الـ CSS يوصل ويتحلّل بالكامل. في الشبكات البطيئة، ده بيبان كصفحة بيضا واقفة.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">2️⃣ الاستراتيجية التانية — الحيلة القديمة <span class="port-tag">Port 8091</span></div>
+    <h2>Media Attribute Trick — <code>media="print"</code></h2>
+    <p class="desc">حيلة قديمة ومعروفة (من Filament Group): تخلّي المتصفح يفتكر إن الملف مخصّص للطباعة بس، فبيحمّله بأولوية منخفضة من غير ما يمنع الرسم. لما التحميل يخلص، الـ JavaScript بيغيّر الـ <code>media</code> لـ <code>all</code> عشان يتطبّق فعليًا.</p>
+    <div class="code-block"><span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span>
+      <span class="attr">media</span>=<span class="val">"print"</span> <span class="attr">onload</span>=<span class="val">"this.media='all'"</span><span class="sel">&gt;</span>
+
+<span class="cm">&lt;!-- Fallback لو الـ JS متعطل --&gt;</span>
+<span class="sel">&lt;noscript&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span><span class="sel">&gt;</span>
+<span class="sel">&lt;/noscript&gt;</span></div>
+    <div class="badge-row">
+      <span class="badge ok">Render-blocking: No</span>
+      <span class="badge mid">FOUC: ممكن يحصل للحظة</span>
+      <span class="badge mid">تعقيد: يحتاج noscript Fallback</span>
+    </div>
+    <div class="callout"><span class="ic">💡</span><div>حل قديم وموثوق جدًا، ومتوافق مع كل المتصفحات تقريبًا حتى القديمة منها — عيبه إنه شكله "Hack" مش API واضح الغرض منه.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">3️⃣ الاستراتيجية التالتة — الأحدث والأنضف <span class="port-tag">Port 8092</span></div>
+    <h2>Preload CSS — <code>rel="preload"</code></h2>
+    <p class="desc">بتقول للمتصفح "حمّل الملف ده بأولوية عالية بدري، بس متطبقهوش دلوقتي". لما يخلص تحميل، بتحوّل الـ <code>rel</code> لـ <code>stylesheet</code> عشان يتفعّل.</p>
+    <div class="code-block"><span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"preload"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span> <span class="attr">as</span>=<span class="val">"style"</span>
+      <span class="attr">onload</span>=<span class="val">"this.onload=null;this.rel='stylesheet'"</span><span class="sel">&gt;</span>
+
+<span class="sel">&lt;noscript&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span><span class="sel">&gt;</span>
+<span class="sel">&lt;/noscript&gt;</span></div>
+    <div class="badge-row">
+      <span class="badge ok">Render-blocking: No</span>
+      <span class="badge mid">FOUC: ممكن يحصل للحظة</span>
+      <span class="badge ok">تعقيد: بسيط، API واضح</span>
+    </div>
+    <div class="callout good"><span class="ic">✅</span><div>ده الاختيار الافتراضي الجيد لمعظم الحالات: بيحمّل الملف بأولوية عالية زي الـ Blocking، بس من غير ما يوقف الرسم. مدعوم في كل المتصفحات الحديثة.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">4️⃣ الاستراتيجية الرابعة — من غير Link خالص <span class="port-tag">Port 8093</span></div>
+    <h2>Async Loading via JavaScript</h2>
+    <p class="desc">مفيش <code>&lt;link&gt;</code> في الـ HTML أصلًا. الـ JavaScript هو اللي بيبني الـ Element ويضيفه للصفحة وقت التنفيذ.</p>
+    <div class="code-block"><span class="sel">&lt;script&gt;</span>
+  <span class="prop">const</span> link = document.createElement(<span class="val">'link'</span>);
+  link.rel = <span class="val">'stylesheet'</span>;
+  link.href = <span class="val">'styles.css'</span>;
+  document.head.appendChild(link);
+<span class="sel">&lt;/script&gt;</span></div>
+    <div class="badge-row">
+      <span class="badge ok">Render-blocking: No</span>
+      <span class="badge bad">FOUC: خطر عالي</span>
+      <span class="badge bad">تعقيد: يعتمد كليًا على JS</span>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>مفيش <code>&lt;noscript&gt;</code> Fallback طبيعي هنا — لو الـ JS اتعطل أو اتأخر، الصفحة ممكن تفضل من غير ستايل خالص. مناسبة أكتر لتطبيقات SPA أصلًا معتمدة على JS بشكل كامل.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">5️⃣ الاستراتيجية الخامسة — أفضل ممارسة <span class="port-tag">Port 8094</span></div>
+    <h2>Critical CSS + Async — الجمع بين الاتنين</h2>
+    <p class="desc">هنا بتجمع بين حاجتين: <code>&lt;style&gt;</code> Inline فيه الـ Critical subset (بيرسم فورًا من غير أي Request)، بالإضافة لباقي الملف بيتحمّل Async بنفس أسلوب الـ Preload.</p>
+    <div class="pipeline">
+      <div class="pipe-step paint">Inline &lt;style&gt; <span class="t">critical فقط</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">Paint فوري 🎨</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">Preload <span class="t">باقي الملف</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">Swap → stylesheet</div>
+    </div>
+    <div class="code-block"><span class="sel">&lt;head&gt;</span>
+  <span class="cm">&lt;!-- Critical CSS: above-the-fold بس --&gt;</span>
+  <span class="sel">&lt;style&gt;</span>
+    <span class="prop">.header</span>{ ... } <span class="prop">.hero</span>{ ... }
+  <span class="sel">&lt;/style&gt;</span>
+
+  <span class="cm">&lt;!-- الباقي: Preload + Swap --&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"preload"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span> <span class="attr">as</span>=<span class="val">"style"</span>
+        <span class="attr">onload</span>=<span class="val">"this.onload=null;this.rel='stylesheet'"</span><span class="sel">&gt;</span>
+  <span class="sel">&lt;noscript&gt;</span><span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span><span class="sel">&gt;</span><span class="sel">&lt;/noscript&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+    <div class="badge-row">
+      <span class="badge ok">Render-blocking: No</span>
+      <span class="badge ok">FOUC: أقل خطر (above-the-fold متلوّن من الأول)</span>
+      <span class="badge bad">تعقيد: الأعلى — محتاج Build step لاستخراج الـ Critical</span>
+    </div>
+    <div class="callout good"><span class="ic">✅</span><div>أحسن نتيجة FCP في الخمس استراتيجيات، بس التكلفة هي التعقيد: لازم Build Pipeline يستخرج الـ Critical subset، ويفضل محدث كل ما التصميم يتغيّر — زي ما شفنا في الحلقة اللي فاتت عن Tailwind.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>مقارنة الخمس استراتيجيات جنب بعض</h2>
+    <table class="stack-table">
+      <tr><th>الاستراتيجية</th><th>Render-blocking؟</th><th>خطر FOUC</th><th>التعقيد</th><th>الأنسب لـ</th></tr>
+      <tr><td>1. Blocking <span class="port-tag">8090</span></td><td>Yes</td><td>مفيش</td><td>صفر</td><td>صفحات صغيرة جدًا / نماذج بسيطة</td></tr>
+      <tr><td>2. media="print" <span class="port-tag">8091</span></td><td>No</td><td>للحظة</td><td>متوسط (noscript)</td><td>دعم متصفحات قديمة</td></tr>
+      <tr><td>3. Preload <span class="port-tag">8092</span></td><td>No</td><td>للحظة</td><td>بسيط</td><td>الاختيار الافتراضي لمعظم المواقع</td></tr>
+      <tr><td>4. Async JS <span class="port-tag">8093</span></td><td>No</td><td>عالي</td><td>يعتمد على JS بالكامل</td><td>SPA أصلًا معتمد على JS</td></tr>
+      <tr><td>5. Critical + Async <span class="port-tag">8094</span></td><td>Above-the-fold فقط</td><td>الأقل</td><td>الأعلى (Build step)</td><td>Landing Pages / صفحات مهمة للـ SEO</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">مفيش استراتيجية "الأفضل" بشكل مطلق — كل واحدة بتبادل حاجة بحاجة: Blocking أبسط حاجة بس أبطأ حاجة، وCritical + Async أسرع حاجة بس أعقد حاجة تتصيّن. الاختيار بيتحدد حسب حجم المشروع وعدد الصفحات، مش بس حسب الرقم النهائي في Lighthouse.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://web.dev/articles/defer-non-critical-css" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>web.dev — Defer Non-Critical CSS</strong><span>شرح Google لأنماط الـ Preload/Swap ولإيه ده بيحسّن الأداء.</span></div>
+      </a>
+      <a class="res-item" href="https://www.filamentgroup.com/lab/load-css-simpler/" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>Filament Group — loadCSS</strong><span>المصدر الأصلي لحيلة media="print"، ومكتبة loadCSS اللي بتطبقها بشكل جاهز.</span></div>
+      </a>
+      <a class="res-item" href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/link#attr-rel" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>MDN — rel="preload"</strong><span>مرجع رسمي لسلوك preload، ومتى بيتحمّل الملف فعليًا مقابل متى بيتطبّق.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 كل استراتيجية شغّالة على السيرفر بتاعها لوحده — بورتات 8090 لحد 8094 — عشان تقدر تقارن الـ Network tab بينهم مباشرة.</footer>
+</div>
+</body>
+</html>

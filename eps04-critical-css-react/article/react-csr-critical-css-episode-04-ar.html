@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٤: React وCritical CSS — مشكلة الـ CSR</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{ background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px, var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85; }
+code, .mono{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block; background:var(--surface2); color:var(--yellow); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6; }
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; } h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+.callout{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2; }
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); } .callout.good{ border-color:rgba(94,234,212,.35); }
+.code-block{ background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px; font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left; }
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); } .code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; } .code-block .attr{ color:var(--pink); }
+.pipeline{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; direction:ltr; }
+.pipe-step{ background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:12.5px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace; display:flex; flex-direction:column; justify-content:center; min-width:100px; flex:0 0 auto; }
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{ display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; flex:0 0 auto; }
+.compare-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:8px; }
+.compare-card{ border-radius:16px; padding:20px; border:1px solid var(--line); background:var(--surface2); }
+.compare-card.before{ border-color:rgba(255,107,74,.35); } .compare-card.after{ border-color:rgba(94,234,212,.35); }
+.compare-tag{ font-size:12px; font-weight:800; letter-spacing:.03em; margin-bottom:14px; display:inline-block; padding:3px 10px; border-radius:999px; }
+.compare-card.before .compare-tag{ color:var(--coral); background:var(--coral-dim); } .compare-card.after .compare-tag{ color:var(--teal); background:var(--teal-dim); }
+.compare-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; } .compare-row:last-child{ border-bottom:none; }
+.compare-row b{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; text-align:left; }
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12.5px; } table.stack-table td:first-child{ font-weight:700; }
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; } .res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٤</div>
+  <h1><span>React</span> وCritical CSS — مشكلة إضافية</h1>
+  <p class="subtitle">لحد دلوقتي كنا بنتكلم عن صفحات HTML عادية. لكن في React (Client-Side Rendering)، فيه مشكلة تانية بتتحط فوق مشكلة الـ CSS: الـ HTML نفسه فاضي لحد ما JavaScript يشتغل. يبقى إيه معنى "Above-the-fold" أصلًا لو مفيش محتوى موجود أصلًا؟</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 المشكلة المضاعفة</div>
+    <h2>CSR = JS Blocking + CSS Blocking مع بعض</h2>
+    <p class="desc">في صفحة HTML عادية، المحتوى موجود في الـ HTML من الأول — بس شكله مش نهائي لحد ما الـ CSS يوصل. في React CSR، الـ HTML الأولي عبارة عن <code>&lt;div id="root"&gt;&lt;/div&gt;</code> فاضي تمامًا. المحتوى نفسه مش موجود لحد ما الـ JS Bundle يتحمّل، يتنفذ، وReact يرسم الـ DOM.</p>
+    <div class="pipeline">
+      <div class="pipe-step block">HTML Shell <span class="t">&lt;div id="root"&gt;</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">JS Bundle <span class="t">تحميل + تنفيذ</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">React Render <span class="t">DOM اتبنى دلوقتي بس</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">CSS <span class="t">لسه محتاج يتلوّن</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Paint 🎨</div>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>يعني في CSR، حتى لو الـ CSS وصل فورًا، المستخدم لسه هيشوف صفحة فاضية لحد ما الـ JS يخلص شغله. الـ Critical CSS مش هيسرّع حاجة هنا لو المشكلة الأساسية هي JS مش CSS.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🎯 يبقى Critical CSS يستهدف إيه في React؟</div>
+    <h2>الحل: Critical CSS لـ Loading State مش للمحتوى النهائي</h2>
+    <p class="desc">بما إن المحتوى الحقيقي مش موجود قبل الـ Hydration، الاستخدام العملي لـ Critical CSS هنا بيكون لتلوين حاجة بسيطة موجودة في الـ HTML الأولي فعلًا — زي Skeleton Screen أو Spinner — عشان المستخدم مايشوفش صفحة بيضا فاضية تمامًا وهو مستني JS.</p>
+    <div class="code-block"><span class="sel">&lt;body&gt;</span>
+  <span class="sel">&lt;style&gt;</span>
+    <span class="cm">/* Critical: بس لتلوين الـ Loading Skeleton */</span>
+    <span class="prop">.skeleton</span>{ background: <span class="val">#1a2030</span>; animation: pulse <span class="val">1.5s</span> infinite; }
+  <span class="sel">&lt;/style&gt;</span>
+
+  <span class="sel">&lt;div</span> <span class="prop">id</span>=<span class="val">"root"</span><span class="sel">&gt;</span>
+    <span class="sel">&lt;div</span> <span class="prop">class</span>=<span class="val">"skeleton"</span><span class="sel">&gt;&lt;/div&gt;</span> <span class="cm">&lt;!-- ظاهر قبل React خالص --&gt;</span>
+  <span class="sel">&lt;/div&gt;</span>
+
+  <span class="sel">&lt;script</span> <span class="prop">src</span>=<span class="val">"bundle.js"</span><span class="sel">&gt;&lt;/script&gt;</span>
+<span class="sel">&lt;/body&gt;</span></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧪 التجربة</div>
+    <h2>Before <span class="port-tag">Port 8084</span> مقابل After <span class="port-tag">Port 8085</span></h2>
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <span class="compare-tag">BEFORE — CSR عادي</span>
+        <div class="compare-row"><span>الـ HTML الأولي</span><b>فاضي تمامًا</b></div>
+        <div class="compare-row"><span>أول حاجة تتعرض</span><b>بعد JS + CSS مع بعض</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>Yes (JS و CSS)</b></div>
+      </div>
+      <div class="compare-card after">
+        <span class="compare-tag">AFTER — Critical Skeleton</span>
+        <div class="compare-row"><span>الـ HTML الأولي</span><b>Skeleton مُلوّن Inline</b></div>
+        <div class="compare-row"><span>أول حاجة تتعرض</span><b>Skeleton فورًا</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>No (للـ Skeleton بس)</b></div>
+      </div>
+    </div>
+    <div class="callout"><span class="ic">💡</span><div>لاحظ إن الـ "After" هنا مش بيسرّع ظهور المحتوى الحقيقي — هو بيدّي إحساس بصري إن حاجة بتحصل، بدل صفحة بيضا صامتة. الـ JS لسه هو الـ Bottleneck الحقيقي.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>HTML عادي مقابل React CSR</h2>
+    <table class="stack-table">
+      <tr><th>الجانب</th><th>HTML عادي</th><th>React CSR</th></tr>
+      <tr><td>المحتوى في HTML الأولي</td><td>موجود</td><td>فاضي</td></tr>
+      <tr><td>الـ Bottleneck الأساسي</td><td>CSS بس</td><td>JS أولًا، بعدين CSS</td></tr>
+      <tr><td>هدف Critical CSS</td><td>تلوين المحتوى الحقيقي فورًا</td><td>تلوين Loading State بس</td></tr>
+      <tr><td>الحل الجذري</td><td>Critical CSS كفاية غالبًا</td><td>لازم حل لمشكلة JS كمان (زي SSR)</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">ده بالظبط اللي هيوصلنا للحلقة الجاية: Next.js وSSR بيحلوا مشكلة "HTML فاضي" دي عن طريق إرسال محتوى حقيقي من السيرفر. بس هل ده كافي لوحده؟ هنشوف.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://web.dev/articles/rendering-on-the-web" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>web.dev — Rendering on the Web</strong><span>مقارنة CSR بأنماط الرسم التانية زي SSR وSSG.</span></div>
+      </a>
+      <a class="res-item" href="https://react.dev/reference/react-dom/client/createRoot" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>React Docs — createRoot</strong><span>مرجع رسمي لآلية الـ Client-Side Rendering في React.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/optimize-lcp" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Optimize LCP</strong><span>مهم خصوصًا في CSR حيث LCP بيتأخر بسبب JS مش CSS بس.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 Before على بورت 8084، After (Critical Skeleton) على بورت 8085.</footer>
+</div>
+</body>
+</html>

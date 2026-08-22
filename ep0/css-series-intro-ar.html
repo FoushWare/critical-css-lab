@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مقدمة السلسلة: هل الـ CSS بيأثر على الأداء زي الـ JavaScript؟</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{ background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px, var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85; }
+code, .mono{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block; background:var(--surface2); color:var(--yellow); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+h1{ font-size:40px; font-weight:800; margin:0 0 14px; line-height:1.4; } h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:700px; margin:0 0 36px; }
+.hook{ font-size:19px; font-weight:700; color:var(--text); border-right:3px solid var(--coral); padding-right:16px; margin:0 0 36px; max-width:700px; }
+.hook span{ color:var(--coral); }
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+p.desc:last-child{ margin-bottom:0; }
+.callout{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2; }
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.good{ border-color:rgba(94,234,212,.35); }
+.js-list{ display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+.js-item{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-size:14.5px; color:#dfe2f2; }
+.js-item .ic{ color:var(--blue); flex:0 0 auto; }
+.ep-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:2px 9px; border-radius:999px; }
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12px; } table.stack-table td:first-child{ font-weight:700; white-space:nowrap; }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 مقدمة السلسلة</div>
+  <h1>هل الـ <span>CSS</span> بيأثر على الأداء زي الـ JavaScript؟</h1>
+  <p class="subtitle">قبل ما نبدأ الحلقة الأولى، خلينا نتفق على السبب اللي خلانا نعمل السلسلة دي أصلًا.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🟨 الجزء اللي كل حد بيتكلم عنه</div>
+    <h2>لما بنتكلم على الـ Performance، دايمًا بنتكلم على الـ JavaScript</h2>
+    <p class="desc">وده مفهوم — الـ JS فعلًا بيستهلك وقت معالجة، وبيكبر بسرعة. عشان كده احنا معتادين نعمل حاجات زي:</p>
+    <div class="js-list">
+      <div class="js-item"><span class="ic">▸</span><span><strong>Code Splitting</strong> — نقسّم الـ Bundle الكبير لأجزاء أصغر تتحمّل عند الحاجة</span></div>
+      <div class="js-item"><span class="ic">▸</span><span><strong>Lazy Loading</strong> — نأجّل تحميل المكونات اللي مش ظاهرة فورًا</span></div>
+      <div class="js-item"><span class="ic">▸</span><span><strong>Tree Shaking</strong> — نشيل أي كود مش مستخدم قبل ما نبعت الـ Bundle</span></div>
+      <div class="js-item"><span class="ic">▸</span><span><strong>defer / async</strong> — نمنع السكريبتات من إنها توقف تحميل باقي الصفحة</span></div>
+      <div class="js-item"><span class="ic">▸</span><span><strong>Minification</strong> — نقلل حجم كل كيلوبايت زيادة زي ما بنراقب فلوسنا</span></div>
+    </div>
+    <p class="desc" style="margin-top:18px;">كل ده صح، وكل ده مهم. المشكلة مش في الاهتمام بالـ JS — المشكلة إن الاهتمام ده بيبقى الاهتمام الوحيد.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🟩 الجزء اللي نادرًا ما بنتكلم عنه</div>
+    <h2>طب الـ CSS بتاعك بيوقف رسم الصفحة قد إيه؟</h2>
+    <p class="desc">الحقيقة إن المتصفح مش بس بينتظر الـ JavaScript — بينتظر الـ CSS كمان، وبطريقة أعمق من اللي إحنا فاكرينها. المتصفح بالحرفي بيرفض يرسم أي بكسل على الشاشة لحد ما يجيب ملف الـ CSS، يحلّله، ويبني منه شجرة كاملة.</p>
+    <div class="callout good"><span class="ic">💡</span><div>صفحة بيضا واقفة مش دايمًا بسبب JS بطيء — أحيانًا كتير السبب إن ملف CSS واحد لسه ما وصلش.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🗺️ إيه اللي جاي</div>
+    <h2>8 حلقات، كل واحدة بتبني على اللي فاتت</h2>
+    <table class="stack-table">
+      <tr><th>الحلقة</th><th>الموضوع</th></tr>
+      <tr><td><span class="ep-tag">EP01</span></td><td>ليه الـ CSS بيوقف رسم الصفحة أصلًا</td></tr>
+      <tr><td><span class="ep-tag">EP02</span></td><td>Critical CSS يدوي — تستخرجه بإيدك</td></tr>
+      <tr><td><span class="ep-tag">EP03</span></td><td>أتمتة Critical CSS بالأدوات</td></tr>
+      <tr><td><span class="ep-tag">EP04</span></td><td>React وCritical CSS — مشكلة الـ CSR</td></tr>
+      <tr><td><span class="ep-tag">EP05</span></td><td>هل Tailwind CSS يغني عن Critical CSS؟</td></tr>
+      <tr><td><span class="ep-tag">EP06</span></td><td>Critical CSS في Next.js</td></tr>
+      <tr><td><span class="ep-tag">EP07</span></td><td>استراتيجيات تحميل CSS الخمسة</td></tr>
+      <tr><td><span class="ep-tag">EP08</span></td><td>المقارنة الشاملة — كل الاستراتيجيات جنب بعض</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">يلا نبدأ.</p>
+  </section>
+
+  <footer>🎨 مقدمة سلسلة استراتيجيات تحميل CSS — 8 حلقات.</footer>
+</div>
+</body>
+</html>

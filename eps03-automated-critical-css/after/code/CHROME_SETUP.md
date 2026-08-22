@@ -65,17 +65,22 @@ Expected output:
 ```
 🔍 Extracting Critical CSS using Playwright with system Chrome...
 📱 Extracting for multiple viewports: mobile, tablet, desktop
-  🔄 Processing mobile (390x844)...
-  ✅ mobile extraction complete (175 rules)
+🔧 Checking Chrome installation...
+✅ Chrome installation verified
+� Checking dev server...
+✅ Dev server is ready
+  �🔄 Processing mobile (390x844)...
+  ✅ mobile extraction complete (224 style rules, 0 @font-face, 4 @keyframes)
   🔄 Processing tablet (768x1024)...
-  ✅ tablet extraction complete (195 rules)
+  ✅ tablet extraction complete (250 style rules, 0 @font-face, 5 @keyframes)
   🔄 Processing desktop (1300x900)...
-  ✅ desktop extraction complete (210 rules)
+  ✅ desktop extraction complete (270 style rules, 0 @font-face, 5 @keyframes)
 ✅ Critical CSS extracted to critical.css
-📊 CSS size: 25375 characters
+📊 CSS size: 32984 characters (229.7% of original 14362 chars)
 🎯 Successfully extracted using Playwright with system Chrome
 📱 Viewports covered: mobile, tablet, desktop
-🔢 Total unique CSS rules: 219
+🔢 Total unique CSS rules: 284
+⚠️  Warning: Output is >80% of original CSS - extraction may not be earning its keep
 ```
 
 ## Benefits

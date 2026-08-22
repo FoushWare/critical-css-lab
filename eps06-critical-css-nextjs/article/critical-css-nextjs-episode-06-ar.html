@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٦: Critical CSS في Next.js</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    var(--bg);
+  color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85;
+}
+code, .mono{
+  font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate;
+  display:inline-block; background:var(--surface2); color:var(--yellow);
+  border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6;
+}
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+  color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35);
+  padding:6px 14px; border-radius:999px; margin-bottom:20px;
+}
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; }
+h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+.stack-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--blue); background:rgba(96,165,250,.12); border:1px solid rgba(96,165,250,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+
+.callout{
+  display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line);
+  border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2;
+}
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); }
+.callout.good{ border-color:rgba(94,234,212,.35); }
+
+.code-block{
+  background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+  font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left;
+}
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); }
+.code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; }
+.code-block .attr{ color:var(--pink); } .code-block .kw{ color:var(--purple); }
+
+.pipeline{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; direction:ltr; }
+.pipe-step{
+  background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+  font-size:12.5px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace;
+  display:flex; flex-direction:column; justify-content:center; min-width:100px; flex:0 0 auto;
+}
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{ display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; flex:0 0 auto; }
+.pipe-label{ font-size:11.5px; color:var(--muted); margin-top:6px; direction:rtl; text-align:right; }
+
+.badge-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.badge{ font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface2); color:var(--muted); }
+.badge.bad{ color:var(--coral); border-color:rgba(255,107,74,.35); background:var(--coral-dim); }
+.badge.ok{ color:var(--teal); border-color:rgba(94,234,212,.35); background:var(--teal-dim); }
+.badge.mid{ color:var(--yellow); border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.1); }
+
+.compare-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:8px; }
+.compare-card{ border-radius:16px; padding:20px; border:1px solid var(--line); background:var(--surface2); }
+.compare-card.before{ border-color:rgba(255,107,74,.35); }
+.compare-card.after{ border-color:rgba(94,234,212,.35); }
+.compare-tag{ font-size:12px; font-weight:800; letter-spacing:.03em; margin-bottom:14px; display:inline-block; padding:3px 10px; border-radius:999px; }
+.compare-card.before .compare-tag{ color:var(--coral); background:var(--coral-dim); }
+.compare-card.after .compare-tag{ color:var(--teal); background:var(--teal-dim); }
+.compare-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.compare-row:last-child{ border-bottom:none; }
+.compare-row b{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; text-align:left; }
+
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12.5px; }
+table.stack-table td:first-child{ font-weight:700; white-space:nowrap; }
+
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; }
+.res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٦</div>
+  <h1>هل <span>Next.js SSR</span> بيلغي احتياجك لـ Critical CSS؟</h1>
+  <p class="subtitle">في الحلقة ٤ اكتشفنا إن React CSR عنده مشكلة إضافية: الـ JS لازم يشتغل الأول قبل ما أي حاجة تتعرض. Next.js بيحل مشكلة الـ JS دي بالـ SSR — بس هل ده معناه إن مشكلة الـ CSS اتحلت هي كمان؟ جهّزنا نسختين حقيقيتين بـ Next.js 16 و Tailwind CSS 4 نقارن بيهم.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 الفرق الأساسي</div>
+    <h2>SSR بيحل مشكلة الـ JS، مش مشكلة الـ CSS</h2>
+    <p class="desc">في CSR (React عادي)، المتصفح لازم يجيب الـ JS Bundle، يشغّله، وبعدين يبني الـ HTML بنفسه — فمفيش حاجة تتعرض قبل كل ده. في SSR، السيرفر بيبعت HTML كامل وجاهز من الأول. لكن السؤال الحقيقي مش "الـ HTML وصل ولا لأ؟" — السؤال هو "الـ CSS اللي بيلوّن الـ HTML ده وصل ولا لأ؟"</p>
+    <div class="pipeline">
+      <div class="pipe-step">SSR HTML <span class="t">جاهز من السيرفر</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">&lt;link&gt; CSS <span class="t">لسه Request خارجي</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Paint 🎨</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">Hydration <span class="t">تفعيل JS</span></div>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>الـ <code>&lt;link rel="stylesheet"&gt;</code> اللي Next.js بيحقنه في الـ <code>&lt;head&gt;</code> بيفضل Render-blocking بنفس الشكل، حتى لو الـ HTML نفسه كامل وموجود. المتصفح لسه مش هيرسم قبل ما يوصله ويحلّله — SSR غيّر مين اللي بيبني الـ HTML، مش إمتى الـ CSS بيوصل.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧪 التجربة</div>
+    <h2>Before <span class="port-tag">Port 8088</span> مقابل After <span class="port-tag">Port 8089</span></h2>
+    <p class="desc">نفس الـ Stack بالظبط في النسختين — <span class="stack-tag">Next.js 16</span> App Router + <span class="stack-tag">Tailwind CSS 4</span> + <span class="stack-tag">TypeScript</span> — وسيرفر مخصص بيأخر Response بتاع الـ CSS بـ 10 ثواني (زي نفس تقنية الحلقات اللي فاتت) عشان نشوف الفرق بوضوح.</p>
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <span class="compare-tag">BEFORE — Tailwind عادي</span>
+        <div class="compare-row"><span>الإعداد</span><b>CSS خارجي قياسي</b></div>
+        <div class="compare-row"><span>الـ HTML</span><b>يوصل فورًا (SSR)</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>Yes</b></div>
+        <div class="compare-row"><span>المتوقع</span><b>محتوى نصي جاهز، لكن مستني CSS يتلوّن</b></div>
+      </div>
+      <div class="compare-card after">
+        <span class="compare-tag">AFTER — optimizeCss: true</span>
+        <div class="compare-row"><span>الإعداد</span><b>Next.js CSS Optimization</b></div>
+        <div class="compare-row"><span>الـ HTML</span><b>يوصل فورًا (SSR)</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>No</b></div>
+        <div class="compare-row"><span>المتوقع</span><b>Critical CSS متولّد Inline تلقائي</b></div>
+      </div>
+    </div>
+    <div class="callout"><span class="ic">💡</span><div>الفرق الوحيد بين النسختين سطر واحد في الإعدادات — مفيش أي أداة Critical CSS خارجية (زي Penthouse أو critical) اتستخدمت، عشان نختبر تحديدًا قدرة Next.js نفسه.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">⚙️ الإعداد</div>
+    <h2>سطر واحد بيفرق: <code>experimental.optimizeCss</code></h2>
+    <p class="desc">في نسخة الـ After، الإضافة الوحيدة كانت في <code>next.config.js</code>:</p>
+    <div class="code-block"><span class="cm">// next.config.js</span>
+<span class="cm">/** @type {import('next').NextConfig} */</span>
+<span class="kw">const</span> nextConfig = {
+  experimental: {
+    optimizeCss: <span class="prop">true</span>,
+  },
+};
+
+<span class="kw">module</span>.exports = nextConfig;</div>
+    <div class="callout good"><span class="ic">✅</span><div>وقت الـ Build/SSR، Next.js بياخد الـ CSS الناتج من Tailwind ويحوّل الـ <code>&lt;link&gt;</code> لـ <code>&lt;style&gt;</code> Inline جوه كل صفحة — أوتوماتيك، من غير Build Script إضافي من عندك.</div></div>
+    <div class="callout warn"><span class="ic">⚠️</span><div><strong>لكن انتبه لتفصيلتين:</strong> الفلاج ده لسه <code>experimental</code> ومسمّاه وسلوكه بيختلف بين إصدارات Next.js (فيه فلاج تاني اسمه <code>inlineCss</code> في الـ App Router أحدث). وتقنيًا هو بيعمل Inline لكل الـ CSS مش بس الـ "Critical" above-the-fold — يعني قريب أكتر من استراتيجية "Inline الكل" اللي ناقشناها قبل كده، مش من الـ Critical Extraction اليدوي بالظبط. راجع Docs النسخة اللي شغّال بيها قبل ما تعتمد عليه.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>مقارنة شاملة: CSR مقابل SSR مقابل SSR + Optimization</h2>
+    <table class="stack-table">
+      <tr><th>البيئة</th><th>المحتوى بيوصل إمتى</th><th>CSS Render-blocking؟</th><th>الحل</th></tr>
+      <tr><td>React CSR <span class="port-tag">حلقة ٤</span></td><td>بعد ما JS يشتغل ويرسم</td><td>Yes (+ عالق وراء JS كمان)</td><td>Critical CSS يدوي أو أداة خارجية</td></tr>
+      <tr><td>Next.js SSR <span class="port-tag">8088</span></td><td>فورًا من السيرفر</td><td>Yes (لسه بيستنى CSS)</td><td>محتاج حل، زي CSR بالظبط لكن من غير مشكلة JS</td></tr>
+      <tr><td>Next.js SSR + optimizeCss <span class="port-tag">8089</span></td><td>فورًا، مع Style جاهز</td><td>No</td><td>Next.js بيعمله وقت الـ Build تلقائي</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">يعني الإجابة على سؤال العنوان: <strong>لأ، SSR لوحده مش بديل عن Critical CSS</strong> — هو بيحل مشكلة تانية خالص (JS Blocking في CSR). لسه محتاج حل صريح لمشكلة الـ CSS، سواء يدوي أو Built-in زي <code>optimizeCss</code>. وبما إن الـ SSR بيبعت HTML كامل (أكبر من الـ Shell البسيط بتاع SPA)، قاعدة الـ 14 KB بتبقى أضيق: لازم الـ Critical CSS المحقون يفضل صغير عشان الصفحة كلها متعدّيش الميزانية دي في أول Packet.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizeCss" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>Next.js Docs — optimizeCss</strong><span>المرجع الرسمي للفلاج، وإزاي بيشتغل مع الـ App Router.</span></div>
+      </a>
+      <a class="res-item" href="https://github.com/danielroe/beasties" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>beasties على GitHub</strong><span>الأداة اللي Next.js بيعتمد عليها داخليًا لعملية الـ Inlining — الخلف الرسمي لمشروع Critters.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/rendering-on-the-web" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Rendering on the Web</strong><span>مقارنة شاملة بين CSR وSSR وSSG وتأثير كل واحدة على الأداء الفعلي.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 Before على بورت 8088، After على بورت 8089 — نفس الـ Next.js 16 + Tailwind CSS 4 + TypeScript، الفرق سطر واحد بس في next.config.js.</footer>
+</div>
+</body>
+</html>

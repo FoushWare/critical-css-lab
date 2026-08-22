@@ -19,9 +19,9 @@ This series explores how Critical CSS works and whether its benefits change when
 | 3 | Automated Critical CSS Extraction | HTML/CSS | ✅ Completed | Tools for automated Critical CSS generation |
 | 4 | Critical CSS in React | React | ✅ Completed | Does Critical CSS work with client-side rendering? |
 | 5 | Critical CSS with Tailwind | Tailwind | ✅ Completed | Tailwind CSS makes Critical CSS unnecessary |
-| 6 | Critical CSS in Next.js | Next.js | 📋 Planned | Does SSR change the Critical CSS equation? |
-| 7 | CSS Loading Strategies | HTML/CSS | 📋 Planned | Compare different CSS loading approaches |
-| 8 | Final Comparison | All | 📋 Planned | Comprehensive performance comparison |
+| 6 | Critical CSS in Next.js | Next.js | ✅ Completed | Does SSR change the Critical CSS equation? |
+| 7 | CSS Loading Strategies | HTML/CSS | ✅ Completed | Compare different CSS loading approaches |
+| 8 | Final Comparison | All | ✅ Completed | Comprehensive performance comparison |
 
 ## 🚀 Quick Start
 
@@ -54,7 +54,9 @@ Each episode has its own README with detailed instructions:
 - **Episode 3**: [eps03-automated-critical-css/README.md](eps03-automated-critical-css/README.md) - Automated Critical CSS extraction tools
 - **Episode 4**: [eps04-critical-css-react/README.md](eps04-critical-css-react/README.md) - Critical CSS in React with client-side rendering (includes interactive Arabic explainer article)
 - **Episode 5**: [eps05-critical-css-tailwind/README.md](eps05-critical-css-tailwind/README.md) - Critical CSS with Tailwind CSS utility-first framework
-- **Episode 6-8**: Coming soon
+- **Episode 6**: [eps06-critical-css-nextjs/README.md](eps06-critical-css-nextjs/README.md) - Critical CSS in Next.js with SSR
+- **Episode 7**: [eps07-css-loading-strategies/README.md](eps07-css-loading-strategies/README.md) - CSS loading strategies comparison
+- **Episode 8**: [eps08-final-comparison/README.md](eps08-final-comparison/README.md) - Final comparison and key takeaways
 
 ## 📁 Project Structure
 
@@ -146,9 +148,68 @@ critical-css-lab/
 │           ├── critical.css          # Extracted critical Tailwind CSS
 │           ├── server.js             # Custom server with CSS delay (port 8087)
 │           └── assets/
-├── eps06-critical-css-nextjs/            # 📋 Planned
-├── eps07-css-loading-strategies/            # 📋 Planned
-└── eps08-final-comparison/            # 📋 Planned
+├── eps06-critical-css-nextjs/            # ✅ Completed
+│   ├── README.md
+│   ├── before/                         # Before: Next.js with CSS delay
+│   │   └── code/
+│   │       ├── package.json
+│   │       ├── next.config.ts
+│   │       ├── server.js             # Custom server with CSS delay (port 8088)
+│   │       ├── src/
+│   │       │   ├── app/
+│   │       │   │   ├── page.tsx
+│   │       │   │   ├── layout.tsx
+│   │       │   │   └── globals.css
+│   │       │   └── ...
+│   │       └── ...
+│   └── after/                          # After: Next.js with built-in optimization
+│       └── code/
+│           ├── package.json
+│           ├── next.config.ts        # With optimizeCss: true
+│           ├── src/
+│           │   ├── app/
+│           │   │   ├── page.tsx
+│           │   │   ├── layout.tsx
+│           │   │   └── globals.css
+│           │   └── ...
+│           └── ...
+├── eps07-css-loading-strategies/            # ✅ Completed
+│   ├── README.md
+│   ├── strategy1-blocking/               # Strategy 1: Blocking CSS (port 8090)
+│   │   └── code/
+│   │       ├── index.html
+│   │       ├── styles.css
+│   │       ├── server.js
+│   │       └── package.json
+│   ├── strategy2-media/                 # Strategy 2: Media Attribute (port 8091)
+│   │   └── code/
+│   │       ├── index.html
+│   │       ├── styles.css
+│   │       ├── server.js
+│   │       └── package.json
+│   ├── strategy3-preload/                # Strategy 3: Preload CSS (port 8092)
+│   │   └── code/
+│   │       ├── index.html
+│   │       ├── styles.css
+│   │       ├── server.js
+│   │       └── package.json
+│   ├── strategy4-async/                  # Strategy 4: Async Loading (port 8093)
+│   │   └── code/
+│   │       ├── index.html
+│   │       ├── styles.css
+│   │       ├── server.js
+│   │       └── package.json
+│   └── strategy5-critical-async/         # Strategy 5: Critical + Async (port 8094)
+│       └── code/
+│           ├── index.html
+│           ├── styles.css
+│           ├── server.js
+│           └── package.json
+└── eps08-final-comparison/            # ✅ Completed
+    ├── README.md
+    ├── KEY-FINDINGS.md                 # Comprehensive findings from all episodes
+    └── comparison-dashboard/
+        └── index.html                  # Visual comparison dashboard
 ```
 
 ## 🎯 Series Approach

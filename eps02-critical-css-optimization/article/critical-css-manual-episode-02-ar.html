@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٢: Critical CSS يدوي — الأساسيات</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{ background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px, var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85; }
+code, .mono{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block; background:var(--surface2); color:var(--yellow); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6; }
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; } h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+.callout{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2; }
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); } .callout.good{ border-color:rgba(94,234,212,.35); }
+.code-block{ background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px; font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left; }
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); } .code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; } .code-block .attr{ color:var(--pink); }
+.steps{ display:flex; flex-direction:column; gap:12px; margin-top:16px; counter-reset:step; }
+.step{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+.step .n{ flex:0 0 auto; width:28px; height:28px; border-radius:50%; background:var(--teal-dim); color:var(--teal); border:1px solid rgba(94,234,212,.35); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; font-family:'JetBrains Mono',monospace; }
+.step .body strong{ display:block; margin-bottom:3px; font-size:15px; } .step .body span{ font-size:13.5px; color:var(--muted); }
+.compare-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:8px; }
+.compare-card{ border-radius:16px; padding:20px; border:1px solid var(--line); background:var(--surface2); }
+.compare-card.before{ border-color:rgba(255,107,74,.35); } .compare-card.after{ border-color:rgba(94,234,212,.35); }
+.compare-tag{ font-size:12px; font-weight:800; letter-spacing:.03em; margin-bottom:14px; display:inline-block; padding:3px 10px; border-radius:999px; }
+.compare-card.before .compare-tag{ color:var(--coral); background:var(--coral-dim); } .compare-card.after .compare-tag{ color:var(--teal); background:var(--teal-dim); }
+.compare-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; } .compare-row:last-child{ border-bottom:none; }
+.compare-row b{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; text-align:left; }
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12.5px; } table.stack-table td:first-child{ font-weight:700; }
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; } .res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٢</div>
+  <h1>Critical CSS <span>يدوي</span> — إزاي تعمله بإيدك</h1>
+  <p class="subtitle">في الحلقة اللي فاتت فهمنا ليه الـ CSS بيوقف الرسم. دلوقتي الحل الأول والأبسط: تستخرج الـ Rules اللي بتغطي أول شاشة بس، تحطها Inline، وتأجّل الباقي. مفيش أدوات هنا — كله بإيدك، عشان تفهم المبدأ قبل ما نودّي الشغل للأدوات في الحلقة الجاية.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 المبدأ</div>
+    <h2>Above-the-Fold: إيه اللي المستخدم بيشوفه فورًا</h2>
+    <p class="desc">"Above-the-fold" يعني أي جزء من الصفحة ظاهر في أول Viewport من غير Scroll. الفكرة إنك تجيب بس الـ CSS Rules اللي بتلوّن العناصر دي، وتسيب كل حاجة تانية (فوتر، أقسام تحت، Modal مخفي) تتحمّل بعدين.</p>
+    <div class="callout warn"><span class="ic">⚠️</span><div>المشكلة الأولى اللي هتقابلها: "Above-the-fold" بيختلف حسب حجم الشاشة. Viewport موبايل مختلف عن Laptop مختلف عن شاشة 4K — يعني لازم تحدد Breakpoint معين تشتغل عليه (غالبًا الموبايل، لأنه الأكتر تقييدًا).</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🛠️ الخطوات</div>
+    <h2>إزاي تستخرج الـ Critical CSS بإيدك</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div class="body"><strong>افتح الصفحة في وضع Incognito وحدد الـ Viewport</strong><span>مثلًا 375×667 للموبايل — ده هيبقى المرجع بتاعك لأي حاجة "Above-the-fold".</span></div></div>
+      <div class="step"><div class="n">2</div><div class="body"><strong>افتح Chrome DevTools → Coverage Tab</strong><span>Cmd/Ctrl+Shift+P ثم اكتب "Coverage". هتشوف نسبة كل ملف CSS فعليًا مستخدمة في اللحظة دي.</span></div></div>
+      <div class="step"><div class="n">3</div><div class="body"><strong>سجّل الـ Coverage وانت بتحمّل الصفحة</strong><span>الأداة هتفرق بين الـ Bytes المستخدمة (أخضر) والمش مستخدمة (أحمر) في نفس الملف.</span></div></div>
+      <div class="step"><div class="n">4</div><div class="body"><strong>انسخ الـ Rules الخضرا بس في ملف <code>critical.css</code></strong><span>حافظ على نفس ترتيب الـ Rules زي ما هو في الملف الأصلي — الترتيب مهم عشان الـ Cascade (خصوصًا مع :hover و media queries).</span></div></div>
+      <div class="step"><div class="n">5</div><div class="body"><strong>حط الملف Inline، وأجّل الباقي</strong><span>زي ما هنشوف في الكود تحت — Inline للـ Critical، وPreload+Swap للباقي.</span></div></div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">💻 التطبيق</div>
+    <h2>الكود النهائي</h2>
+    <div class="code-block"><span class="sel">&lt;head&gt;</span>
+  <span class="cm">&lt;!-- Critical: نسخته بإيدي من Coverage tab --&gt;</span>
+  <span class="sel">&lt;style&gt;</span>
+    <span class="prop">.header</span>{ ... }
+    <span class="prop">.hero</span>{ ... }
+    <span class="prop">.hero</span> <span class="prop">h1</span>{ ... }
+  <span class="sel">&lt;/style&gt;</span>
+
+  <span class="cm">&lt;!-- الباقي: مؤجل، بيتطبق بعد أول Paint --&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"preload"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span> <span class="attr">as</span>=<span class="val">"style"</span>
+        <span class="attr">onload</span>=<span class="val">"this.onload=null;this.rel='stylesheet'"</span><span class="sel">&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧪 التجربة</div>
+    <h2>Before <span class="port-tag">Port 8081</span> مقابل After <span class="port-tag">Port 8082</span></h2>
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <span class="compare-tag">BEFORE — CSS خارجي عادي</span>
+        <div class="compare-row"><span>Render-blocking؟</span><b>Yes</b></div>
+        <div class="compare-row"><span>الطريقة</span><b>&lt;link&gt; واحد لكل الملف</b></div>
+      </div>
+      <div class="compare-card after">
+        <span class="compare-tag">AFTER — critical.css يدوي</span>
+        <div class="compare-row"><span>Render-blocking؟</span><b>No (للـ Above-the-fold)</b></div>
+        <div class="compare-row"><span>الطريقة</span><b>Inline + Preload/Swap للباقي</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>مميزات وعيوب الطريقة اليدوية</h2>
+    <table class="stack-table">
+      <tr><th>الجانب</th><th>التقييم</th></tr>
+      <tr><td>الفهم</td><td>ممتاز — بتشوف بالظبط إيه اللي بيحصل، مفيش صندوق أسود</td></tr>
+      <tr><td>الدقة</td><td>عالية لو الصفحة ثابتة وصغيرة</td></tr>
+      <tr><td>الصيانة</td><td>ضعيفة جدًا — أي تعديل في التصميم لازم تعيد الخطوات كلها بإيدك</td></tr>
+      <tr><td>التوسع</td><td>غير عملي على مواقع فيها عشرات الصفحات أو محتوى Dynamic</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">الطريقة اليدوية أهم حاجة فيها إنها بتعلّمك المبدأ صح. لكن في مشروع حقيقي بيتغيّر باستمرار، الصيانة اليدوية دي مش قابلة للاستمرار — وده بالظبط سبب وجود الحلقة الجاية: الأتمتة.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://developer.chrome.com/docs/devtools/coverage" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>Chrome DevTools — Coverage Tab</strong><span>الدليل الرسمي لأداة قياس الـ CSS/JS المستخدم فعليًا في الصفحة.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/extract-critical-css" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>web.dev — Extract Critical CSS</strong><span>شرح المبدأ العام ومتى يستحق تستخدمه.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/defer-non-critical-css" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Defer Non-Critical CSS</strong><span>تفاصيل نمط الـ Preload/Swap اللي استخدمناه فوق.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 Before على بورت 8081، After (critical.css يدوي) على بورت 8082.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ٥: هل Tailwind CSS يغني عن Critical CSS؟</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px,
+    var(--bg);
+  color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85;
+}
+code, .mono{
+  font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate;
+  display:inline-block; background:var(--surface2); color:var(--yellow);
+  border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6;
+}
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+  color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35);
+  padding:6px 14px; border-radius:999px; margin-bottom:20px;
+}
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; }
+h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+
+.callout{
+  display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line);
+  border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2;
+}
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); }
+.callout.good{ border-color:rgba(94,234,212,.35); }
+
+.code-block{
+  background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+  font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left;
+}
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); }
+.code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; }
+
+/* pipeline — flex-wrap, never overflows */
+.pipeline{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; direction:ltr; }
+.pipe-step{
+  background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 14px;
+  font-size:12.5px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace;
+  display:flex; flex-direction:column; justify-content:center; min-width:100px; flex:0 0 auto;
+}
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{ display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; flex:0 0 auto; }
+
+/* before/after comparison */
+.compare-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:8px; }
+.compare-card{ border-radius:16px; padding:20px; border:1px solid var(--line); background:var(--surface2); }
+.compare-card.before{ border-color:rgba(255,107,74,.35); }
+.compare-card.after{ border-color:rgba(94,234,212,.35); }
+.compare-tag{ font-size:12px; font-weight:800; letter-spacing:.03em; margin-bottom:14px; display:inline-block; padding:3px 10px; border-radius:999px; }
+.compare-card.before .compare-tag{ color:var(--coral); background:var(--coral-dim); }
+.compare-card.after .compare-tag{ color:var(--teal); background:var(--teal-dim); }
+.compare-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.compare-row:last-child{ border-bottom:none; }
+.compare-row b{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; }
+
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14.5px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); }
+table.stack-table th{ color:var(--teal); font-size:13px; }
+table.stack-table td:nth-child(2), table.stack-table td:nth-child(3){ direction:ltr; text-align:right; font-family:'JetBrains Mono',monospace; }
+
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; }
+.res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ٥</div>
+  <h1>هل <span>Tailwind CSS</span> يغني عن Critical CSS؟</h1>
+  <p class="subtitle">مرة كل الـ Utility Classes بتتولد في ملف <code>output.css</code> واحد بعد الـ Build، الناس بتفتكر إن Tailwind "بيحل" مشكلة CSS الكبير أوتوماتيك. بس هل ده معناه إنك مش محتاج Critical CSS تاني؟ خلينا نشوف الأرقام.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 إيه اللي اتغيّر مع Tailwind؟</div>
+    <h2>Utility-first مش معناها "مفيش Render-blocking"</h2>
+    <p class="desc">Tailwind وقت الـ Build بياخد كل الـ Classes اللي فعلًا مستخدمة في الـ HTML، وبيولّد منها ملف CSS واحد <strong>Purged</strong> — يعني من غير أي Class إنت مش مستخدمها. الملف ده بيبقى أصغر بكتير من لو كتبت CSS تقليدي، لكنه برضو:</p>
+    <div class="pipeline">
+      <div class="pipe-step">HTML <span class="t">+ Tailwind classes</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">Tailwind Build <span class="t">توليد CSS</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">Purged CSS <span class="t">ملف واحد خارجي</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Paint 🎨</div>
+    </div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>لسه عندك <code>&lt;link rel="stylesheet" href="output.css"&gt;</code> — يعني لسه فيه <strong>Network Request واحد Render-blocking</strong> قبل ما المتصفح يرسم أي حاجة. حجم الملف اتقلل، بس طبيعته لسه هي هي: المتصفح مش هيرسم قبل ما يوصله ويحلّله.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧪 التجربة</div>
+    <h2>Before / After بنفس الـ 10s Delay</h2>
+    <p class="desc">استخدمت نفس السيرفر اللي عملته في التجارب اللي فاتت — <code>server.js</code> بيأخر أي Request لـ <code>output.css</code> بمقدار 10 ثواني عشان يحاكي شبكة بطيئة، وده بيوريك بالظبط إمتى الصفحة بتتلون.</p>
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <span class="compare-tag">BEFORE — Tailwind من غير Critical CSS</span>
+        <div class="compare-row"><span>CSS Delay</span><b>10.0s</b></div>
+        <div class="compare-row"><span>First Paint (FCP)</span><b>~10.0s</b></div>
+        <div class="compare-row"><span>Largest Paint (LCP)</span><b>~10.1s</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>Yes</b></div>
+      </div>
+      <div class="compare-card after">
+        <span class="compare-tag">AFTER — Tailwind + Critical CSS</span>
+        <div class="compare-row"><span>CSS Delay</span><b>10.0s</b></div>
+        <div class="compare-row"><span>First Paint (FCP)</span><b>~7ms</b></div>
+        <div class="compare-row"><span>Largest Paint (LCP)</span><b>~10.1s</b></div>
+        <div class="compare-row"><span>Render-blocking؟</span><b>No</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🔍 النقطة اللي هتلفت نظرك</div>
+    <h2>ليه الـ LCP لسه ~10.1s حتى بعد Critical CSS؟</h2>
+    <p class="desc">ده أهم رقم في التجربة كلها. لاحظ إن <strong>First Paint</strong> اتحسّن من 10 ثواني لـ 7 ميلي ثانية — ده لأن <code>critical.css</code> بقى Inline في الـ <code>&lt;head&gt;</code>، فالمتصفح رسم الـ Hero والـ Header فورًا. لكن <strong>Largest Paint</strong> فضل واقف عند ~10.1s.</p>
+    <div class="code-block"><span class="cm">&lt;!-- ده اللي فرق في نسخة After --&gt;</span>
+<span class="sel">&lt;head&gt;</span>
+  <span class="cm">&lt;!-- Critical CSS: Inline, بيرسم فورًا --&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"critical.css"</span> <span class="sel">&gt;</span>
+
+  <span class="cm">&lt;!-- Tailwind الكامل: لسه بياخد وقته --&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"output.css"</span> <span class="sel">&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+    <div class="callout"><span class="ic">💡</span><div>الـ <code>critical.css</code> عندك بيغطي الـ Header والـ Hero بس (نصوص، أزرار، Browser mockup). لكن أكبر عنصر بصري في الصفحة — الـ Grid بتاع الـ Metrics تحت — Classes بتاعته (زي <code>grid-cols-4</code> و<code>rounded-lg</code>) مش موجودة في الـ Critical subset، فبيفضل مستني الـ <code>output.css</code> الكامل يوصل عشان يتلوّن صح. يعني Critical CSS حسّن الـ FCP بشكل جامد، لكن مسحش المشكلة، بس نقلها لمكان تاني.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>الخلاصة: Tailwind يقلل المشكلة، مش يمسحها</h2>
+    <table class="stack-table">
+      <tr><th>المقارنة</th><th>Before</th><th>After</th></tr>
+      <tr><td>حجم الـ CSS</td><td colspan="2">Tailwind بيقلله (Purge) — أصغر من CSS تقليدي، بس لسه ملف واحد خارجي</td></tr>
+      <tr><td>First Paint</td><td>~10.0s</td><td>~7ms</td></tr>
+      <tr><td>Largest Paint</td><td>~10.1s</td><td>~10.1s</td></tr>
+      <tr><td>Render-blocking</td><td>Yes</td><td>No (للـ Above-the-fold بس)</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">يعني الإجابة على سؤال العنوان: <strong>لأ، Tailwind لوحده مش بديل عن Critical CSS</strong>. هو بيقلل حجم المشكلة (Purging)، لكن لسه بيبعت ملف CSS واحد Render-blocking. Critical CSS لسه له دور — يحسّن أول ظهور (FCP) — لكن لازم تنتبه إن الـ Critical subset بتاعك يغطي فعلًا كل حاجة above-the-fold، وإلا هتحسّن FCP وتسيب LCP لوحده يتعطل.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🛠️ التطبيق العملي</div>
+    <h2>إزاي تطبّق Critical CSS مع Tailwind فعليًا؟</h2>
+    <p class="desc">الفكرة واحدة سواء بتشتغل بـ HTML عادي أو React: تستخرج الـ Rules اللي بتغطي أول شاشة (Above-the-fold) من ملف <code>output.css</code> بتاع Tailwind، وتحطها Inline جوه <code>&lt;head&gt;</code>، وتسيب الباقي يتحمّل عادي بـ <code>&lt;link&gt;</code> من غير ما يمنع الرسم.</p>
+
+    <div class="eyebrow-sm" style="margin-top:8px;">1) HTML عادي — باستخدام <code>critical</code></div>
+    <p class="desc">بعد ما Tailwind يعمل Build ويطلّع <code>output.css</code> الـ Purged، شغّل أداة زي <code>critical</code> على الصفحة النهائية عشان تولّد نسخة فيها الـ Critical subset Inline:</p>
+    <div class="code-block"><span class="cm">// npm i -D critical</span>
+<span class="cm">// generate-critical.js</span>
+<span class="sel">import</span> { generate } <span class="sel">from</span> <span class="val">"critical"</span>;
+
+<span class="sel">await</span> generate({
+  base: <span class="val">"dist/"</span>,           <span class="cm">// فولدر الـ Build</span>
+  src: <span class="val">"index.html"</span>,
+  target: <span class="val">"index.html"</span>,    <span class="cm">// بيكتب فوق نفس الملف Inline</span>
+  css: [<span class="val">"dist/output.css"</span>], <span class="cm">// ناتج Tailwind</span>
+  inline: <span class="prop">true</span>,
+  width: <span class="val">1300</span>,
+  height: <span class="val">900</span>,
+});</div>
+    <div class="callout"><span class="ic">💡</span><div>الأداة بتفتح الصفحة فعليًا (Headless Chrome) وبتشوف أنهي Classes اتلونت فعلًا في أول Viewport، وبتحطها Inline — يعني مش لازم تكتب <code>critical.css</code> بإيدك زي المثال اللي فوق.</div></div>
+
+    <div class="eyebrow-sm" style="margin-top:22px;">2) React — مع Vite</div>
+    <p class="desc">في مشروع React مبني بـ Vite، ممكن تشغّل نفس الفكرة كـ Plugin وقت الـ Build، فكل صفحة طالعة من <code>vite build</code> بتاخد نسخة Inline أوتوماتيك:</p>
+    <div class="code-block"><span class="cm">// npm i -D vite-plugin-critical</span>
+<span class="cm">// vite.config.js</span>
+<span class="sel">import</span> { defineConfig } <span class="sel">from</span> <span class="val">"vite"</span>;
+<span class="sel">import</span> critical <span class="sel">from</span> <span class="val">"vite-plugin-critical"</span>;
+
+<span class="sel">export</span> <span class="sel">default</span> defineConfig({
+  plugins: [
+    critical({
+      criticalBase: <span class="val">"./dist/"</span>,
+      criticalPages: [{ uri: <span class="val">""</span>, template: <span class="val">"index"</span> }],
+      criticalConfig: { inline: <span class="prop">true</span>, extract: <span class="prop">false</span> },
+    }),
+  ],
+});</div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>في React، الـ Classes اللي بتتبني Dynamic (زي <code>`bg-${color}-500`</code>) ممكن Tailwind الأساسي يعملها Purge غلط، وده بينعكس على الـ Critical extraction كمان. الحل: اكتب الـ Class كاملة صريحة، أو ضيفها في <code>safelist</code> جوه <code>tailwind.config.js</code>.</div></div>
+
+    <div class="eyebrow-sm" style="margin-top:22px;">3) Next.js — الطريق الأسهل عمليًا</div>
+    <p class="desc">لو بتستخدم Next.js، الأداتين اللي فوق مش متكاملتين بشكل رسمي معاه. البديل الشائع هو <code>beasties</code> (الخلف الرسمي لمشروع Critters اللي بقى Deprecated) كـ Webpack Plugin في <code>next.config.js</code>، وهو نفس المبدأ: بيقرا الـ HTML الناتج ويحط الـ Critical CSS Inline تلقائي في كل صفحة وقت الـ Build.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🤔 نقاش مهم</div>
+    <h2>طب يبقى Critical CSS بقى زيادة عن اللزوم مع Tailwind؟</h2>
+    <p class="desc">في رأي منتشر إن أدوات الـ Critical CSS اتعملت أصلًا لملفات ضخمة (ميجابايتات)، وإن Tailwind بالـ Purge بتاعه بيخليها Overkill — بل ممكن تعمل مشاكل أكتر ما تحل. خلينا نشوف نقط الاتفاق ونقط اللي محتاجة تفصيل أكتر.</p>
+
+    <table class="stack-table">
+      <tr><th>المشكلة</th><th>الاعتراض على Critical CSS مع Tailwind</th></tr>
+      <tr><td>Diminishing Returns</td><td>الأداة اتعملت لملفات ضخمة؛ ملف Tailwind الـ Purged أصلًا صغير (10–15 KB) فمفيش حاجة كبيرة تتقسم</td></tr>
+      <tr><td>Cascade Order Bugs</td><td>Tailwind بيعتمد على ترتيب Layers (Base → Components → Utilities)؛ تقسيم غلط ممكن يكسر hover: أو md:</td></tr>
+      <tr><td>Automation Overhead</td><td>الـ Above-the-fold صعب تحدده في تطبيقات Dynamic؛ الأدوات ممكن تفوت Classes بتظهر بعد تفاعل المستخدم</td></tr>
+    </table>
+
+    <div class="callout good"><span class="ic">✅</span><div>النقط دي صح فعلًا، خصوصًا إن أداة الـ Critical CSS بقت بتوفر جزء صغير جدًا من ملف أصلًا صغير — العائد بقى أقل بكتير من زمان.</div></div>
+
+    <div class="eyebrow-sm" style="margin-top:20px;">البديل المطروح: Inline كل حاجة</div>
+    <p class="desc">الاقتراح إنك بدل ما تقسم الملف، تعمل Inline للـ <code>output.css</code> بالكامل جوه <code>&lt;head&gt;</code> — تلغي الـ Network Request خالص، وطالما الصفحة كلها (HTML + CSS) تحت ~14 KB مضغوطة، بتوصل في أول TCP Packet وترسم فورًا. النقطة دي صح تقنيًا — قاعدة الـ 14 KB حقيقية.</p>
+
+    <div class="callout warn"><span class="ic">⚠️</span><div><strong>لكن فيه نقطة بتتنسى:</strong> ملف CSS خارجي مربوط بـ <code>&lt;link&gt;</code>، حتى من غير أي Critical splitting، بيتحمّل مرة واحدة والمتصفح بيـ Cache-ـه لكل باقي صفحات الموقع مجانًا. لو عملت Inline لكل الـ CSS جوه كل صفحة، بقيت بتبعت نفس الـ 12 KB دي من جديد في <strong>كل</strong> صفحة، من غير أي Caching. يعني "زوّد الـ HTML Bloat" ده بالظبط عكس اللي بيحصل في مواقع متعددة الصفحات.</div></div>
+
+    <div class="compare-grid">
+      <div class="compare-card after">
+        <span class="compare-tag">صفحة واحدة / Landing Page</span>
+        <div class="compare-row"><span>الاستراتيجية</span><b>Inline كل CSS</b></div>
+        <div class="compare-row"><span>السبب</span><b>مفيش صفحات تانية تستفيد من Cache أصلًا</b></div>
+      </div>
+      <div class="compare-card before">
+        <span class="compare-tag">موقع متعدد الصفحات / Routes كتير</span>
+        <div class="compare-row"><span>الاستراتيجية</span><b>Critical Inline + Link مؤجل</b></div>
+        <div class="compare-row"><span>السبب</span><b>الملف الكامل بيتـ Cache ويتستخدم في كل صفحة بعد كده</b></div>
+      </div>
+    </div>
+
+    <p class="desc" style="margin-top:18px;">يعني القاعدة الحقيقية مش "Tailwind صغير يبقى Inline كله دايمًا" — دي بتفرق حسب <strong>عدد الصفحات</strong> مش حجم الملف بس. لموقع بصفحة واحدة أو تطبيق SPA بشل واحد، الـ Inline الكامل غالبًا أبسط وأحسن. لموقع فيه عشرات الـ Routes زي Next.js، فقدان الـ Caching ده تكلفة حقيقية، ولسه له معنى تستخدم حاجة زي <code>optimizeCss</code>/<code>inlineCss</code> بتاعة Next نفسها بدل أدوات Critical CSS العامة.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://tailwindcss.com/docs/content-configuration" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>Tailwind — Content Configuration (Purging)</strong><span>إزاي Tailwind بيقرر إيه الـ Classes اللي تفضل في الـ Build النهائي، وإزاي تتحكم فيها.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/extract-critical-css" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>web.dev — Extract Critical CSS</strong><span>شرح Google لفكرة Critical CSS ومتى يستحق تستخدمه.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/optimize-lcp" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Optimize LCP</strong><span>ليه الـ Largest Contentful Paint ممكن يفضل بطيء حتى بعد ما تحسّن الـ FCP، وإزاي تعالجه.</span></div>
+      </a>
+      <a class="res-item" href="https://github.com/addyosmani/critical" target="_blank" rel="noopener">
+        <div class="num">04</div>
+        <div class="body"><strong>critical على npm</strong><span>الأداة اللي استخدمناها في مثال HTML — بتفتح الصفحة بمتصفح حقيقي وتستخرج الـ Critical Rules فعليًا.</span></div>
+      </a>
+      <a class="res-item" href="https://www.npmjs.com/package/vite-plugin-critical" target="_blank" rel="noopener">
+        <div class="num">05</div>
+        <div class="body"><strong>vite-plugin-critical</strong><span>نفس الفكرة كـ Plugin جاهز لمشاريع Vite/React، بيشتغل أوتوماتيك مع كل Build.</span></div>
+      </a>
+      <a class="res-item" href="https://github.com/danielroe/beasties" target="_blank" rel="noopener">
+        <div class="num">06</div>
+        <div class="body"><strong>beasties على GitHub</strong><span>الخلف الرسمي لمشروع Critters بعد ما بقى Deprecated — أنسب اختيار مع Next.js وأدوات الـ Build التانية.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 كل الأرقام فوق طالعة من تجربتك الفعلية على <code>server.js</code> بتاعك — بورت 8086، Delay بـ 10 ثواني على <code>output.css</code>.</footer>
+</div>
+</body>
+</html>

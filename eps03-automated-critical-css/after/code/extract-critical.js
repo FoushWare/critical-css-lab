@@ -2,12 +2,17 @@ import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execAsync = promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = 8083;
 const outputPath = path.join(__dirname, 'critical.css');
+const chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 // Define viewports for different devices
 const viewports = [
@@ -16,14 +21,52 @@ const viewports = [
   { name: 'desktop', width: 1300, height: 900 },  // Desktop
 ];
 
+async function checkChromePath() {
+  try {
+    await fs.access(chromePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function checkServerReady() {
+  try {
+    const response = await fetch(`http://localhost:${PORT}`);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 async function extractCriticalCSS() {
   try {
     console.log('🔍 Extracting Critical CSS using Playwright with system Chrome...');
     console.log('📱 Extracting for multiple viewports: mobile, tablet, desktop');
     
+    // Validate Chrome path
+    console.log('🔧 Checking Chrome installation...');
+    const chromeExists = await checkChromePath();
+    if (!chromeExists) {
+      console.error(`❌ Chrome not found at: ${chromePath}`);
+      console.error('Please verify your Chrome installation path or update the chromePath variable.');
+      process.exit(1);
+    }
+    console.log('✅ Chrome installation verified');
+    
+    // Check server readiness
+    console.log('🔧 Checking dev server...');
+    const serverReady = await checkServerReady();
+    if (!serverReady) {
+      console.error(`❌ Dev server not reachable at http://localhost:${PORT}`);
+      console.error('Please run "npm run dev" first to start the server.');
+      process.exit(1);
+    }
+    console.log('✅ Dev server is ready');
+    
     // Launch browser with system Chrome
     const browser = await chromium.launch({
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      executablePath: chromePath,
       headless: true,
     });
 
@@ -42,10 +85,14 @@ async function extractCriticalCSS() {
       // Navigate to the page
       await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle' });
       
-      // Extract critical CSS using bounding-box approach with media query support
-      const criticalRules = await page.evaluate(({ vpWidth, vpHeight }) => {
+      // Extract critical CSS with comprehensive rule handling
+      const result = await page.evaluate(({ vpWidth, vpHeight }) => {
         const used = [];
         const sheets = Array.from(document.styleSheets);
+        
+        // Collect all @font-face and @keyframes for later reference checking
+        const fontFaces = [];
+        const keyframes = [];
         
         function collectRules(rules, sheetIndex, counter, vpWidth, vpHeight, used) {
           for (const rule of rules) {
@@ -53,26 +100,58 @@ async function extractCriticalCSS() {
             
             // Handle @media rules
             if (rule.type === CSSRule.MEDIA_RULE) {
-              // Check if this media query applies to the current viewport
               if (window.matchMedia(rule.conditionText).matches) {
                 collectRules(rule.cssRules, sheetIndex, counter, vpWidth, vpHeight, used);
               }
               continue;
             }
             
-            // Skip rules without selectorText (@font-face, @keyframes, @supports, etc.)
+            // Handle @supports rules
+            if (rule.type === CSSRule.SUPPORTS_RULE) {
+              if (CSS.supports(rule.conditionText)) {
+                collectRules(rule.cssRules, sheetIndex, counter, vpWidth, vpHeight, used);
+              }
+              continue;
+            }
+            
+            // Collect @font-face rules for later reference checking
+            if (rule.type === CSSRule.FONT_FACE_RULE) {
+              fontFaces.push({
+                cssText: rule.cssText,
+                position: sheetIndex * 1e6 + currentIndex,
+                fontFamily: rule.style.getPropertyValue('font-family')?.replace(/['"]/g, '')
+              });
+              continue;
+            }
+            
+            // Collect @keyframes rules for later reference checking
+            if (rule.type === CSSRule.KEYFRAMES_RULE) {
+              keyframes.push({
+                cssText: rule.cssText,
+                position: sheetIndex * 1e6 + currentIndex,
+                name: rule.name
+              });
+              continue;
+            }
+            
+            // Skip rules without selectorText (@layer, @import, etc.)
             if (!rule.selectorText) continue;
             
             try {
-              const elements = document.querySelectorAll(rule.selectorText);
+              // Handle pseudo-elements (::before, ::after, ::placeholder, ::selection, ::marker)
+              const selector = rule.selectorText;
+              const pseudoPattern = /::(before|after|placeholder|selection|marker)/;
+              const baseSelector = selector.replace(pseudoPattern, '');
+              
+              const elements = document.querySelectorAll(baseSelector);
               for (const el of elements) {
                 const rect = el.getBoundingClientRect();
                 // Check if element is within viewport (above the fold)
                 if (rect.top < vpHeight && rect.bottom > 0) {
-                  // Store with numeric position key for order preservation
                   used.push({
                     cssText: rule.cssText,
-                    position: sheetIndex * 1e6 + currentIndex
+                    position: sheetIndex * 1e6 + currentIndex,
+                    selector: selector
                   });
                   break; // Only need one element to be visible
                 }
@@ -95,18 +174,86 @@ async function extractCriticalCSS() {
           }
         }
         
-        return used;
+        // Check which @font-face and @keyframes are actually used
+        const usedFontFamilies = new Set();
+        const usedAnimationNames = new Set();
+        
+        used.forEach(rule => {
+          if (!rule.selector) return;
+          
+          // Check for font-family usage
+          const elements = document.querySelectorAll(rule.selector);
+          elements.forEach(el => {
+            const computedStyle = window.getComputedStyle(el);
+            const fontFamily = computedStyle.fontFamily;
+            if (fontFamily) {
+              fontFamily.split(',').forEach(f => {
+                usedFontFamilies.add(f.trim().replace(/['"]/g, ''));
+              });
+            }
+          });
+          
+          // Check for animation usage
+          const styleEl = document.querySelector(rule.selector);
+          if (styleEl) {
+            const computedStyle = window.getComputedStyle(styleEl);
+            const animation = computedStyle.animation;
+            const animationName = computedStyle.animationName;
+            
+            // Parse animation shorthand to extract name
+            if (animation) {
+              const parts = animation.split(/\s+/);
+              // First part is typically the animation name (unless it's a duration)
+              if (parts[0] && !parts[0].match(/^\d/)) {
+                usedAnimationNames.add(parts[0]);
+              }
+            }
+            if (animationName && animationName !== 'none') {
+              usedAnimationNames.add(animationName);
+            }
+          }
+        });
+        
+        // Keep @font-face rules that are used
+        const keptFontFaces = fontFaces.filter(ff => 
+          usedFontFamilies.has(ff.fontFamily)
+        );
+        
+        // Keep @keyframes rules that are used
+        const keptKeyframes = keyframes.filter(kf => 
+          usedAnimationNames.has(kf.name)
+        );
+        
+        return {
+          styleRules: used,
+          fontFaces: keptFontFaces,
+          keyframes: keptKeyframes
+        };
       }, { vpWidth: viewport.width, vpHeight: viewport.height });
       
       // Add CSS rules to Map for order-preserving deduplication
-      criticalRules.forEach(rule => {
+      result.styleRules.forEach(rule => {
+        if (rule && rule.cssText && rule.position !== undefined) {
+          cssRulesMap.set(rule.position, rule.cssText);
+        }
+      });
+      
+      // Add @font-face rules
+      result.fontFaces.forEach(rule => {
+        if (rule && rule.cssText && rule.position !== undefined) {
+          cssRulesMap.set(rule.position, rule.cssText);
+        }
+      });
+      
+      // Add @keyframes rules
+      result.keyframes.forEach(rule => {
         if (rule && rule.cssText && rule.position !== undefined) {
           cssRulesMap.set(rule.position, rule.cssText);
         }
       });
       
       await page.close();
-      console.log(`  ✅ ${viewport.name} extraction complete (${criticalRules.length} rules)`);
+      console.log(`  ✅ ${viewport.name} extraction complete (${result.styleRules.length} style rules, ${result.fontFaces.length} @font-face, ${result.keyframes.length} @keyframes)`);
     }
 
     await browser.close();
@@ -118,12 +265,33 @@ async function extractCriticalCSS() {
     
     const criticalCSS = sortedRules.join('\n');
     
+    // Read original CSS for size comparison
+    const originalCSSPath = path.join(__dirname, 'styles.css');
+    let originalCSS = '';
+    try {
+      originalCSS = await fs.readFile(originalCSSPath, 'utf-8');
+    } catch (e) {
+      console.warn('⚠️  Could not read styles.css for size comparison');
+    }
+    
+    const originalSize = originalCSS.length;
+    const criticalSize = criticalCSS.length;
+    const percentage = originalSize > 0 ? ((criticalSize / originalSize) * 100).toFixed(1) : 0;
+    
     await fs.writeFile(outputPath, criticalCSS);
     console.log('✅ Critical CSS extracted to critical.css');
-    console.log(`📊 CSS size: ${criticalCSS.length} characters`);
+    console.log(`📊 CSS size: ${criticalSize} characters (${percentage}% of original ${originalSize} chars)`);
     console.log(`🎯 Successfully extracted using Playwright with system Chrome`);
     console.log(`📱 Viewports covered: ${viewports.map(v => v.name).join(', ')}`);
     console.log(`🔢 Total unique CSS rules: ${cssRulesMap.size}`);
+    
+    // Sanity checks
+    if (criticalSize === 0) {
+      console.warn('⚠️  Warning: Output is empty - check that the page loaded correctly');
+    }
+    if (parseFloat(percentage) > 80) {
+      console.warn('⚠️  Warning: Output is >80% of original CSS - extraction may not be earning its keep');
+    }
     
   } catch (error) {
     console.error('❌ Error extracting Critical CSS:', error);

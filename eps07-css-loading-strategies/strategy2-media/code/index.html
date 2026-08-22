@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Loading Strategies - Media Attribute Loading</title>
+  <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css"></noscript>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <span class="logo-text">C</span>
+        <span class="logo-subtitle">Critical CSS Lab</span>
+      </div>
+      <nav>
+        <span class="episode-badge">EPS07</span>
+        <span class="strategy-badge">Strategy 2</span>
+        <span class="loading-badge">Media Attribute</span>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="subtitle">WEB PERFORMANCE LAB</p>
+          <h1>CSS Loading Strategies</h1>
+          <p class="description">Compare different CSS loading techniques and their impact on page performance.</p>
+          
+          <div class="actions">
+            <button onclick="location.reload()" class="btn btn-primary">Refresh Page</button>
+            <div class="badge badge-info">Media attribute loading</div>
+          </div>
+
+          <div class="meta">
+            <div>
+              <strong>Strategy 2</strong>
+              <span>Media Attribute</span>
+            </div>
+            <div class="separator">|</div>
+            <div>
+              <strong>Port</strong>
+              <span>8091</span>
+            </div>
+            <div class="separator">|</div>
+            <div>
+              <strong>Method</strong>
+              <span>Non-blocking</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="browser-preview">
+          <div class="browser-header">
+            <div class="window-controls">
+              <span class="control control-red"></span>
+              <span class="control control-yellow"></span>
+              <span class="control control-green"></span>
+            </div>
+            <div class="address-bar">localhost:8091</div>
+          </div>
+          <div class="browser-content">
+            <div class="skeleton skeleton-hero"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text-short"></div>
+            <div class="skeleton-grid">
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <div class="metrics-header">
+          <p class="subtitle">Performance Metrics</p>
+          <h2>Media Attribute Impact</h2>
+          <p>CSS with media="print" loads non-blocking, then switches to all.</p>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">CSS Load Time</div>
+            <div class="metric-value">~0.1s</div>
+            <div class="metric-desc">Non-blocking</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">First Paint</div>
+            <div class="metric-value">~0.1s</div>
+            <div class="metric-desc">Before CSS loads</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Largest Paint</div>
+            <div class="metric-value">~0.2s</div>
+            <div class="metric-desc">After CSS applies</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Blocking</div>
+            <div class="metric-value">No</div>
+            <div class="metric-desc">Non-blocking</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="strategies">
+        <div class="strategies-header">
+          <p class="subtitle">Loading Strategies</p>
+          <h2>Compare All Strategies</h2>
+          <p>See how different CSS loading techniques affect performance.</p>
+        </div>
+
+        <div class="strategies-grid">
+          <a href="http://localhost:8090" class="strategy-card">
+            <div class="strategy-num">01</div>
+            <div class="strategy-name">Blocking CSS</div>
+            <div class="strategy-desc">Standard blocking</div>
+            <div class="strategy-status">Port 8090</div>
+          </a>
+          <a href="http://localhost:8091" class="strategy-card active">
+            <div class="strategy-num">02</div>
+            <div class="strategy-name">Media Attribute</div>
+            <div class="strategy-desc">Non-blocking trick</div>
+            <div class="strategy-status">Current</div>
+          </a>
+          <a href="http://localhost:8092" class="strategy-card">
+            <div class="strategy-num">03</div>
+            <div class="strategy-name">Preload CSS</div>
+            <div class="strategy-desc">Early discovery</div>
+            <div class="strategy-status">Port 8092</div>
+          </a>
+          <a href="http://localhost:8093" class="strategy-card">
+            <div class="strategy-num">04</div>
+            <div class="strategy-name">Async Loading</div>
+            <div class="strategy-desc">JavaScript async</div>
+            <div class="strategy-status">Port 8093</div>
+          </a>
+          <a href="http://localhost:8094" class="strategy-card">
+            <div class="strategy-num">05</div>
+            <div class="strategy-name">Critical + Async</div>
+            <div class="strategy-desc">Best practice</div>
+            <div class="strategy-status">Port 8094</div>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Display performance metrics
+    window.addEventListener('load', () => {
+      const perfData = performance.getEntriesByType('navigation')[0];
+      const fp = performance.getEntriesByType('paint').find(p => p.name === 'first-paint');
+      const lcp = performance.getEntriesByType('largest-contentful-paint')[0];
+
+      console.log('Performance Metrics:', {
+        domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+        loadComplete: perfData.loadEventEnd - perfData.loadEventStart,
+        firstPaint: fp ? fp.startTime : 'N/A',
+        largestContentfulPaint: lcp ? lcp.startTime : 'N/A'
+      });
+    });
+  </script>
+</body>
+</html>

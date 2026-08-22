@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الحلقة ١: ليه الـ CSS بيوقف رسم الصفحة؟</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --bg:#12151f; --surface:#1a2030; --surface2:#212844; --line:rgba(255,255,255,.09);
+  --text:#eef0f8; --muted:#8d93ac;
+  --coral:#ff6b4a; --coral-dim:#3a2620;
+  --teal:#5eead4; --teal-dim:#183430;
+  --yellow:#ffd166; --purple:#a78bfa; --pink:#f472b6; --blue:#60a5fa;
+}
+*{box-sizing:border-box;} html,body{margin:0;padding:0;}
+body{ background: linear-gradient(var(--line) 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0/48px 48px, var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; line-height:1.85; }
+code, .mono{ font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block; background:var(--surface2); color:var(--yellow); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-size:.88em; line-height:1.6; }
+h2 code{ font-size:.7em; vertical-align:2px; }
+.page{ max-width:960px; margin:0 auto; padding:56px 28px 90px; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--coral); background:var(--coral-dim); border:1px solid rgba(255,107,74,.35); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.35; } h1 span{ color:var(--coral); }
+.subtitle{ font-size:17px; color:var(--muted); max-width:680px; margin:0 0 36px; }
+section.lesson{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:36px; margin-top:28px; }
+.eyebrow-sm{ font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.port-tag{ font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; font-weight:700; color:var(--purple); background:rgba(167,139,250,.12); border:1px solid rgba(167,139,250,.35); padding:2px 9px; border-radius:999px; }
+h2{ font-size:24px; font-weight:800; margin:0 0 14px; }
+p.desc{ color:var(--muted); font-size:16px; max-width:700px; margin:0 0 22px; }
+.callout{ display:flex; gap:12px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:20px 0; font-size:15px; color:#dfe2f2; }
+.callout .ic{ font-size:20px; flex:0 0 auto; }
+.callout.warn{ border-color:rgba(255,107,74,.35); } .callout.good{ border-color:rgba(94,234,212,.35); }
+.code-block{ background:#0d0f17; border:1px solid var(--line); border-radius:12px; padding:16px 18px; font-size:14px; white-space:pre; overflow-x:auto; margin-top:16px; direction:ltr; text-align:left; }
+.code-block .prop{ color:var(--teal); } .code-block .val{ color:var(--yellow); } .code-block .sel{ color:var(--muted); } .code-block .cm{ color:#5b6280; font-style:italic; } .code-block .attr{ color:var(--pink); }
+.pipeline{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; direction:ltr; }
+.pipe-step{ background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:12.5px; font-weight:700; text-align:center; font-family:'JetBrains Mono',monospace; display:flex; flex-direction:column; justify-content:center; min-width:100px; flex:0 0 auto; }
+.pipe-step .t{ display:block; font-size:10.5px; font-weight:400; color:var(--muted); margin-top:4px; font-family:'Tajawal',sans-serif; direction:rtl; }
+.pipe-step.block{ border-color:var(--coral); box-shadow:0 0 0 1px var(--coral) inset; background:var(--coral-dim); }
+.pipe-step.purple{ border-color:var(--purple); box-shadow:0 0 0 1px var(--purple) inset; background:rgba(167,139,250,.12); }
+.pipe-step.paint{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; background:var(--teal-dim); }
+.pipe-arrow{ display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:18px; flex:0 0 auto; }
+.badge-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+.badge{ font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface2); color:var(--muted); }
+.badge.bad{ color:var(--coral); border-color:rgba(255,107,74,.35); background:var(--coral-dim); }
+.badge.ok{ color:var(--teal); border-color:rgba(94,234,212,.35); background:var(--teal-dim); }
+table.stack-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+table.stack-table th, table.stack-table td{ text-align:right; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+table.stack-table th{ color:var(--teal); font-size:12.5px; }
+table.stack-table td:first-child{ font-weight:700; }
+.res-list{ display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.res-item{ display:flex; gap:14px; align-items:flex-start; background:var(--surface2); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+.res-item:hover{ border-color:var(--teal); }
+.res-item .num{ font-family:'JetBrains Mono',monospace; color:var(--teal); font-weight:700; font-size:13px; direction:ltr; }
+.res-item .body strong{ display:block; font-size:15px; margin-bottom:3px; } .res-item .body span{ font-size:13.5px; color:var(--muted); }
+footer{ text-align:center; color:var(--muted); font-size:14px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow">🎬 الحلقة ١</div>
+  <h1>ليه الـ <span>CSS</span> بيوقف رسم الصفحة أصلًا؟</h1>
+  <p class="subtitle">قبل ما نتكلم عن حلول زي Critical CSS، لازم نفهم المشكلة الأساسية: ليه المتصفح بيرفض يرسم أي حاجة لحد ما الـ CSS يوصل؟ ده مش Bug — ده قرار متعمّد. الحلقة دي هي نقطة البداية لسلسلة كاملة عن استراتيجيات تحميل CSS.</p>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧠 المسار الحرج للرسم — Critical Rendering Path</div>
+    <h2>من الـ HTML لحد أول بكسل على الشاشة</h2>
+    <p class="desc">المتصفح بيبني شجرتين منفصلتين: <strong>DOM</strong> من الـ HTML، و<strong>CSSOM</strong> من الـ CSS. المشكلة إن المتصفح مش بيقدر يبدأ يرسم إلا لما الشجرتين يتدمجوا في <strong>Render Tree</strong> — وده معناه لازم يستنى الـ CSSOM يخلص أولًا.</p>
+    <div class="pipeline">
+      <div class="pipe-step">HTML Parsing <span class="t">بناء DOM</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step block">CSS Request <span class="t">Render-blocking</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">CSSOM <span class="t">بناء شجرة الأنماط</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step purple">Render Tree <span class="t">DOM + CSSOM</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step paint">Layout → Paint 🎨</div>
+    </div>
+    <div class="callout"><span class="ic">💡</span><div>الـ HTML Parsing ممكن يكمل ويبني DOM كامل وهو مستني الـ CSS — المتصفح شاطر كفاية إنه يعمل الحاجتين مع بعض. لكن مرحلة الـ Paint نفسها واقفة تمامًا لحد ما الـ CSSOM يخلص.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🎯 السبب الحقيقي</div>
+    <h2>ده مش تقصير من المتصفح — ده حماية من الـ FOUC</h2>
+    <p class="desc">لو المتصفح رسم الصفحة بالـ HTML بس وبعدين لوّنها لما الـ CSS يوصل، هتشوف <strong>FOUC (Flash of Unstyled Content)</strong> — الصفحة تظهر شكلها الافتراضي (نص أسود، Times New Roman) للحظة، وبعدين "تقفز" للتصميم الحقيقي. كل المتصفحات الحديثة قررت تمنع الرسم بدل ما تسيب المستخدم يشوف القفزة دي.</p>
+    <div class="badge-row">
+      <span class="badge bad">بدون الحماية دي: FOUC مضمون</span>
+      <span class="badge ok">مع الحماية: صفحة بيضا بدل قفزة بصرية</span>
+    </div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🔍 النقطة اللي هتلفت نظرك</div>
+    <h2>الـ CSS مش بس بيوقف الرسم — بيوقف الـ JavaScript كمان</h2>
+    <p class="desc">تفصيلة كتير من الناس مش واخدين بالهم منها: أي <code>&lt;script&gt;</code> عادي (من غير <code>async</code> أو <code>defer</code>) جاي بعد <code>&lt;link rel="stylesheet"&gt;</code> في الـ HTML، مش هيتنفذ إلا بعد ما الـ CSSOM يخلص بناء. السبب: الـ JS ممكن يسأل عن Computed Styles (زي <code>getComputedStyle</code>)، فالمتصفح لازم يضمن إن الـ CSSOM جاهز قبل ما ينفذ أي كود ممكن يحتاجه.</p>
+    <div class="code-block"><span class="sel">&lt;head&gt;</span>
+  <span class="sel">&lt;link</span> <span class="prop">rel</span>=<span class="val">"stylesheet"</span> <span class="prop">href</span>=<span class="val">"styles.css"</span><span class="sel">&gt;</span>
+
+  <span class="cm">&lt;!-- السكريبت ده مش هيتنفذ إلا بعد ما styles.css يوصل ويتحلل بالكامل --&gt;</span>
+  <span class="sel">&lt;script</span> <span class="prop">src</span>=<span class="val">"app.js"</span><span class="sel">&gt;&lt;/script&gt;</span>
+<span class="sel">&lt;/head&gt;</span></div>
+    <div class="callout warn"><span class="ic">⚠️</span><div>يعني ملف CSS بطيء مش بس بيأخر الرسم — ممكن يأخر أي منطق JS مهم كان المفروض يشتغل بدري، حتى لو الـ JS نفسه مش بيلمس CSS خالص.</div></div>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">🧰 CHEAT SHEET</div>
+    <h2>إيه اللي بيوقف الرسم فعليًا وإيه اللي لأ</h2>
+    <table class="stack-table">
+      <tr><th>الحالة</th><th>Render-blocking؟</th><th>ملاحظة</th></tr>
+      <tr><td><code>&lt;link rel="stylesheet"&gt;</code> عادي</td><td>Yes</td><td>السلوك الافتراضي في كل المتصفحات</td></tr>
+      <tr><td><code>&lt;link media="print"&gt;</code></td><td>No</td><td>بيتحمّل بأولوية منخفضة، مش مطبّق على الشاشة</td></tr>
+      <tr><td><code>&lt;style&gt;</code> Inline</td><td>No إضافي</td><td>جزء من الـ HTML نفسه، مفيش Request تاني</td></tr>
+      <tr><td><code>&lt;script&gt;</code> بعد CSS (عادي)</td><td>مؤجَّل</td><td>بينتظر الـ CSSOM قبل التنفيذ</td></tr>
+      <tr><td>CSS محقون عن طريق JS بعد الـ Load</td><td>No</td><td>لكن معرّض لـ FOUC لحظي</td></tr>
+    </table>
+    <p class="desc" style="margin-top:18px;">فهم النقطة دي هو أساس كل الحلقات الجاية: كل استراتيجية هنتكلم عنها — سواء Critical CSS يدوي، أدوات أوتوماتيك، أو استراتيجيات التحميل الخمسة — كلها بتحاول تحل نفس المشكلة: إزاي تقلل وقت انتظار الـ Paint من غير ما تسيب المستخدم يشوف FOUC.</p>
+  </section>
+
+  <section class="lesson">
+    <div class="eyebrow-sm">📚 عايز تتعمق أكتر؟</div>
+    <h2>مصادر للحلقة الجاية</h2>
+    <div class="res-list">
+      <a class="res-item" href="https://web.dev/articles/critical-rendering-path" target="_blank" rel="noopener">
+        <div class="num">01</div>
+        <div class="body"><strong>web.dev — Critical Rendering Path</strong><span>الشرح الرسمي لخطوات DOM → CSSOM → Render Tree → Paint.</span></div>
+      </a>
+      <a class="res-item" href="https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Critical_rendering_path" target="_blank" rel="noopener">
+        <div class="num">02</div>
+        <div class="body"><strong>MDN — Populating the Page</strong><span>تفصيل تقني لكيفية بناء الـ Render Tree وتأثير الـ CSS والـ JS على بعض.</span></div>
+      </a>
+      <a class="res-item" href="https://web.dev/articles/extract-critical-css" target="_blank" rel="noopener">
+        <div class="num">03</div>
+        <div class="body"><strong>web.dev — Extract Critical CSS</strong><span>أول خطوة عملية للحل — هنتعمقها في الحلقة ٢.</span></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>🎨 الحلقة دي مفاهيمية بحتة — الديمو العملي شغّال على بورت 8080 لمقارنة سلوك المتصفح Live.</footer>
+</div>
+</body>
+</html>
